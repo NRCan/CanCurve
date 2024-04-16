@@ -9,9 +9,9 @@ script for porting MRB 'LineRules' to a SQLite
 # variables
 #===============================================================================
 raw_linerules_xls = r'l:\02_WORK\CEF\2403_CanCurve\02_INFO\davids_tool\linerules_20240415.xls'
-index_cols = ['cat', 'sel']
+index_cols = ['cat', 'sel', 'bldg_layout']
 
-sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20240415.db'
+sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20240416.db'
 
 
 #===============================================================================
@@ -32,40 +32,56 @@ view(df_left)
 """
  
 
-# load
+#===============================================================================
+# # load
+#===============================================================================
 df_raw = pd.read_excel(raw_linerules_xls, sheet_name=0, header=[0,1,2])
 df1 = df_raw.copy()
 
 
+#===============================================================================
+# indexing
+#===============================================================================
 #clean up index
-df_left = df_raw.xs('meta1', level=1, axis=1).droplevel(0, axis=1).loc[:, ['Cat', 'Sel', 'Unit', 'Desc']]
+df_left = df_raw.xs('meta1', level=1, axis=1).droplevel(0, axis=1).loc[:, ['Cat', 'Sel', 'StructGroup', 'Cat.Sel', 'Unit', 'Desc']]
 df_left.columns = df_left.columns.str.lower()
 
+
+    
+
+# bldg_layout
+
+"""looks like these had some suffix added to Cat.Sel
+ie. wanting to use different DRF for the same cost-item (e.g., ductwork in a 1storey vs. 2 storey)
+David manually added a suffix to the 'cat.sel' field for these
+"""
+    
+    
+#extract type from desc
+bx =  df_left[['cat', 'sel']].duplicated(keep=False)
+df_left = df_left.join(df_left[bx]['desc'].str.extract(r'\((.*?)\)').dropna().iloc[:,0].rename('bldg_layout'))
+df_left['bldg_layout'].fillna('default', inplace=True)
+
+df_left = df_left.loc[:, ['cat', 'sel', 'bldg_layout', 'unit', 'desc']]
+
+
 #check for uniques
-bx =  df_left[index_cols].duplicated(keep='first')
-if bx.any():
-    """looks like these had some suffix added to Cat.Sel
-    ie. wanting to use different DRF for the same cost-item (e.g., ductwork in a 1storey vs. 2 storey)
-    just dropping these for now
-    """
-    print(f'WARNING: got {bx.sum()}/{len(bx)} duplicated {index_cols} entries')
-    
-    #take just the first occurence of each duplicated entry
-    df_left = df_left.loc[~bx]
-    
-    #view(df_left.loc[bx, index_cols])
+bx =  df_left[index_cols].duplicated(keep=False)
+assert not bx.any()
 
 df_left['unit'].fillna('EA', inplace=True)
 cost_meta_df = df_left.set_index(index_cols)
 
 
 
-#DRF
+#===============================================================================
+# #DRF
+#===============================================================================
 drf_df = df_raw[~bx].xs('drf', level=0, axis=1).fillna(0.0).droplevel(0, axis=1)
 drf_df.columns.name = 'meters'
 
 #join index
-drf_df = drf_df.join(df_left.loc[:, ['cat', 'sel']]).set_index(['cat', 'sel'])
+drf_df = drf_df.join(df_left.loc[:, index_cols]).set_index(index_cols)
 
 #===============================================================================
 # # Create metadata DataFrame
@@ -82,7 +98,9 @@ metadata_df = pd.DataFrame({
     'script_name': [script_name],
     'output_filename': [output_filename],
     'raw_linerules_xls':[raw_linerules_xls],
-    'entries':[len(drf_df)]
+    'mrb_sourcee':[r'l:\09_REPOS\04_TOOLS\DDFP\DDF_RuleBook_r0.xlsm'],
+    'entries':[len(drf_df)],
+    'index_cols':[str(index_cols)],
 })
 
 #===============================================================================
