@@ -9,7 +9,7 @@ script for porting MRB 'LineRules' to a SQLite
 # variables
 #===============================================================================
 raw_linerules_xls = r'l:\02_WORK\CEF\2403_CanCurve\02_INFO\davids_tool\linerules_20240415.xls'
-index_cols = ['cat', 'sel', 'bldg_layout']
+
 
 sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20240416.db'
 
@@ -23,6 +23,7 @@ from pandas import IndexSlice as idx
 import sqlite3
 
 from cancurve.hp.basic import view_web_df as view
+from cancurve.parameters import index_cols
 
 
 
