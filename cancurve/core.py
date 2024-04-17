@@ -156,14 +156,17 @@ def _update_proj_meta(function_name, log, conn):
 #===============================================================================
 
 def c00_setup_project(
-        log=None,
-        ofp=None,
-        out_dir=None,
+        ci_fp,
+        drf_db_fp=None,
+        
+        bldg_layout='default',
         curve_name='curve_name',
         bldg_meta=None,
+        log=None,ofp=None,out_dir=None,
+
         
         ):
-    """build project SQLite"""
+    """build project SQLite. load data into it"""
     
     #===========================================================================
     # defaults
@@ -182,11 +185,40 @@ def c00_setup_project(
         ofp = os.path.join(out_dir, f'{curve_name}_{today_str}.cancurve')
         
     assert not os.path.exists(ofp)
+    
+    if drf_db_fp is None: drf_db_fp = drf_db_master_fp
  
+
+    
+    
+    #===========================================================================
+    # load costitem table
+    #===========================================================================
+    log.info(f'on {os.path.basename(ci_fp)}')
+    ci_df = load_ci_df(ci_fp, log=log)
+    
+    #===========================================================================
+    # load depth-replacement-factor database
+    #===========================================================================
+    drf_df = load_drf(drf_db_fp, log=log).xs(bldg_layout, level=2)
+    
+    #===========================================================================
+    # check intersect
+    #===========================================================================
+    bx = np.invert(ci_df.index.isin(drf_df.index))
+    if bx.any():
+        """TODO: add some support for populating missing entries into the DRF"""
+        log.warning(f'missing {bx.sum()}/{len(bx)} entries')
+        raise KeyError()
+    
+    
     #===========================================================================
     # setup project meta
     #===========================================================================
     proj_meta_df = _get_proj_meta(log, curve_name=curve_name, function_name='c00_setup_project')
+    
+    proj_meta_df['ci_fp']=ci_fp
+    proj_meta_df['drf_db_fp']=drf_db_fp
     
     #===========================================================================
     # start database
@@ -198,7 +230,14 @@ def c00_setup_project(
         proj_meta_df.to_sql('project_meta', conn, if_exists='replace', index=False)
         
         #create a table 'bldg_meta' and populate it with the entries in bldg_meta
-        pd.Series(bldg_meta, name='val').to_frame().to_sql('bldg_meta', conn, if_exists='replace', index=True)
+        pd.Series(bldg_meta, name='val').to_frame().to_sql('bldg_meta', conn, if_exists='replace', index=False)
+        
+        #add data tables
+        ci_df.to_sql('cost_items', conn, if_exists='replace', index=True)
+        
+        bx = drf_df.index.isin(ci_df.index)
+        drf_df[bx].to_sql('drf', conn, if_exists='replace', index=True)
+        
         
     log.info(f'project SQLiite DB built at \n    {ofp}')
     
@@ -211,10 +250,10 @@ def c00_setup_project(
 
 
 def c01_join_drf(
-        ci_fp,
+        
         proj_db_fp,
-        drf_db_fp=None,
-        bldg_layout='default',
+        
+        
         log=None,
         out_dir=None,
         
@@ -236,38 +275,21 @@ def c01_join_drf(
     #===========================================================================
     # defaults
     #===========================================================================
-    if drf_db_fp is None: drf_db_fp = drf_db_master_fp
+    
     
     if out_dir is None: 
         out_dir = os.getcwd()
         
     log = get_slog('c01', log)
     
-    log.info(f'on {os.path.basename(ci_fp)}')
+    
     
     #===========================================================================
     # prechecks
     #===========================================================================
  
     
-    #===========================================================================
-    # load costitem table
-    #===========================================================================
-    ci_df = load_ci_df(ci_fp, log=log)
-    
-    #===========================================================================
-    # load depth-replacement-factor database
-    #===========================================================================
-    drf_df = load_drf(drf_db_fp, log=log).xs(bldg_layout, level=2)
-    
-    #===========================================================================
-    # check intersect
-    #===========================================================================
-    bx = np.invert(ci_df.index.isin(drf_df.index))
-    if bx.any():
-        """TODO: add some support for populating missing entries into the DRF"""
-        log.warning(f'missing {bx.sum()}/{len(bx)} entries')
-        raise KeyError()
+
     
     #===========================================================================
     # join
@@ -278,8 +300,7 @@ def c01_join_drf(
     
     #===========================================================================
     # update proejct database
-    #===========================================================================
-    
+    #===========================================================================    
     
     log.info(f'adding cost-item w/ DRF table to project database w/ {df1.shape}\n    {proj_db_fp}')
     with sqlite3.connect(proj_db_fp) as conn:
@@ -298,9 +319,11 @@ def c01_join_drf(
     return proj_db_fp
     
     
-    """
-    view(df1)
-    """
+def c02_group_story(proj_db_fp,
+            log=None,
+            out_dir=None,
+            ):
+    """group by story and assemble DDF"""
 
     
     
