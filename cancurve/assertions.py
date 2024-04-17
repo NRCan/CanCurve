@@ -4,11 +4,15 @@ Created on Apr. 16, 2024
 @author: cef
 '''
 
+import os
+import sqlite3
+import pandas as pd
+
 from cancurve.parameters import colns_index, colns_dtypes
 
-import sqlite3
 
-import pandas as pd
+
+
 
 def assert_ci_df(df):
     """
@@ -40,16 +44,58 @@ def assert_ci_df(df):
             raise AssertionError(f"Incorrect data type for column '{coln}'. Expected: {colns_dtypes[coln]}, Found: {dstr}")
 
  
+#===============================================================================
+# Project database
+#===============================================================================
+def assert_proj_db_fp(fp):
+    """full check of proj_db_fp"""
+    
+    assert os.path.exists(fp), fp
+    assert fp.endswith('.cancurve')
+    
+    try:
+        with sqlite3.connect(fp) as conn:
+            assert_proj_db(conn)
+    
+    except Exception as e:
+        raise AssertionError(f'project DB connection failed w/\n    {e}')
+        
+        
+    
+ 
+
+def assert_proj_db(conn, expected_tables=['bldg_meta', 'project_meta']):
+    """
+    Checks if the provided project database meets expectations by verifying expected tables exist.
+
+    Args:
+        conn: An open SQLite database connection.
+        expected_tables: A list of expected table names.
+
+    Raises:
+        AssertionError: If any of the expected tables are missing.
+    """
+    cursor = conn.cursor()
+
+    missing_tables = []
+    for table_name in expected_tables:
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        if not cursor.fetchone():
+            missing_tables.append(table_name)
+
+    if missing_tables:
+        raise AssertionError(f"Missing tables in project database: {', '.join(missing_tables)}")
 
  
 
 
+#===============================================================================
+# DRF database
+#===============================================================================
 def assert_drf_db(conn, table_name='drf'):
     """check the drf database meets expectations"""
 
     try:
- 
-
         # Check if the table exists
         cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
         result = cursor.fetchone()

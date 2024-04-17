@@ -14,7 +14,7 @@ from datetime import datetime
 from .hp.logr import get_log_stream
 from .hp.basic import view_web_df as view
 from .parameters import drf_db_master_fp, colns_index, today_str
-from .assertions import assert_ci_df, assert_drf_db, assert_drf_df
+from .assertions import assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db
 from cancurve import __version__
  
 def get_od(name):
@@ -27,6 +27,31 @@ def get_slog(name, log):
         log = get_log_stream()
         
     return log.getChild(name)
+
+def get_curve_name(conn):
+    """
+    Retrieves the first curve name from the 'project_meta' table.
+
+    Args:
+        conn: An open SQLite database connection.
+
+    Returns:
+        The first 'curve_name' value, or None if the table or column doesn't exist. 
+    """
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute("SELECT curve_name FROM project_meta LIMIT 1")
+        result = cursor.fetchone()
+
+        if result:
+            return result[0]  # Extract the first item from the result tuple
+        else:
+            return None
+
+    except sqlite3.Error as e:
+        print(f"Error retrieving curve name: {e}")
+        return None 
 
 def load_ci_df(fp, log=None):
     
@@ -65,7 +90,6 @@ def load_drf(fp, log=None):
     # precheck
     #===========================================================================
     assert os.path.exists(fp), fp
-    #assert os.path.exists(r'l:\09_REPOS\04_TOOLS\CanCurve\cancurve\db\mrb_20240416.db')
     assert fp.endswith('.db')
     
     log = get_slog('load_drf', log)
@@ -98,6 +122,39 @@ def load_drf(fp, log=None):
     
     
     
+
+def _get_proj_meta(log, curve_name=None,function_name=None):
+    proj_meta_df = pd.DataFrame({
+            'curve_name':[curve_name], 
+            #'date':[today_str],
+            'now':[datetime.now()], 
+            'username':[os.getlogin()], 
+            'script_name':[os.path.basename(__file__)],
+            'function_name':function_name, 
+            'cancurve_version':[__version__], 
+            'python_version':[sys.version.split()[0]],
+            
+            })
+    #add qgis
+    try:
+        from qgis.core import Qgis
+        proj_meta_df['qgis_version'] = Qgis.QGIS_VERSION
+    except Exception as e:
+        log.warning(f'failed to retrieve QGIS version\n    {e}')
+    return proj_meta_df
+
+def _update_proj_meta(function_name, log, conn):
+    curve_name = get_curve_name(conn)
+    proj_meta_df = _get_proj_meta(log, curve_name=curve_name, function_name=function_name)
+    proj_meta_df.to_sql('project_meta', conn, if_exists='append', index=False)
+    
+    log.debug(f'updated \'project_meta\' w/ {proj_meta_df.shape}')
+    return proj_meta_df
+    
+#===============================================================================
+# ACTIONS------------
+#===============================================================================
+
 def c00_setup_project(
         log=None,
         ofp=None,
@@ -129,22 +186,7 @@ def c00_setup_project(
     #===========================================================================
     # setup project meta
     #===========================================================================
-    proj_meta_df = pd.DataFrame({
-        'curve_name':[curve_name],
-        'date': [today_str],
-        'username': [os.getlogin()],
-        'script_name': [os.path.basename(__file__)],
-        'cancurve_version':[__version__],
-        'python_version':[sys.version.split()[0]]
-
-    })
-    
-    #add qgis
-    try:
-        from qgis.core import Qgis
-        proj_meta_df['qgis_version'] = Qgis.QGIS_VERSION
-    except Exception as e:
-        log.warning(f'failed to retrieve QGIS version\n    {e}')
+    proj_meta_df = _get_proj_meta(log, curve_name=curve_name, function_name='c00_setup_project')
     
     #===========================================================================
     # start database
@@ -153,27 +195,24 @@ def c00_setup_project(
     with sqlite3.connect(ofp) as conn:
         
         #add project meta
-        proj_meta_df.to_sql('project_meta', conn, if_exists='replace', index=True)
+        proj_meta_df.to_sql('project_meta', conn, if_exists='replace', index=False)
         
         #create a table 'bldg_meta' and populate it with the entries in bldg_meta
-        pd.Series(bldg_meta).to_frame().to_sql('bldg_meta', conn, if_exists='replace', index=True)
+        pd.Series(bldg_meta, name='val').to_frame().to_sql('bldg_meta', conn, if_exists='replace', index=True)
         
     log.info(f'project SQLiite DB built at \n    {ofp}')
     
+    assert_proj_db_fp(ofp)
+    
     return ofp
-
-
-    
  
-    
-    
-    
-    
+
 
 
 
 def c01_join_drf(
         ci_fp,
+        proj_db_fp,
         drf_db_fp=None,
         bldg_layout='default',
         log=None,
@@ -207,6 +246,11 @@ def c01_join_drf(
     log.info(f'on {os.path.basename(ci_fp)}')
     
     #===========================================================================
+    # prechecks
+    #===========================================================================
+ 
+    
+    #===========================================================================
     # load costitem table
     #===========================================================================
     ci_df = load_ci_df(ci_fp, log=log)
@@ -231,6 +275,28 @@ def c01_join_drf(
     df1 = ci_df.loc[:, ['rcv', 'story']].join(drf_df)
     
     assert df1.notna().all().all()
+    
+    #===========================================================================
+    # update proejct database
+    #===========================================================================
+    
+    
+    log.info(f'adding cost-item w/ DRF table to project database w/ {df1.shape}\n    {proj_db_fp}')
+    with sqlite3.connect(proj_db_fp) as conn:
+        
+        assert_proj_db(conn)
+        
+        #add result table
+        df1.to_sql('ci_drf', conn, if_exists='replace', index=True)
+        
+        #update project meta
+        _update_proj_meta('c01_join_drf', log, conn)
+ 
+        
+    log.info(f'finished')
+    
+    return proj_db_fp
+    
     
     """
     view(df1)

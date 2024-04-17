@@ -32,21 +32,23 @@ def ci_fp(testCase):
     tdata_dir = os.path.join(test_data_dir_master, testCase)    
     return find_single_file_by_extension(tdata_dir, '.csv')
     
-    
-    
+@pytest.fixture(scope='function')   
+def proj_db_fp(tmp_path):
+    fp = find_single_file_by_extension(test_data_dir_master, '.cancurve')
+    return shutil.copy(fp, os.path.join(tmp_path, os.path.basename(fp)))
 
 
 #===============================================================================
 # tests---------
 #===============================================================================
-@pytest.mark.dev
+
 def test_c00_setup_project( tmp_path):
     from cancurve.core import c00_setup_project as func
-    func(out_dir=tmp_path, bldg_meta={'testFeat1':'v1', 'testFeat2':'v2'})
+    func(out_dir=tmp_path, bldg_meta={'testFeat1':'v1', 'testFeat2':'v2'}, curve_name='testCurve')
     
     
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
-def test_c01_join_drf(ci_fp, tmp_path):
+def test_c01_join_drf(ci_fp, proj_db_fp, tmp_path):
     from cancurve.core import c01_join_drf as func
-    func(ci_fp, out_dir=tmp_path)
+    func(ci_fp, proj_db_fp, out_dir=tmp_path)
