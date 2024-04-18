@@ -287,26 +287,33 @@ def c01_join_drf(
     #===========================================================================
     # prechecks
     #===========================================================================
- 
+    assert_proj_db_fp(proj_db_fp)
     
 
-    
-    #===========================================================================
-    # join
-    #===========================================================================
-    df1 = ci_df.loc[:, ['rcv', 'story']].join(drf_df)
-    
-    assert df1.notna().all().all()
-    
-    #===========================================================================
-    # update proejct database
-    #===========================================================================    
-    
-    log.info(f'adding cost-item w/ DRF table to project database w/ {df1.shape}\n    {proj_db_fp}')
+    log.debug(f'openning database from {proj_db_fp}')
     with sqlite3.connect(proj_db_fp) as conn:
-        
         assert_proj_db(conn)
         
+        #=======================================================================
+        # retrieve
+        #=======================================================================
+        ci_df =  pd.read_sql('SELECT * FROM cost_items', conn, index_col=['cat', 'sel'])
+        drf_df = pd.read_sql('SELECT * FROM drf', conn, index_col=['cat', 'sel'])
+        #===========================================================================
+        # join
+        #===========================================================================
+        log.debug(f'left join drf {drf_df.shape} to cost-item {ci_df.shape}')
+        df1 = ci_df.loc[:, ['rcv', 'story']].join(drf_df)
+        
+        assert df1.notna().all().all()
+        
+        #===========================================================================
+        # update proejct database
+        #===========================================================================    
+        
+        log.info(f'adding cost-item w/ DRF table to project database w/ {df1.shape}\n    {proj_db_fp}')
+    
+ 
         #add result table
         df1.to_sql('ci_drf', conn, if_exists='replace', index=True)
         

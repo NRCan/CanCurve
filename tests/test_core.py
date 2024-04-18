@@ -34,13 +34,16 @@ def ci_fp(testCase):
     
 @pytest.fixture(scope='function')   
 def proj_db_fp(testCase, testPhase, tmp_path):
-    fp = find_single_file_by_extension(test_data_dir_master, '.cancurve')
     
-    proj_db_fp = shutil.copy(
-        os.path.join(test_data_dir_master, 'c00.cancurve'), 
-        os.path.join(tmp_path, 'c01.cancurve'))
-        
-    return shutil.copy(fp, os.path.join(tmp_path, os.path.basename(fp)))
+    #get the target directory
+    tdata_dir = os.path.join(test_data_dir_master, testCase, testPhase)
+    assert os.path.exists(tdata_dir)
+    
+    #get the project db file
+    fp = find_single_file_by_extension(tdata_dir, '.cancurve')
+    
+    #make a working copy        
+    return shutil.copy(fp,os.path.join(tmp_path, 'copy_'+os.path.basename(fp)))
 
 
 #===============================================================================
@@ -63,7 +66,7 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase):
 def test_c01_join_drf(tmp_path, proj_db_fp):
     from cancurve.core import c01_join_drf as func   
  
-    func(ci_fp, proj_db_fp, out_dir=tmp_path)
+    func(proj_db_fp, out_dir=tmp_path)
      
      
  
