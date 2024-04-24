@@ -63,7 +63,7 @@ def test_plot_c00_costitems(action_result, tmp_path):
     fig = func(ci_df)
     
     
-@pytest.mark.dev
+ 
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 def test_plot_c00_costitems(action_result, tmp_path):
@@ -72,3 +72,15 @@ def test_plot_c00_costitems(action_result, tmp_path):
     from cancurve.plots import plot_c00_DRF as func
     
     fig = func(drf_df)
+    
+    
+
+@pytest.mark.dev
+@pytest.mark.parametrize('testPhase',['c01'], indirect=False)
+@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+def test_plot_c01_depth_rcv(action_result, tmp_path):
+    data = action_result #c00 returns both of these
+    
+    from cancurve.plots import plot_c01_depth_rcv as func
+    
+    fig = func(data)

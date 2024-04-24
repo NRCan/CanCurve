@@ -149,7 +149,7 @@ def plot_c00_DRF(df_raw,
                            ),
                        
                        log=None):
-    """plot the cost items dataset"""
+    """matrix line plots"""
     
     log = get_slog('plot_c00_DRF', log)
     
@@ -185,8 +185,7 @@ def plot_c00_DRF(df_raw,
     ax_d = dict()
     for cat in cat_l:
         ax_d[cat] = dict(zip(cat_l, ax_ar.flat))[cat]
-      # Create the dictionary keyed by 'cat'
-
+ 
     
     #cmap = plt.cm.get_cmap('tab20')
     
@@ -234,18 +233,7 @@ def plot_c00_DRF(df_raw,
         if not ax.has_data():  
             ax.set_visible(False)
         
-    
-    #===========================================================================
-    # xmin, xmax = ax.get_xlim()
-    # for k0, ax in ax_d.items():        
-    #     ax.set_xlim(np.floor(xmin), np.ceil(xmax))
-    #===========================================================================
-    
-    #===========================================================================
-    # for k0, row in df.iterrows():
-    #     xar, yar = row.index.values, row.values
-    #     ax.plot(xar, yar)
-    #===========================================================================
+ 
     
  
     
@@ -255,6 +243,91 @@ def plot_c00_DRF(df_raw,
     #figure.subplots_adjust(hspace=0, wspace=0)
  
  
+        
+        
+    return figure
+"""
+plt.show()
+"""
+
+def plot_c01_depth_rcv(df_raw,
+                       figure=None,
+                       fig_kwargs=dict(
+                           #figsize=(10,10),
+                           tight_layout=True,
+                           ),
+                       
+                       log=None):
+    """plot the cost items dataset"""
+    
+    log = get_slog('plot_c01_depth_rcv', log)
+    
+    log.info(f'on {df_raw.shape}')
+    
+    
+    #===========================================================================
+    # #data prep
+    #===========================================================================
+    """
+    view(df_raw)
+    """
+ 
+    #===========================================================================
+    # setup figure
+    #===========================================================================
+    cmap = plt.cm.get_cmap('tab20')
+    #figure default
+    if figure is None:
+        figure = plt.figure(**fig_kwargs)
+    
+    story_l = df_raw.index.unique('story').tolist()
+    ax_ar  = figure.subplots(ncols=1, nrows=len(story_l), sharey=True, sharex=True)
+    ax_d = dict(zip(story_l, ax_ar.flat))
+    
+    #===========================================================================
+    # loop and plot
+    #===========================================================================
+    for k0, gdf in df_raw.groupby(level='story'):
+        log.debug(k0)
+        ax = ax_d[k0]
+        
+        #create stacked area plot (one polygon per cat.sum())
+        gdf1 = gdf.groupby(level='cat').sum()
+        
+        """
+             -0.9  -0.46  0.0        0.03  ...      1.22      1.52      1.83       2.7
+        cat                                ...                                        
+        CAB   0.0    0.0  0.0      0.0000  ...   9335.20   9335.20   9335.20   9335.20
+        DOR   0.0    0.0  0.0      0.0000  ...   6161.00   6161.00   6161.00   6161.00
+        DRY   0.0    0.0  0.0   8944.3525  ...  35777.41  35777.41  35777.41  35777.41
+        
+        ax.clear()
+        """
+        gdf1.T.plot.area(ax=ax, stacked=True, legend=False,
+                         cmap=cmap)
+        #
+        
+        #add legend
+        ax.legend(ncols=6, title=f'story {k0}', fontsize=6, loc=2)
+        
+        #=======================================================================
+        # ax.set_title(f'story {k0}', 
+        #              #y=0.8,
+        #              #bbox=dict(boxstyle="round,pad=0.3", fc="white", lw=0.0,alpha=0.75 ),
+        #              )
+        #=======================================================================
+        
+        ax.yaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:,.0f}'))
+        
+    #===========================================================================
+    # post
+    #===========================================================================
+    figure.suptitle('Depth-RCV'+'\nby story')
+    figure.supxlabel('depth (m)')
+    figure.supylabel('replacement cost value')
+        
+        
+        
         
         
     return figure
