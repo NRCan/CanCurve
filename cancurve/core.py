@@ -44,7 +44,7 @@ def get_setting(conn, param, table_name="project_settings"):
     cursor = conn.cursor()
 
     try:
-        cursor.execute("SELECT val FROM ? WHERE param = ?", (table_name, param))
+        cursor.execute(f"SELECT val FROM {table_name} WHERE param = ?", (param,))
         result = cursor.fetchone()
 
         if result:
@@ -54,8 +54,7 @@ def get_setting(conn, param, table_name="project_settings"):
 
     except Exception as e:
         raise IOError(f'failed to retrieve {param} FROM {table_name} w/ \n    {e}')
-    
-
+ 
 
 def load_ci_df(fp, log=None):
     
@@ -129,14 +128,17 @@ def load_drf(fp, log=None):
 
 def _get_proj_meta(log, 
                    #curve_name=None,
-                   function_name=None):
+                   function_name=None,
+                   misc=None):
     
  
     proj_meta_df = pd.DataFrame({
             #'curve_name':[curve_name], 
             #'date':[today_str],
-            'script_name':[os.path.basename(__file__)],
+            
             'function_name':function_name, 
+            'script_name':[os.path.basename(__file__)],
+            'script_path':[os.path.dirname(__file__)],
             'now':[datetime.now()], 
             'username':[os.getlogin()], 
 
@@ -151,10 +153,14 @@ def _get_proj_meta(log,
         proj_meta_df['qgis_version'] = Qgis.QGIS_VERSION
     except Exception as e:
         log.warning(f'failed to retrieve QGIS version\n    {e}')
+        
+    #add misc
+    if not misc is None:
+        proj_meta_df['misc'] = misc
     return proj_meta_df
 
-def _update_proj_meta(function_name, log, conn):
-    proj_meta_df = _get_proj_meta(log,function_name=function_name)
+def _update_proj_meta(function_name, log, conn, **kwargs):
+    proj_meta_df = _get_proj_meta(log,function_name=function_name, **kwargs)
     proj_meta_df.to_sql('project_meta', conn, if_exists='append', index=False)    
     log.debug(f'updated \'project_meta\' w/ {proj_meta_df.shape}')
     return proj_meta_df
@@ -291,8 +297,9 @@ def c00_setup_project(
     bldg_meta['bldg_layout'] = bldg_layout
     
     #create a table 'bldg_meta' and populate it with the entries in bldg_meta
-    meta_df =pd.Series(bldg_meta, name='val').to_frame()
-    meta_df.index.name='attn' 
+    """using single row to preserve dtypes"""
+    meta_df = pd.DataFrame.from_dict({'attn':bldg_meta}, orient='index')
+ 
     
     #===========================================================================
     # project settings------
@@ -317,7 +324,7 @@ def c00_setup_project(
         #add tables
         proj_meta_df.to_sql('project_meta', conn, if_exists='replace', index=False)
         settings_df.to_sql('project_settings', conn, if_exists='replace', index=True)
-        meta_df.to_sql('c00_bldg_meta', conn, if_exists='replace', index=True)        
+        meta_df.to_sql('c00_bldg_meta', conn, if_exists='replace', index=False)        
         ci_df.to_sql('c00_cost_items', conn, if_exists='replace', index=True)        
         drf_df2.to_sql('c00_drf', conn, if_exists='replace', index=True)
         
@@ -400,12 +407,15 @@ def c01_join_drf(
         
     log.info(f'finished')
     
-    return proj_db_fp
+    return depth_rcv_df
     
     
 def c02_group_story(proj_db_fp,
             log=None,
             scale_m2=None,
+            
+            basement_height_m=None, mf_area_m2=None,
+            
             
  
             ):
@@ -417,6 +427,15 @@ def c02_group_story(proj_db_fp,
     scale_m2: bool, optional
         whether curves are $/m2 or $
         None: retrieve from project_settings
+        
+    basement_height_m: float, optional
+        vertical distance with which to shift the basement curve in meters
+        defaults to value in c00_bldg_meta
+        
+    mf_area_m2: float, optional
+        area with which to scare replacement values (e.g., floor area in m2)
+        defaults to value in c00_bldg_meta
+        
     """
     
         #===========================================================================
@@ -440,13 +459,27 @@ def c02_group_story(proj_db_fp,
         cid_df.columns = cid_df.columns.astype(float)
         cid_df.columns.name = 'depths_m'
         
-        
-        bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn, index_col=['attn']).iloc[:, 0].to_dict()
-        
+        #project settings
         if scale_m2 is None:
             scale_m2 = convert_to_bool(get_setting(conn, 'scale_m2'))
+        assert isinstance(scale_m2, bool)
+        
+        #building metadata defaults
+        bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn).iloc[0, :].to_dict()
+        if basement_height_m is None:
+            basement_height_m = float(bldg_meta_d['basement_height_m'])
             
-        log.debug(f'extracted data from proj_db w/ scale_m2={scale_m2}')
+        
+        if scale_m2:
+            if mf_area_m2 is None:
+                assert 'mf_area_m2' in bldg_meta_d, f'passed scale_m2=True but no \'mf_area_m2\' provided'
+                mf_area_m2 = float(bldg_meta_d['mf_area_m2'])
+            assert isinstance(mf_area_m2, float)
+        
+        params_d = dict(scale_m2=scale_m2, basement_height_m=basement_height_m, mf_area_m2=mf_area_m2)
+
+            
+        log.debug(f'extracted data from proj_db w/ f\n    {params_d}')
         """
         view(cid_df)
         """
@@ -468,13 +501,9 @@ def c02_group_story(proj_db_fp,
         # concat on story
         #=======================================================================
         if len(ddf1.columns)==2:
-            
  
-            
-            assert 'basement_height_m' in bldg_meta_d, f'passed scale_m2=True but no \'mf_area_m2\' provided'
-            
-            #setup
-            basement_height_m = bldg_meta_d['basement_height_m']
+            assert isinstance(basement_height_m, float), f'multi-story requires \'basement_height_m\' value'
+          
             log.info(f'concating stories together w/ basement_height_m={basement_height_m} ')
  
             
@@ -493,8 +522,7 @@ def c02_group_story(proj_db_fp,
             #===================================================================
             # harmonize and concat
             #===================================================================
-            ddf2 = ddf1.iloc[:, 1].rename('main').to_frame().join(bsmt_s1, how='outer').sort_index()
-            
+            ddf2 = ddf1.iloc[:, 1].rename('main').to_frame().join(bsmt_s1, how='outer').sort_index()          
  
             ddf2 = ddf2.interpolate(method='index', limit_direction='both')
             
@@ -513,8 +541,7 @@ def c02_group_story(proj_db_fp,
         # scale
         #=======================================================================
         if scale_m2:
-            assert 'mf_area_m2' in bldg_meta_d, f'passed scale_m2=True but no \'mf_area_m2\' provided'
-            mf_area_m2 = bldg_meta_d['mf_area_m2']
+
             log.info(f'scaling by {mf_area_m2:.2f} m2')
             
             ddf3 = (ddf2/mf_area_m2).round(2)
@@ -548,7 +575,7 @@ def c02_group_story(proj_db_fp,
         ddf3.to_sql(tabnm, conn, if_exists='replace', index=True)
         
         #update project meta
-        _update_proj_meta('c02_group_story', log, conn)
+        _update_proj_meta('c02_group_story', log, conn, misc=str(params_d))
  
         
     log.info(f'finished')
