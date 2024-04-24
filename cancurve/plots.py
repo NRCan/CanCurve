@@ -20,7 +20,7 @@ from cancurve.parameters_matplotlib import font_size #set custom styles
 #===============================================================================
 # imports
 #===============================================================================
-import os
+import os, itertools, math
 import pandas as pd
 import numpy as np
 
@@ -45,9 +45,9 @@ def plot_c00_costitems(df_raw,
                            figsize=(6,10)),
                        
                        log=None):
-    """plot the cost items dataset"""
+    """plot the cost items dataset as bar charts"""
     
-    log = get_slog('plot_c00', log)
+    log = get_slog('plot_c00_costitems', log)
     
     log.info(f'on {df_raw.shape}')
     
@@ -141,10 +141,126 @@ def plot_c00_costitems(df_raw,
 plt.show()
 """
         
+def plot_c00_DRF(df_raw,
+                       figure=None,
+                       fig_kwargs=dict(
+                           figsize=(10,10),
+                           tight_layout=True,
+                           ),
+                       
+                       log=None):
+    """plot the cost items dataset"""
+    
+    log = get_slog('plot_c00_DRF', log)
+    
+    log.info(f'on {df_raw.shape}')
+        
+    
+    """
+    view(df_raw)
+    ax.clear()
+    """
+    
+    #===========================================================================
+    # #data prep
+    #===========================================================================
+    
+ 
+    #===========================================================================
+    # plot
+    #===========================================================================
+    #figure default
+    if figure is None:
+        figure = plt.figure(**fig_kwargs)
+        
+    
+    cat_l = df_raw.index.unique('cat')
+    nrows = math.ceil(math.sqrt(len(cat_l)))  # Find smallest square layout accommodating the cats
+    ncols = math.ceil(len(cat_l) / nrows)
+    
+    #create a figure with NxN subplots. each cat_l has a unique subplot (there will be some empty subplots)
+    #return a dictionary keyed by 'cat' values
+    ax_ar  = figure.subplots(nrows=nrows, ncols=ncols, sharey=True, sharex=True)
+    #ax_d = dict(zip(cat_l, ax_ar.flat))
+    ax_d = dict()
+    for cat in cat_l:
+        ax_d[cat] = dict(zip(cat_l, ax_ar.flat))[cat]
+      # Create the dictionary keyed by 'cat'
+
+    
+    #cmap = plt.cm.get_cmap('tab20')
+    
+    for i, (k0, gdf) in enumerate(df_raw.groupby(level='cat')):
+        ax = ax_d[k0]
+        #color = cmap(i*(1.0/len(cat_l)))
+        #markers = itertools.cycle(plt.Line2D.filled_markers)
+        
+        #plot mean
+        yar, xar = gdf.mean().values, gdf.mean().index.values
+        ax.plot(xar, yar, color='black', linestyle='dashed', marker=None, linewidth=1.0,
+                label=f'mean')
+        
+        #plot spagetti
+        for j, (k1, row) in enumerate(gdf.iterrows()):
+            xar, yar = row.index.values, row.values
+            ax.plot(xar, yar, 
+                    #color=color, marker=next(markers), 
+                    linewidth=0.5, markersize=3, 
+                    #alpha=0.5,
+                    label=k1[1]
+                    )
+            
+        #post
+        ax.set_title(k0, y=0.8,
+                     bbox=dict(boxstyle="round,pad=0.3", fc="white", lw=0.0,alpha=0.75 ),
+                     )
+        
+        txt = f'sel count: {len(gdf)}'
+        ax.text(.95, 0.05, txt, transform=ax.transAxes, 
+                va='bottom', ha='right', 
+                fontsize=6, color='black',
+                #bbox=dict(boxstyle="round,pad=0.3", fc="white", lw=0.0,alpha=0.5 ),
+                )
+        
+        #ax.legend(fontsize=font_size-4)
+            
+        
+ 
+    #===========================================================================
+    # post
+    #===========================================================================
+    #hide empties
+    for ax in ax_ar.flat:
+        if not ax.has_data():  
+            ax.set_visible(False)
+        
+    
+    #===========================================================================
+    # xmin, xmax = ax.get_xlim()
+    # for k0, ax in ax_d.items():        
+    #     ax.set_xlim(np.floor(xmin), np.ceil(xmax))
+    #===========================================================================
+    
+    #===========================================================================
+    # for k0, row in df.iterrows():
+    #     xar, yar = row.index.values, row.values
+    #     ax.plot(xar, yar)
+    #===========================================================================
+    
+ 
+    
+    figure.suptitle('Depth-Replacement-Factors'+'\nby category')
+    figure.supxlabel('depth (m)')
+    figure.supylabel('replacement-factor')
+    #figure.subplots_adjust(hspace=0, wspace=0)
+ 
+ 
         
         
-        
-        
+    return figure
+"""
+plt.show()
+"""
         
         
         
