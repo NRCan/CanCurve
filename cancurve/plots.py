@@ -14,7 +14,7 @@ import matplotlib
 matplotlib.set_loglevel("info") #reduce logging level
 import matplotlib.pyplot as plt
 
-from cancurve.parameters_matplotlib import font_size #set custom styles
+from cancurve.parameters_matplotlib import font_size, cmap_default #set custom styles
 
 
 #===============================================================================
@@ -335,6 +335,75 @@ def plot_c01_depth_rcv(df_raw,
 plt.show()
 """
         
+def plot_c02_ddf(df_raw,
+                       figure=None,
+                       fig_kwargs=dict(
+                           #figsize=(10,10),
+                           tight_layout=True,
+                           ),
+                       
+                       cmap=None,
+                       
+                       log=None):
+    """plot the cost items dataset"""
+    #===========================================================================
+    # setup
+    #===========================================================================
+    log = get_slog('plot_c02_ddf', log)
+    
+    log.info(f'on {df_raw.shape}')  
+    
+    if cmap is None:
+        cmap = cmap_default
+    
+    #===========================================================================
+    # dataprep
+    #===========================================================================
+    df = df_raw.copy()
+    bx = df.columns=='combined'
+    assert bx.sum()==1
+    
+ 
+    
+    #===========================================================================
+    # setup figure
+    #===========================================================================
+ 
+    #figure default
+    if figure is None:
+        figure = plt.figure(**fig_kwargs)
         
+    ax = figure.subplots()
+    
+    #===========================================================================
+    # plot 
+    #===========================================================================
+
+    #stories
+    df.loc[:, ~bx].plot.area(ax=ax, stacked=True, legend=False,cmap=cmap, xlabel='')
+    
+    #total
+    xar, yar = df['combined'].index.values, df['combined'].values
+    ax.plot(xar, yar, color='black', linestyle='dashed', linewidth=2, label='combined')
+    
+    #===========================================================================
+    # post
+    #===========================================================================
+    ax.legend()
+    
+    ax.yaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:,.0f}'))
+    ax.xaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:.2f}'))
+    
+    figure.suptitle('Depth-Damage-Function')
+    figure.supxlabel('depth (m)')
+    figure.supylabel('total replacement cost')
+    
+    
+    return figure
+"""
+ax.clear()
+plt.show()
+"""
+
         
         

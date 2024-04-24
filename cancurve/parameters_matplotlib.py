@@ -8,6 +8,7 @@ default style parameters for plots
 
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 #set teh styles
 plt.style.use('default')
@@ -29,3 +30,8 @@ matplotlib.rcParams.update({
     'legend.title_fontsize':'large',
     'text.usetex':False,
     })
+
+
+#NRCan colormap
+colors_default = ['#99B7B3', '#2B403F', '#DFECEB']
+cmap_default = mcolors.ListedColormap(colors_default, name='NRCan_cmap')
