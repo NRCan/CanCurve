@@ -27,11 +27,7 @@ from cancurve import __version__
 #===============================================================================
 # helper funcs----------
 #===============================================================================
-
-def get_od(name):
-    out_dir = os.path.join(out_base_dir, 'fines', name)
-    if not os.path.exists(out_dir):os.makedirs(out_dir)
-    return out_dir
+ 
 
 def get_slog(name, log):
     if log is None:
@@ -372,7 +368,7 @@ def c01_join_drf(
     with sqlite3.connect(proj_db_fp) as conn:
         
         #=======================================================================
-        # retrieve
+        # retrieve-----------
         #=======================================================================
         ci_df =  pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['cat', 'sel'])
         drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['cat', 'sel'])
