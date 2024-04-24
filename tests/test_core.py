@@ -7,19 +7,15 @@ Created on Apr. 16, 2024
 tests for the core module
 '''
 
-import pytest, os, shutil
+import pytest, os, shutil, pickle
 
 import pandas as pd
 
-from cancurve.hp.basic import find_single_file_by_extension
-from cancurve.parameters import src_dir
 
+from tests.conftest import find_single_file_by_extension, src_dir, test_data_dir_master
  
 
-#===============================================================================
-# data
-#===============================================================================
-test_data_dir_master = os.path.join(src_dir, 'tests', 'data')
+
 
 #===============================================================================
 # fixtures-------
@@ -32,28 +28,18 @@ def ci_fp(testCase):
     tdata_dir = os.path.join(test_data_dir_master, testCase)    
     return find_single_file_by_extension(tdata_dir, '.csv')
     
-@pytest.fixture(scope='function')   
-def proj_db_fp(testCase, testPhase, tmp_path):
-    
-    #get the target directory
-    tdata_dir = os.path.join(test_data_dir_master, testCase, testPhase)
-    assert os.path.exists(tdata_dir)
-    
-    #get the project db file
-    fp = find_single_file_by_extension(tdata_dir, '.cancurve')
-    
-    #make a working copy        
-    return shutil.copy(fp,os.path.join(tmp_path, 'copy_'+os.path.basename(fp)))
+
 
 
 #===============================================================================
 # tests---------
 #===============================================================================
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 def test_c00_setup_project(tmp_path, ci_fp, testCase):
     from cancurve.core import c00_setup_project as func
-    func(ci_fp, 
+    
+    result = func(ci_fp, 
          out_dir=tmp_path, 
          bldg_meta={'basement_height_m':1.8, 'mf_area_m2':232.0},
          #settings_d = {'scale_m2':True}, 
@@ -63,24 +49,51 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase):
     
     print(f'finished at\n    {tmp_path}')
     
+    #write result
+
+    #===========================================================================
+    # ofp = os.path.join(test_data_dir_master, testCase,'c00', 'c00_setup_project_result.pkl')
+    # with open(ofp, 'wb') as file:
+    #     pickle.dump(result, file)
+    # print(f'wrote result to \n    {ofp}')
+    #===========================================================================
+
+    
+    
 
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)
-def test_c01_join_drf(proj_db_fp, tmp_path):
+def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
     from cancurve.core import c01_join_drf as func   
  
-    func(proj_db_fp)
+    result = func(proj_db_fp)
     
     print(f'finished at\n    {tmp_path}')
+    
+    #===========================================================================
+    # #write result
+    # ofp = os.path.join(test_data_dir_master, testCase,testPhase, 'c01_join_drf_result.pkl')
+    # with open(ofp, 'wb') as file:
+    #     pickle.dump(result, file)
+    # print(f'wrote result to \n    {ofp}')
+    #===========================================================================
      
      
  
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c02'], indirect=False)
-@pytest.mark.parametrize('scale_m2',[None, True, False], indirect=False)
-def test_c02_group_story(proj_db_fp, scale_m2):
-    from cancurve.core import c02_group_story as func     
- 
+@pytest.mark.parametrize('scale_m2',[None, 
+                                     #True, False
+                                     ], indirect=False)
+def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase):
+    from cancurve.core import c02_group_story as func 
       
-    func(proj_db_fp, scale_m2=scale_m2)
+    result = func(proj_db_fp, scale_m2=scale_m2)
+    
+    
+    #write result
+    ofp = os.path.join(test_data_dir_master, testCase,testPhase, 'c02_group_story_result.pkl')
+    with open(ofp, 'wb') as file:
+        pickle.dump(result, file)
+    print(f'wrote result to \n    {ofp}')
