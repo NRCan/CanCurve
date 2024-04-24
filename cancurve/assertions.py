@@ -64,7 +64,9 @@ def assert_proj_db_fp(fp, **kwargs):
     
  
 
-def assert_proj_db(conn, expected_tables=['c00_bldg_meta', 'c00_project_meta']):
+def assert_proj_db(conn,
+                   expected_tables=['project_meta','project_settings', 
+                                    'c00_bldg_meta', 'c00_cost_items','c00_drf']):
     """
     Checks if the provided project database meets expectations by verifying expected tables exist.
 

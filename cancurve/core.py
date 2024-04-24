@@ -8,7 +8,7 @@ core join, group, and scaling source code
 #===============================================================================
 # IMPORTS---------
 #===============================================================================
-import os, sys
+import os, sys, platform
 import pandas as pd
 import numpy as np
 import sqlite3
@@ -39,29 +39,23 @@ def get_slog(name, log):
         
     return log.getChild(name)
 
-def get_meta(conn,table_name= "c00_project_meta", attn="curve_name"):
-    """
-    Retrieves the first curve name from the 'project_meta' table.
-
-    Args:
-        conn: An open SQLite database connection.
-
-    Returns:
-        The first 'curve_name' value, or None if the table or column doesn't exist. 
-    """
+def get_setting(conn, param, table_name="project_settings"):
+    """Retrieve a setting from the settings table."""
     cursor = conn.cursor()
 
     try:
-        cursor.execute(f"SELECT {attn} FROM {table_name} LIMIT 1")
+        cursor.execute("SELECT val FROM ? WHERE param = ?", (table_name, param))
         result = cursor.fetchone()
 
         if result:
-            return result[0]  # Extract the first item from the result tuple
+            return result[0]
         else:
             return None
 
     except Exception as e:
-        raise IOError(f'failed to retrieve {attn} FROM {table_name} w/ \n    {e}') 
+        raise IOError(f'failed to retrieve {param} FROM {table_name} w/ \n    {e}')
+    
+
 
 def load_ci_df(fp, log=None):
     
@@ -136,6 +130,8 @@ def load_drf(fp, log=None):
 def _get_proj_meta(log, 
                    #curve_name=None,
                    function_name=None):
+    
+ 
     proj_meta_df = pd.DataFrame({
             #'curve_name':[curve_name], 
             #'date':[today_str],
@@ -146,6 +142,7 @@ def _get_proj_meta(log,
 
             'cancurve_version':[__version__], 
             'python_version':[sys.version.split()[0]],
+            'platform':f"{platform.system()} {platform.release()}"            
             
             })
     #add qgis
@@ -157,12 +154,8 @@ def _get_proj_meta(log,
     return proj_meta_df
 
 def _update_proj_meta(function_name, log, conn):
-    #curve_name = get_meta(conn, attn="curve_name")
-    proj_meta_df = _get_proj_meta(log, 
-                                  #curve_name=curve_name, 
-                                  function_name=function_name)
-    proj_meta_df.to_sql('c00_project_meta', conn, if_exists='append', index=False)
-    
+    proj_meta_df = _get_proj_meta(log,function_name=function_name)
+    proj_meta_df.to_sql('project_meta', conn, if_exists='append', index=False)    
     log.debug(f'updated \'project_meta\' w/ {proj_meta_df.shape}')
     return proj_meta_df
     
@@ -331,8 +324,7 @@ def c00_setup_project(
         
     log.info(f'project SQLiite DB built at \n    {ofp}')
     
-    assert_proj_db_fp(ofp,
-          expected_tables=['project_meta','project_settings', 'c00_bldg_meta', 'c00_cost_items','c00_drf'])
+    assert_proj_db_fp(ofp)
     
     return ofp
  
@@ -348,17 +340,14 @@ def c01_join_drf(
         log=None,
  
         ):
-    """Join DRF db to cost-item csv then multiply through
+    """Join DRF to CI then multiply through to create 'depth_rcv' table
     
     
     Params
     ------------
-    ci_fp: str
-        filepath to cost-item csv data table
-        
-    drf_db_fp: str, optional
-        filepath to DRF SQLite db
-        defaults to drf_db_default_fp 
+    proj_db_fp: str
+        filepath to project database
+
     """
     
     #===========================================================================
@@ -370,13 +359,10 @@ def c01_join_drf(
     #===========================================================================
     # prechecks
     #===========================================================================
-    assert_proj_db_fp(proj_db_fp,
-                      expected_tables=['c00_bldg_meta', 'c00_project_meta',
-                                       'c00_cost_items','c00_drf'])
+    assert_proj_db_fp(proj_db_fp)
 
     log.debug(f'openning database from {proj_db_fp}')
     with sqlite3.connect(proj_db_fp) as conn:
-        assert_proj_db(conn)
         
         #=======================================================================
         # retrieve
@@ -430,15 +416,14 @@ def c02_group_story(proj_db_fp,
     ---------------
     scale_m2: bool, optional
         whether curves are $/m2 or $
-        sets default retrieved by c02
-        None: retrieve from project_meta
+        None: retrieve from project_settings
     """
     
         #===========================================================================
     # defaults
     #===========================================================================
    
-    log = get_slog('c01', log)
+    log = get_slog('c02', log)
  
     #===========================================================================
     # prechecks
@@ -447,7 +432,6 @@ def c02_group_story(proj_db_fp,
 
     log.debug(f'openning database from \n    {proj_db_fp}')
     with sqlite3.connect(proj_db_fp) as conn:
-        assert_proj_db(conn)
         
         #=======================================================================
         # retrieve
@@ -460,7 +444,7 @@ def c02_group_story(proj_db_fp,
         bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn, index_col=['attn']).iloc[:, 0].to_dict()
         
         if scale_m2 is None:
-            scale_m2 = convert_to_bool(get_meta(conn, attn='scale_m2'))
+            scale_m2 = convert_to_bool(get_setting(conn, 'scale_m2'))
             
         log.debug(f'extracted data from proj_db w/ scale_m2={scale_m2}')
         """
@@ -538,7 +522,7 @@ def c02_group_story(proj_db_fp,
         else:
             ddf3=ddf2.round(2)
             
-        #get_meta(conn, table_name='bldg_meta', attn="mf_area_m2")
+        #get_setting(conn, table_name='bldg_meta', attn="mf_area_m2")
         
         #=======================================================================
         # sum stores
