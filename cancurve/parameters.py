@@ -11,7 +11,7 @@ from datetime import datetime
 #===============================================================================
 src_dir = os.path.dirname(os.path.dirname(__file__))
 
-drf_db_master_fp = os.path.join(src_dir, 'cancurve', 'db', 'mrb_20240416.db')
+drf_db_default_fp = os.path.join(src_dir, 'cancurve', 'db', 'mrb_20240416.db')
 
 #===============================================================================
 # params
@@ -23,7 +23,10 @@ colns_dtypes = {'cat': 'object', 'sel': 'object', 'rcv': 'float64', 'desc': 'obj
 
 floor_story_d = {'main':0, 'basement':-1}
 
-log_format_str =  "%(levelname)s.%(name)s.%(asctime)s:  %(message)s" 
+log_format_str =  "%(levelname)s.%(name)s.%(asctime)s:  %(message)s"
+
+
+settings_default_d = {'scale_m2':False} 
 
 #===============================================================================
 # autos

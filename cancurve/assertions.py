@@ -47,7 +47,7 @@ def assert_ci_df(df):
 #===============================================================================
 # Project database
 #===============================================================================
-def assert_proj_db_fp(fp):
+def assert_proj_db_fp(fp, **kwargs):
     """full check of proj_db_fp"""
     
     assert os.path.exists(fp), fp
@@ -55,7 +55,7 @@ def assert_proj_db_fp(fp):
     
     try:
         with sqlite3.connect(fp) as conn:
-            assert_proj_db(conn)
+            assert_proj_db(conn, **kwargs)
     
     except Exception as e:
         raise AssertionError(f'project DB connection failed w/\n    {e}')
@@ -64,7 +64,7 @@ def assert_proj_db_fp(fp):
     
  
 
-def assert_proj_db(conn, expected_tables=['bldg_meta', 'project_meta']):
+def assert_proj_db(conn, expected_tables=['c00_bldg_meta', 'c00_project_meta']):
     """
     Checks if the provided project database meets expectations by verifying expected tables exist.
 

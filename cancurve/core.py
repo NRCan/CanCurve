@@ -5,6 +5,9 @@ Created on Apr. 16, 2024
 
 core join, group, and scaling source code
 '''
+#===============================================================================
+# IMPORTS---------
+#===============================================================================
 import os, sys
 import pandas as pd
 import numpy as np
@@ -13,10 +16,18 @@ from datetime import datetime
 
 from .hp.logr import get_log_stream
 from .hp.basic import view_web_df as view
-from .parameters import drf_db_master_fp, colns_index, today_str
+from .hp.basic import convert_to_bool
+
+
+from .parameters import drf_db_default_fp, colns_index, today_str, settings_default_d
 from .assertions import assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db
 from cancurve import __version__
  
+ 
+#===============================================================================
+# helper funcs----------
+#===============================================================================
+
 def get_od(name):
     out_dir = os.path.join(out_base_dir, 'fines', name)
     if not os.path.exists(out_dir):os.makedirs(out_dir)
@@ -28,7 +39,7 @@ def get_slog(name, log):
         
     return log.getChild(name)
 
-def get_curve_name(conn):
+def get_meta(conn,table_name= "c00_project_meta", attn="curve_name"):
     """
     Retrieves the first curve name from the 'project_meta' table.
 
@@ -41,7 +52,7 @@ def get_curve_name(conn):
     cursor = conn.cursor()
 
     try:
-        cursor.execute("SELECT curve_name FROM project_meta LIMIT 1")
+        cursor.execute(f"SELECT {attn} FROM {table_name} LIMIT 1")
         result = cursor.fetchone()
 
         if result:
@@ -49,9 +60,8 @@ def get_curve_name(conn):
         else:
             return None
 
-    except sqlite3.Error as e:
-        print(f"Error retrieving curve name: {e}")
-        return None 
+    except Exception as e:
+        raise IOError(f'failed to retrieve {attn} FROM {table_name} w/ \n    {e}') 
 
 def load_ci_df(fp, log=None):
     
@@ -123,14 +133,17 @@ def load_drf(fp, log=None):
     
     
 
-def _get_proj_meta(log, curve_name=None,function_name=None):
+def _get_proj_meta(log, 
+                   #curve_name=None,
+                   function_name=None):
     proj_meta_df = pd.DataFrame({
-            'curve_name':[curve_name], 
+            #'curve_name':[curve_name], 
             #'date':[today_str],
-            'now':[datetime.now()], 
-            'username':[os.getlogin()], 
             'script_name':[os.path.basename(__file__)],
             'function_name':function_name, 
+            'now':[datetime.now()], 
+            'username':[os.getlogin()], 
+
             'cancurve_version':[__version__], 
             'python_version':[sys.version.split()[0]],
             
@@ -144,9 +157,11 @@ def _get_proj_meta(log, curve_name=None,function_name=None):
     return proj_meta_df
 
 def _update_proj_meta(function_name, log, conn):
-    curve_name = get_curve_name(conn)
-    proj_meta_df = _get_proj_meta(log, curve_name=curve_name, function_name=function_name)
-    proj_meta_df.to_sql('project_meta', conn, if_exists='append', index=False)
+    #curve_name = get_meta(conn, attn="curve_name")
+    proj_meta_df = _get_proj_meta(log, 
+                                  #curve_name=curve_name, 
+                                  function_name=function_name)
+    proj_meta_df.to_sql('c00_project_meta', conn, if_exists='append', index=False)
     
     log.debug(f'updated \'project_meta\' w/ {proj_meta_df.shape}')
     return proj_meta_df
@@ -159,14 +174,42 @@ def c00_setup_project(
         ci_fp,
         drf_db_fp=None,
         
-        bldg_layout='default',
-        curve_name='curve_name',
         bldg_meta=None,
+        
+        bldg_layout='default',
+        
+        curve_name='curve_name',
+        settings_d=None,
+        
         log=None,ofp=None,out_dir=None,
 
         
         ):
-    """build project SQLite. load data into it"""
+    """build project SQLite. load data into it
+    
+    
+    Params
+    ---------------
+    ci_fp: str
+        filepath to cost-item dataset
+        
+    drf_db_fp: str, optional
+        filepath to depth-replacement-fraction dataset
+        defaults to drf_db_default_fp (from params)
+        
+    bldg_layout: str
+        building layout used to slice the DRF
+    
+        
+    bldg_meta: dict
+        building metadata to be added to 'c00_bldg_meta'
+        
+        
+    settings_d: dict, optional
+        conatiner for settings values to apply to 'c00_settings'
+        defaults to settings_default_d (from params)
+    
+    """
     
     #===========================================================================
     # defaults
@@ -186,39 +229,91 @@ def c00_setup_project(
         
     assert not os.path.exists(ofp)
     
-    if drf_db_fp is None: drf_db_fp = drf_db_master_fp
+    if drf_db_fp is None: 
+        log.info(f'using default depth-replacement-fraction dataset')
+        drf_db_fp = drf_db_default_fp
+    else:
+        log.info(f'using user-provided depth-replacement-fraction dataset')
+        
+        
+    if settings_d is None:
+        settings_d = settings_default_d
+        
+    assert isinstance(settings_d, dict)
+    assert isinstance(bldg_meta, dict)
  
 
     
-    
+    #===========================================================================
+    # load datasets---------
+    #===========================================================================
     #===========================================================================
     # load costitem table
-    #===========================================================================
-    log.info(f'on {os.path.basename(ci_fp)}')
+    #=========================================================================== 
     ci_df = load_ci_df(ci_fp, log=log)
     
     #===========================================================================
     # load depth-replacement-factor database
     #===========================================================================
-    drf_df = load_drf(drf_db_fp, log=log).xs(bldg_layout, level=2)
+    drf_df_raw = load_drf(drf_db_fp, log=log)
+    
+    
+    #slice by building layout
+    drf_df1 = drf_df_raw.xs(bldg_layout, level=2)
+    log.debug(f'sliced DRF w/ bldg_layout={bldg_layout} to get {drf_df1.shape}')
+    
+    #slice by keys intersect
+    bx = drf_df1.index.isin(ci_df.index)
+    drf_df2 = drf_df1[bx]
+    log.debug(f'sliced DRF w/ CI keys to get {drf_df2.shape}')
+
     
     #===========================================================================
     # check intersect
     #===========================================================================
-    bx = np.invert(ci_df.index.isin(drf_df.index))
+    log.debug(f'checking datasets')
+    bx = np.invert(ci_df.index.isin(drf_df2.index))
     if bx.any():
         """TODO: add some support for populating missing entries into the DRF"""
         log.warning(f'missing {bx.sum()}/{len(bx)} entries')
         raise KeyError()
+    else:
+        log.debug(f'all keys intersect')
     
+
     
     #===========================================================================
-    # setup project meta
+    # setup project meta----------
     #===========================================================================
-    proj_meta_df = _get_proj_meta(log, curve_name=curve_name, function_name='c00_setup_project')
+    log.debug(f'setting up project metadata')
+    proj_meta_df = _get_proj_meta(log, function_name='c00_setup_project')
     
-    proj_meta_df['ci_fp']=ci_fp
-    proj_meta_df['drf_db_fp']=drf_db_fp
+    #set specials
+    proj_meta_df['misc'] = str({'ci_fp':ci_fp, 'drf_db_fp':drf_db_fp})
+    #proj_meta_df['scale_m2'] = str(scale_m2)
+    
+    #===========================================================================
+    # building metadata------
+    #===========================================================================
+    bldg_meta['bldg_layout'] = bldg_layout
+    
+    #create a table 'bldg_meta' and populate it with the entries in bldg_meta
+    meta_df =pd.Series(bldg_meta, name='val').to_frame()
+    meta_df.index.name='attn' 
+    
+    #===========================================================================
+    # project settings------
+    #===========================================================================
+    settings_d.update({'curve_name':curve_name})
+    
+    for k , v in settings_d.copy().items():
+        if isinstance(v, bool):
+            log.debug(f'converting \'{k}\' to string')
+            settings_d[k] = str(v)
+    
+    settings_df = pd.Series(settings_d, name='val').to_frame()
+    settings_df.index.name='param'
+    
     
     #===========================================================================
     # start database
@@ -226,22 +321,18 @@ def c00_setup_project(
     log.info(f'init project SQLite db at\n    {ofp}')
     with sqlite3.connect(ofp) as conn:
         
-        #add project meta
+        #add tables
         proj_meta_df.to_sql('project_meta', conn, if_exists='replace', index=False)
-        
-        #create a table 'bldg_meta' and populate it with the entries in bldg_meta
-        pd.Series(bldg_meta, name='val').to_frame().to_sql('bldg_meta', conn, if_exists='replace', index=False)
-        
-        #add data tables
-        ci_df.to_sql('cost_items', conn, if_exists='replace', index=True)
-        
-        bx = drf_df.index.isin(ci_df.index)
-        drf_df[bx].to_sql('drf', conn, if_exists='replace', index=True)
+        settings_df.to_sql('project_settings', conn, if_exists='replace', index=True)
+        meta_df.to_sql('c00_bldg_meta', conn, if_exists='replace', index=True)        
+        ci_df.to_sql('c00_cost_items', conn, if_exists='replace', index=True)        
+        drf_df2.to_sql('c00_drf', conn, if_exists='replace', index=True)
         
         
     log.info(f'project SQLiite DB built at \n    {ofp}')
     
-    assert_proj_db_fp(ofp)
+    assert_proj_db_fp(ofp,
+          expected_tables=['project_meta','project_settings', 'c00_bldg_meta', 'c00_cost_items','c00_drf'])
     
     return ofp
  
@@ -255,11 +346,9 @@ def c01_join_drf(
         
         
         log=None,
-        out_dir=None,
-        
-        
+ 
         ):
-    """Join DRF db to cost-item csv (creates a ddf for each cost item)
+    """Join DRF db to cost-item csv then multiply through
     
     
     Params
@@ -269,26 +358,21 @@ def c01_join_drf(
         
     drf_db_fp: str, optional
         filepath to DRF SQLite db
-        defaults to drf_db_master_fp 
+        defaults to drf_db_default_fp 
     """
     
     #===========================================================================
     # defaults
     #===========================================================================
-    
-    
-    if out_dir is None: 
-        out_dir = os.getcwd()
-        
+   
     log = get_slog('c01', log)
-    
-    
-    
+ 
     #===========================================================================
     # prechecks
     #===========================================================================
-    assert_proj_db_fp(proj_db_fp)
-    
+    assert_proj_db_fp(proj_db_fp,
+                      expected_tables=['c00_bldg_meta', 'c00_project_meta',
+                                       'c00_cost_items','c00_drf'])
 
     log.debug(f'openning database from {proj_db_fp}')
     with sqlite3.connect(proj_db_fp) as conn:
@@ -297,25 +381,32 @@ def c01_join_drf(
         #=======================================================================
         # retrieve
         #=======================================================================
-        ci_df =  pd.read_sql('SELECT * FROM cost_items', conn, index_col=['cat', 'sel'])
-        drf_df = pd.read_sql('SELECT * FROM drf', conn, index_col=['cat', 'sel'])
+        ci_df =  pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['cat', 'sel'])
+        drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['cat', 'sel'])
         #===========================================================================
         # join
         #===========================================================================
         log.debug(f'left join drf {drf_df.shape} to cost-item {ci_df.shape}')
-        df1 = ci_df.loc[:, ['rcv', 'story']].join(drf_df)
+        df1 = ci_df.loc[:, ['rcv', 'story']].join(drf_df).set_index('story', append=True)
         
         assert df1.notna().all().all()
+        
+        #=======================================================================
+        # multiply through rcv
+        #=======================================================================
+        rcv_df = df1.pop('rcv')
+        
+        depth_rcv_df = df1.multiply(rcv_df.values, axis=0)
         
         #===========================================================================
         # update proejct database
         #===========================================================================    
         
-        log.info(f'adding cost-item w/ DRF table to project database w/ {df1.shape}\n    {proj_db_fp}')
+        log.info(f'adding \'depth_rcv_df\' project database w/ {depth_rcv_df.shape}\n    {proj_db_fp}')
     
  
         #add result table
-        df1.to_sql('ci_drf', conn, if_exists='replace', index=True)
+        depth_rcv_df.to_sql('c01_depth_rcv', conn, if_exists='replace', index=True)
         
         #update project meta
         _update_proj_meta('c01_join_drf', log, conn)
@@ -328,12 +419,166 @@ def c01_join_drf(
     
 def c02_group_story(proj_db_fp,
             log=None,
-            out_dir=None,
+            scale_m2=None,
+            
+ 
             ):
-    """group by story and assemble DDF"""
+    """group by story and assemble DDF
+    
+    
+    Params
+    ---------------
+    scale_m2: bool, optional
+        whether curves are $/m2 or $
+        sets default retrieved by c02
+        None: retrieve from project_meta
+    """
+    
+        #===========================================================================
+    # defaults
+    #===========================================================================
+   
+    log = get_slog('c01', log)
+ 
+    #===========================================================================
+    # prechecks
+    #===========================================================================
+    assert_proj_db_fp(proj_db_fp)
+
+    log.debug(f'openning database from \n    {proj_db_fp}')
+    with sqlite3.connect(proj_db_fp) as conn:
+        assert_proj_db(conn)
+        
+        #=======================================================================
+        # retrieve
+        #=======================================================================
+        cid_df = pd.read_sql('SELECT * FROM c01_depth_rcv', conn, index_col=['cat', 'sel', 'story'])
+        cid_df.columns = cid_df.columns.astype(float)
+        cid_df.columns.name = 'depths_m'
+        
+        
+        bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn, index_col=['attn']).iloc[:, 0].to_dict()
+        
+        if scale_m2 is None:
+            scale_m2 = convert_to_bool(get_meta(conn, attn='scale_m2'))
+            
+        log.debug(f'extracted data from proj_db w/ scale_m2={scale_m2}')
+        """
+        view(cid_df)
+        """
+        
+        #=======================================================================
+        # group
+        #=======================================================================
+        #sum on story
+        ddf1 = cid_df.groupby(level='story').sum().T.sort_index()
+ 
+ 
+        
+        #check
+        for coln, col in ddf1.items():
+            assert np.all(np.diff(col.values)>=0), f'{coln} values non-monotonic'
+ 
+        
+        #=======================================================================
+        # concat on story
+        #=======================================================================
+        if len(ddf1.columns)==2:
+            
+ 
+            
+            assert 'basement_height_m' in bldg_meta_d, f'passed scale_m2=True but no \'mf_area_m2\' provided'
+            
+            #setup
+            basement_height_m = bldg_meta_d['basement_height_m']
+            log.info(f'concating stories together w/ basement_height_m={basement_height_m} ')
+ 
+            
+            #===================================================================
+            # #basement
+            #===================================================================
+            #drop negatives
+            bx = ddf1.index<0
+            assert ddf1.iloc[bx, 0].sum()<=0, f'got some negative basement damages'
+            bsmt_s = ddf1.iloc[~bx, 0]
+            
+            #shift down
+            bsmt_s1 = pd.Series(bsmt_s.values, index = bsmt_s.index.values - basement_height_m, name='base')
+            bsmt_s1.index.name=ddf1.index.name
+            
+            #===================================================================
+            # harmonize and concat
+            #===================================================================
+            ddf2 = ddf1.iloc[:, 1].rename('main').to_frame().join(bsmt_s1, how='outer').sort_index()
+            
+ 
+            ddf2 = ddf2.interpolate(method='index', limit_direction='both')
+            
+            """
+            import matplotlib.pyplot as plt
+            ddf2.plot()
+            plt.show()
+            """
+            
+        else:
+            raise NotImplementedError('only 2 story curves are implemented')
+            
+ 
+        log.info(f'curves harmonized to {ddf2.shape}')
+        #=======================================================================
+        # scale
+        #=======================================================================
+        if scale_m2:
+            assert 'mf_area_m2' in bldg_meta_d, f'passed scale_m2=True but no \'mf_area_m2\' provided'
+            mf_area_m2 = bldg_meta_d['mf_area_m2']
+            log.info(f'scaling by {mf_area_m2:.2f} m2')
+            
+            ddf3 = (ddf2/mf_area_m2).round(2)
+            
+        else:
+            ddf3=ddf2.round(2)
+            
+        #get_meta(conn, table_name='bldg_meta', attn="mf_area_m2")
+        
+        #=======================================================================
+        # sum stores
+        #=======================================================================
+        ddf3['combined'] = ddf3.sum(axis=1)
+        
+        """
+        view(ddf3)
+        import matplotlib.pyplot as plt
+        ddf3.plot()
+        plt.show()
+        """
+        
+        
+        #===========================================================================
+        # update proejct database
+        #===========================================================================    
+        tabnm='c02_ddf'
+        log.info(f'adding \'{tabnm}\' {ddf3.shape} table to project database \n    {proj_db_fp}')
+    
+ 
+        #add result table
+        ddf3.to_sql(tabnm, conn, if_exists='replace', index=True)
+        
+        #update project meta
+        _update_proj_meta('c02_group_story', log, conn)
+ 
+        
+    log.info(f'finished')
+    
+    return ddf3
+        
+ 
+        
+        
+        
 
     
     
  
     
     
+3

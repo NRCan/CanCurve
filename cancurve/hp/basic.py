@@ -46,3 +46,13 @@ def find_single_file_by_extension(directory, extension):
         raise ValueError(f"Multiple files with extension '{extension}' found in '{directory}'")
 
     return os.path.join(directory, matching_files[0])
+
+
+
+def convert_to_bool(value):
+    if isinstance(value, str):
+        if value.lower() == 'true':
+            return True
+        elif value.lower() == 'false':
+            return False
+    return value  # Keep other values as they are
