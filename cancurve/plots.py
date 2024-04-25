@@ -141,7 +141,7 @@ def plot_c00_costitems(df_raw,
             # #add the label
             #===================================================================
             
-            if not present: group_name=f'{k1}_miss'
+            if not present: group_name=f'{k1} (miss)'
             else: group_name=k1
             
             """hiding labels on skinny bars""" 
