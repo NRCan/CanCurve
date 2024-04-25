@@ -28,6 +28,28 @@ from cancurve import __version__
 # helper funcs----------
 #===============================================================================
  
+def table_exists(conn, table_name):
+    """Checks if a table exists in the SQLite3 database.
+
+    Args:
+        conn: The database connection object.
+        table_name: The name of the table to check.
+
+    Returns:
+        True if the table exists, False otherwise.
+    """
+
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT count(*)
+        FROM sqlite_master 
+        WHERE type='table' AND name=?
+        """, (table_name,))
+
+    if cursor.fetchone()[0] == 1:
+        return True
+    else:
+        return False
 
 def get_slog(name, log):
     if log is None:
@@ -324,6 +346,7 @@ def c00_setup_project(
     #===========================================================================
     if not fixed_costs_d is None:
         fc_ser = pd.Series(fixed_costs_d, name='rcv', dtype=float)
+        fc_ser.index.name='story'
         log.debug(f'loaded {len(fc_ser)} fixed costs')
         
         #check intersect
@@ -332,6 +355,7 @@ def c00_setup_project(
         
     else:
         fc_ser=None
+        log.warning(f'no fixed costs provided')
     
     #===========================================================================
     # project settings------
@@ -359,6 +383,9 @@ def c00_setup_project(
         meta_df.to_sql('c00_bldg_meta', conn, if_exists='replace', index=False)        
         ci_df.to_sql('c00_cost_items', conn, if_exists='replace', index=True)        
         drf_df2.to_sql('c00_drf', conn, if_exists='replace', index=True)
+        
+        if not fc_ser is None:
+            fc_ser.to_frame().to_sql('c00_fixed_costs', conn, if_exists='replace', index=True)
         
         
     log.info(f'project SQLiite DB built at \n    {ofp}')
@@ -495,9 +522,17 @@ def c02_group_story(proj_db_fp,
         #=======================================================================
         # retrieve
         #=======================================================================
+        #cost information
         cid_df = pd.read_sql('SELECT * FROM c01_depth_rcv', conn, index_col=['cat', 'sel', 'story'])
         cid_df.columns = cid_df.columns.astype(float)
         cid_df.columns.name = 'depths_m'
+        
+        #fixed costs
+        if table_exists(conn, 'c00_fixed_costs'):
+            fc_ser = pd.read_sql('SELECT * FROM c00_fixed_costs', conn, index_col=['story']).iloc[:, 0]
+        else:
+            fc_ser=None
+            log.warning(f'no fixed costs found in the database')
         
         #project settings
         if scale_m2 is None:
@@ -529,6 +564,11 @@ def c02_group_story(proj_db_fp,
         #=======================================================================
         #sum on story
         ddf1 = cid_df.groupby(level='story').sum().T.sort_index()
+        
+        #add fixed costs
+        if not fc_ser is None:
+            log.debug(f'adding fixed costs\n    {fc_ser.to_dict()}')
+            ddf1 = ddf1.add(fc_ser)
  
  
         
@@ -552,7 +592,8 @@ def c02_group_story(proj_db_fp,
             #===================================================================
             #drop negatives
             bx = ddf1.index<0
-            assert ddf1.iloc[bx, 0].sum()<=0, f'got some negative basement damages'
+            """not useful anymore because of how we added fixed costs
+            assert ddf1.iloc[bx, 0].sum()<=0, f'got some negative basement damages'"""
             bsmt_s = ddf1.iloc[~bx, 0]
             
             #shift down
@@ -567,6 +608,8 @@ def c02_group_story(proj_db_fp,
             ddf2 = ddf2.interpolate(method='index', limit_direction='both')
             
             """
+            view(ddf1)
+ 
             import matplotlib.pyplot as plt
             ddf2.plot()
             plt.show()

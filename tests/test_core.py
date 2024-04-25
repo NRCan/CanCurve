@@ -20,7 +20,7 @@ from tests.conftest import find_single_file_by_extension, src_dir, test_data_dir
 #===============================================================================
 # helpers
 #===============================================================================
-def write_pick(result, ofp, write=False):
+def write_pick(result, ofp, write=True):
     if write:
         if not os.path.exists(os.path.dirname(ofp)):
             os.makedirs(os.path.dirname(ofp))
@@ -29,7 +29,7 @@ def write_pick(result, ofp, write=False):
         print(f'wrote result to \n    {ofp}')
         
         
-def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=True):
+def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=False):
     
     if write:
         dest_fp = os.path.join(test_data_dir_master, testCase, destinationPhase, os.path.basename(proj_db_fp))
@@ -51,8 +51,12 @@ def ci_fp(testCase):
     tdata_dir = os.path.join(test_data_dir_master, testCase)    
     return find_single_file_by_extension(tdata_dir, '.csv')
     
-
-
+@pytest.fixture(scope='function')
+def fixed_costs_d(testCase):
+    return {
+        'case1':{0:10000, -1:8000},
+        'case2':None,        
+        }[testCase]
 
 #===============================================================================
 # tests---------
@@ -60,15 +64,18 @@ def ci_fp(testCase):
 
 
 
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
     'case2',
     ], indirect=False)
-@pytest.mark.parametrize('fixed_costs_d',[
-    {0:10000, -1:8000},
-    #pytest.param({0:10000, -2:8000}, marks=pytest.mark.xfail(raises=KeyError, reason="bad story")), 
-    ])
+#===============================================================================
+# @pytest.mark.parametrize('fixed_costs_d',[
+#     {0:10000, -1:8000},
+#     None,
+#     #pytest.param({0:10000, -2:8000}, marks=pytest.mark.xfail(raises=KeyError, reason="bad story")), 
+#     ])
+#===============================================================================
 def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d):
     from cancurve.core import c00_setup_project as func
     
@@ -106,7 +113,7 @@ def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
      
      
  
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c02'], indirect=False)
 @pytest.mark.parametrize('scale_m2',[None, 
