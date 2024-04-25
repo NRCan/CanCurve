@@ -391,6 +391,14 @@ def c01_join_drf(
         #=======================================================================
         ci_df =  pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['cat', 'sel'])
         drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['cat', 'sel'])
+        
+        #check
+        bx = ~ci_df['drf_intersect'].astype(bool)
+        if bx.any():
+            msg = f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF... update your DRF and re-run step 1'
+            log.error(msg)
+            raise KeyError(msg)
+        
         #===========================================================================
         # join
         #===========================================================================

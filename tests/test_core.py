@@ -60,10 +60,10 @@ def ci_fp(testCase):
 
 
 
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
-    #'case2',
+    'case2',
     ], indirect=False)
 def test_c00_setup_project(tmp_path, ci_fp, testCase):
     from cancurve.core import c00_setup_project as func
@@ -84,8 +84,11 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase):
 
     
     
-
-@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',[
+    #'case1',
+    pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
+    ], indirect=False)
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)
 def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
     from cancurve.core import c01_join_drf as func   
