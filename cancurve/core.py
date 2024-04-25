@@ -266,16 +266,35 @@ def c00_setup_project(
     #===========================================================================
     # check intersect
     #===========================================================================
+ 
     log.debug(f'checking datasets')
     bx = np.invert(ci_df.index.isin(drf_df2.index))
     if bx.any():
         """TODO: add some support for populating missing entries into the DRF"""
-        log.warning(f'missing {bx.sum()}/{len(bx)} entries')
-        raise KeyError()
+        msg = f'DRF ({os.path.basename(drf_db_fp)}) is missing {bx.sum()}/{len(bx)} entries from the cost-items'
+        
+        ofp1 = os.path.join(out_dir, f'missing_DRF.csv')
+        ci_df[bx].to_csv(ofp1)
+        
+        msg+=f'\noutput missing entries {ci_df[bx].shape} to {ofp1}'
+        
+        msg+=f'\nupdate the DRF and re-run this step before proceeding'
+        
+ 
+        
+        log.warning(msg)
+        
+        
+        """
+        view(ci_df)
+        """
+ 
     else:
         log.debug(f'all keys intersect')
     
-
+        
+    #add column
+    ci_df['drf_intersect'] = ~bx #note this wriites as 0=False; 1=True
     
     #===========================================================================
     # setup project meta----------

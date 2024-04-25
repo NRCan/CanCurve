@@ -34,8 +34,11 @@ def ci_fp(testCase):
 #===============================================================================
 # tests---------
 #===============================================================================
-
-@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',[
+    #'case1',
+    'case2',
+    ], indirect=False)
 def test_c00_setup_project(tmp_path, ci_fp, testCase):
     from cancurve.core import c00_setup_project as func
     
@@ -49,14 +52,15 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase):
     
     print(f'finished at\n    {tmp_path}')
     
-    #write result
+    #write result pickle
 
-    #===========================================================================
-    # ofp = os.path.join(test_data_dir_master, testCase,'c00', 'c00_setup_project_result.pkl')
-    # with open(ofp, 'wb') as file:
-    #     pickle.dump(result, file)
-    # print(f'wrote result to \n    {ofp}')
-    #===========================================================================
+    ofp = os.path.join(test_data_dir_master, testCase,'c00', 'c00_setup_project_result.pkl')
+     
+    if not os.path.exists(os.path.dirname(ofp)):os.makedirs(os.path.dirname(ofp))
+     
+    with open(ofp, 'wb') as file:
+        pickle.dump(result, file)
+    print(f'wrote result to \n    {ofp}')
 
     
     
@@ -80,7 +84,7 @@ def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
      
      
  
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c02'], indirect=False)
 @pytest.mark.parametrize('scale_m2',[None, 

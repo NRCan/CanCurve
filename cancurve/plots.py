@@ -16,10 +16,13 @@ import matplotlib.pyplot as plt
 
 from cancurve.parameters_matplotlib import font_size, cmap_default #set custom styles
 
-
 #===============================================================================
 # imports
 #===============================================================================
+import matplotlib.colors as mcolors
+import matplotlib.patches as patches
+
+
 import os, itertools, math
 import pandas as pd
 import numpy as np
@@ -30,7 +33,15 @@ from .hp.basic import view_web_df as view
 #===============================================================================
 # helper funcs----------
 #===============================================================================
- 
+
+
+def get_large_cmap():
+        #setup colors
+    bcolors = list(mcolors.CSS4_COLORS.values())
+    np.random.shuffle(bcolors)
+    return mcolors.ListedColormap(bcolors)
+    
+    
 
 def get_slog(name, log):
     if log is None:
@@ -45,7 +56,12 @@ def plot_c00_costitems(df_raw,
                            figsize=(6,10)),
                        
                        log=None):
-    """plot the cost items dataset as bar charts"""
+    """plot the cost items dataset as bar charts
+    
+    params
+    --------
+    
+    """
     
     log = get_slog('plot_c00_costitems', log)
     
@@ -58,10 +74,10 @@ def plot_c00_costitems(df_raw,
     #===========================================================================
     # #data prep
     #===========================================================================
-    ser = df_raw.drop('desc', axis=1).set_index(['group_code', 'story'], append=True).iloc[:, 0]
+    ser = df_raw.drop('desc', axis=1).set_index(['group_code', 'story', 'drf_intersect'], append=True).iloc[:, 0]
     
     #sum and pivot
-    ser1 = ser.groupby(['group_code', 'story']).sum() #.unstack('group_code')
+    ser1 = ser.groupby(['group_code', 'story', 'drf_intersect']).sum() #.unstack('group_code')
  
     
     
@@ -72,26 +88,83 @@ def plot_c00_costitems(df_raw,
     if figure is None:
         figure = plt.figure(**fig_kwargs)
         
-    cmap = plt.cm.get_cmap('tab20')
     
+
+    
+    cmap = plt.cm.get_cmap('tab20')
+    #cmap = get_large_cmap()
+    gc_l = ser1.index.unique('group_code').tolist()
+    color_v = [cmap(i * (1.0 / len(gc_l))) for i,k in enumerate(gc_l)]
+    np.random.shuffle(color_v)
+    color_d = dict(zip(gc_l, color_v))
+    log.debug(f'built colors for {len(color_d)} \'group_code\'')
+    
+    #iterator for small labels
+    ha_offset=itertools.cycle([+20, -20])
+    ha_l = itertools.cycle(['left', 'right'])
+ 
                 
     #create two axijs side by side 
     stories_l = ser1.index.unique('story').to_list()
     ax_d = dict(zip(stories_l, figure.subplots(nrows=1, ncols=len(stories_l), sharey=True)))
+    ymax = max(ser1.groupby('story').sum())
     
     for k0, ax in ax_d.items():
         gser = ser1.xs(k0, level='story') 
  
         jval=0
  
-        for i, (k1, val) in enumerate(gser.items()):
+        #=======================================================================
+        # loop and plot each rectangle bar
+        #=======================================================================
+        for i, ((k1,present), val) in enumerate(gser.items()):
              
-            color=cmap(i * (1.0 / len(gser)))
-            container = ax.bar(0.5,val, align='center', bottom=jval, width=0.75,color=color)            
+            #===================================================================
+            # plot the bar
+            #===================================================================
+            pkwargs = dict(
+                align='center', bottom=jval, width=0.75,
+                color=color_d[k1], hatch=None, edgecolor=None,
+                alpha=0.9)
+            
+            #missing hatch
+            if not present:
+                pkwargs.update(dict(hatch='/', edgecolor='red', alpha=1.0))
+                
+ 
+            container = ax.bar(0.5,val, **pkwargs)            
             jval = val + jval
             
-            #add the label
-            ax.bar_label(container, labels = [f'{k1} ({val:,.0f})'], label_type='center')
+            
+                
+            #===================================================================
+            # #add the label
+            #===================================================================
+            
+            if not present: group_name=f'{k1}_miss'
+            else: group_name=k1
+            
+            """hiding labels on skinny bars""" 
+            for rect in container:height=rect.get_height() #pull out first rectangle                
+                
+            #offset tiny bars
+            if height < ymax*0.005:
+                log.warning(f'no label added for {group_name} (too small)')
+            elif height < ymax*0.02:
+                xy = (rect.get_x() + rect.get_width() / 2, rect.get_y()+height/2)
+                ax.annotate(group_name,
+                    #f'{k1} {100*(val/gser.sum()):.2f}% ({val:,.0f})',
+                    xy=xy,
+                    xytext=(next(ha_offset), 0),  # Use offset for popping out
+                    textcoords="offset points",
+                    #fontsize=6,
+                    xycoords='data',
+                    ha=next(ha_l), va='bottom',
+                    arrowprops=dict(arrowstyle="->", connectionstyle="arc3"))
+            else:
+                ax.bar_label(container, labels = [f'{group_name} {100*(val/gser.sum()):.0f}% ({val:,.0f})'], label_type='center')
+                
+ 
             
         #add the meta
         ax.set_xlim(0, 1)
@@ -104,8 +177,11 @@ def plot_c00_costitems(df_raw,
         #         bbox=dict(boxstyle="round,pad=0.3", fc="white", lw=0.0,alpha=0.5 ),
         #         )
         #=======================================================================
-        ax.set_title(f'story \'{k0}\''+f'\nRCV sum: {gser.sum():,.0f}')
+        ax.set_title(f'story \'{k0}\''+\
+                     f'\nRCV sum: {gser.sum():,.0f}'+\
+                     f'\nmissing RCV sum: {gser.xs(False, level=1).sum():,.2f}')
             
+        
     #===========================================================================
     # post
     #===========================================================================
@@ -126,6 +202,13 @@ def plot_c00_costitems(df_raw,
     
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
+        
+    #===========================================================================
+    # legend
+    #===========================================================================
+    hatch_patch = patches.Patch(facecolor='white', linewidth=2, edgecolor='red',hatch='/',  label='missing in DRF')
+    
+    figure.legend(handles=[hatch_patch], labels=['missing in DRF'], loc=4)
             
  
 
@@ -134,7 +217,7 @@ def plot_c00_costitems(df_raw,
     figure.subplots_adjust(hspace=0, wspace=0)
  
  
-        
+    
         
     return figure
 """
