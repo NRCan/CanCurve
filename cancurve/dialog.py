@@ -22,18 +22,23 @@
  ***************************************************************************/
 """
 
-import os
+import os, datetime
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
+
+from qgis.core import Qgis, QgsLogger, QgsMessageLog
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'cc_dialog.ui'))
 
 
+
 class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
+    def __init__(self, 
+                 parent=None, #not sure what this is supposed to be... 
+                 iface=None):
         """Constructor."""
         super(CanCurveDialog, self).__init__(parent)
         # Set up the user interface from Designer through FORM_CLASS.
@@ -42,3 +47,155 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+        
+        
+        self.iface=iface
+        
+        #setup logger
+        self.logger = plugLogger(self.iface, parent=self, statusQlab=self.progressText)
+        
+        self.connect_slots()
+        
+ 
+        
+    def connect_slots(self):
+        """
+        using the cointaier (dict) self.launch_actions to store functions
+            that should be called once the dialog is launched
+            see self.launch()
+        """
+        log = self.logger.getChild('connect_slots')
+        
+        
+        
+        #=======================================================================
+        # general----------------
+        #=======================================================================
+        """are these needed?
+        #ok/cancel buttons
+        self.buttonBox.accepted.connect(self.reject) #back out of the dialog
+        self.buttonBox.rejected.connect(self.reject)
+        """
+        
+        
+        #=======================================================================
+        # Tab: Create Curve---------
+        #=======================================================================
+        self.pushButton_Tcc_run.clicked.connect(self.action_Tcc_run)
+        
+        
+    def action_Tcc_run(self):
+        """pushButton_Tcc_run"""
+        log = self.logger.getChild('action_Tcc_run')
+        log.push(f'start')
+        
+        #import
+        """I guess the plugin dir is added to PYTHONPATH?"""
+        
+        #from core import c00_setup_project
+        
+        #retrieve
+        
+        
+        
+ 
+        
+class plugLogger(object): 
+    """pythonic logging interface"""
+    
+    log_tabnm = 'CanCurve' # qgis logging panel tab name
+    
+    log_nm = 'cc' #logger name
+    
+    def __init__(self, 
+                 iface,
+                 statusQlab=None,                 
+                 parent=None,
+                 log_nm = None,
+                 ):
+        
+        self.iface=iface
+        self.statusQlab = statusQlab
+        self.parent=parent
+        
+        if  log_nm is None: #normal calls
+            self.log_nm = '%s.%s'%(self.log_nm, self.parent.__class__.__name__)
+        else: #getChild calls
+            self.log_nm = log_nm
+        
+        
+    def getChild(self, new_childnm):
+        
+        if hasattr(self.parent, 'logger'):
+            log_nm = '%s.%s'%(self.parent.logger.log_nm, new_childnm)
+        else:
+            log_nm = new_childnm
+        
+        #build a new logger
+        child_log = plugLogger(self.parent, 
+                           statusQlab=self.statusQlab,
+                           log_nm=log_nm)
+        
+
+        
+        return child_log
+    
+    def info(self, msg):
+        self._loghlp(msg, Qgis.Info, push=False, status=True)
+
+
+    def debug(self, msg):
+        self._loghlp(msg, -1, push=False, status=False)
+ 
+    def warning(self, msg):
+        self._loghlp(msg, Qgis.Warning, push=False)
+
+    def push(self, msg):
+        self._loghlp(msg, Qgis.Info, push=True)
+
+    def error(self, msg):
+        """similar behavior to raising a QError.. but without throwing the execption"""
+        self._loghlp(msg, Qgis.Critical, push=True)
+        
+    def _loghlp(self, #helper function for generalized logging
+                msg_raw, qlevel, 
+                push=False, #treat as a push message on Qgis' bar
+                status=False, #whether to send to the status widget
+                ):
+        """
+        QgsMessageLog writes to the message panel
+            optionally, users can enable file logging
+            this file logger 
+        """
+
+        #=======================================================================
+        # send message based on qlevel
+        #=======================================================================
+        msgDebug = '%s    %s: %s'%(datetime.datetime.now().strftime('%d-%H.%M.%S'), self.log_nm,  msg_raw)
+        
+        if qlevel < 0: #file logger only            
+            QgsLogger.debug('D_%s'%msgDebug)
+            push, status = False, False #should never trip
+        else:#console logger
+            msg = '%s:   %s'%(self.log_nm, msg_raw)
+            QgsMessageLog.logMessage(msg, self.log_tabnm, level=qlevel)
+            QgsLogger.debug('%i_%s'%(qlevel, msgDebug)) #also send to file
+        
+        #Qgis bar
+        if push:
+            try:
+                self.iface.messageBar().pushMessage(self.log_tabnm, msg_raw, level=qlevel)
+            except:
+                QgsLogger.debug('failed to push to interface') #used for standalone tests
+        
+        #Optional widget
+        if status or push:
+            if not self.statusQlab is None:
+                self.statusQlab.setText(msg_raw)
+    
+        
+        
+        
+        
+        
+        

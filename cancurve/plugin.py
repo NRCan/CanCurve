@@ -159,12 +159,17 @@ class CanCurve:
 
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
-
-        icon_path = ':/plugins/cancurve/icon.png'
+        
+        
+        
+        #=======================================================================
+        # #configure button/action for main dialog
+        #=======================================================================
+        icon_path = os.path.join(self.plugin_dir, 'img', 'icon.png')
         self.add_action(
             icon_path,
-            text=self.tr(u'text_for_menu'),
-            callback=self.run,
+            text=self.tr(u'CanCurve'),
+            callback=self.launch_dialog, #action to be trigered
             parent=self.iface.mainWindow())
 
         # will be set False in run()
@@ -180,21 +185,21 @@ class CanCurve:
             self.iface.removeToolBarIcon(action)
 
 
-    def run(self):
-        """Run method that performs all the real work"""
+    def launch_dialog(self):
+        """main launch action
+        
+        setup for 1 dialog/button"""
 
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
         if self.first_start == True:
             self.first_start = False
-            self.dlg = CanCurveDialog()
+            self.dlg = CanCurveDialog(iface = self.iface)
+            
+            #self.dlg.connect_slots()
+            
 
         # show the dialog
         self.dlg.show()
-        # Run the dialog event loop
-        result = self.dlg.exec_()
-        # See if OK was pressed
-        if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
-            pass
+        
+
