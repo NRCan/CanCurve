@@ -55,11 +55,11 @@ def action_result(testCase, testPhase):
 @pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',[
-    #'case1',
+    'case1',
     'case2'
     ], indirect=False)
 def test_plot_c00_costitems(action_result, tmp_path):
-    ci_df, _ = action_result #c00 returns both of these
+    ci_df, _, _ = action_result #c00 returns both of these
     
     from cancurve.plots import plot_c00_costitems as func
     
@@ -74,7 +74,7 @@ def test_plot_c00_costitems(action_result, tmp_path):
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 def test_plot_c00_DRF(action_result, tmp_path):
-    _, drf_df = action_result #c00 returns both of these
+    _, drf_df, _ = action_result #c00 returns both of these
     
     from cancurve.plots import plot_c00_DRF as func
     

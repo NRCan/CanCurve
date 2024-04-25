@@ -20,7 +20,7 @@ from tests.conftest import find_single_file_by_extension, src_dir, test_data_dir
 #===============================================================================
 # helpers
 #===============================================================================
-def write_pick(result, ofp, write=True):
+def write_pick(result, ofp, write=False):
     if write:
         if not os.path.exists(os.path.dirname(ofp)):
             os.makedirs(os.path.dirname(ofp))
@@ -29,7 +29,7 @@ def write_pick(result, ofp, write=True):
         print(f'wrote result to \n    {ofp}')
         
         
-def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=True):
+def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=False):
     
     if write:
         dest_fp = os.path.join(test_data_dir_master, testCase, destinationPhase, os.path.basename(proj_db_fp))
@@ -86,7 +86,7 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase):
     
 @pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
-    #'case1',
+    'case1',
     pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
     ], indirect=False)
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)
