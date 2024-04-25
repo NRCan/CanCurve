@@ -18,6 +18,29 @@ from tests.conftest import find_single_file_by_extension, src_dir, test_data_dir
 
 
 #===============================================================================
+# helpers
+#===============================================================================
+def write_pick(result, ofp, write=True):
+    if write:
+        if not os.path.exists(os.path.dirname(ofp)):
+            os.makedirs(os.path.dirname(ofp))
+        with open(ofp, 'wb') as file:
+            pickle.dump(result, file)
+        print(f'wrote result to \n    {ofp}')
+        
+        
+def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=True):
+    
+    if write:
+        dest_fp = os.path.join(test_data_dir_master, testCase, destinationPhase, os.path.basename(proj_db_fp))
+        
+        if not os.path.exists(os.path.dirname(dest_fp)):os.makedirs(os.path.dirname(dest_fp))
+        
+        shutil.copy(proj_db_fp, dest_fp)
+        
+        print(f'coipied sqlite database to \n    {dest_fp}')
+
+#===============================================================================
 # fixtures-------
 #===============================================================================
  
@@ -34,10 +57,13 @@ def ci_fp(testCase):
 #===============================================================================
 # tests---------
 #===============================================================================
+
+
+
 @pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
-    #'case1',
-    'case2',
+    'case1',
+    #'case2',
     ], indirect=False)
 def test_c00_setup_project(tmp_path, ci_fp, testCase):
     from cancurve.core import c00_setup_project as func
@@ -52,15 +78,9 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase):
     
     print(f'finished at\n    {tmp_path}')
     
-    #write result pickle
-
-    ofp = os.path.join(test_data_dir_master, testCase,'c00', 'c00_setup_project_result.pkl')
-     
-    if not os.path.exists(os.path.dirname(ofp)):os.makedirs(os.path.dirname(ofp))
-     
-    with open(ofp, 'wb') as file:
-        pickle.dump(result, file)
-    print(f'wrote result to \n    {ofp}')
+    #write results 
+    write_pick(result, os.path.join(test_data_dir_master, testCase,'c00', 'c00_setup_project_result.pkl'))
+    copy_sqlite(result[2], testCase, 'c01')
 
     
     
@@ -74,13 +94,8 @@ def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
     
     print(f'finished at\n    {tmp_path}')
     
-    #===========================================================================
-    # #write result
-    # ofp = os.path.join(test_data_dir_master, testCase,testPhase, 'c01_join_drf_result.pkl')
-    # with open(ofp, 'wb') as file:
-    #     pickle.dump(result, file)
-    # print(f'wrote result to \n    {ofp}')
-    #===========================================================================
+    write_pick(result, os.path.join(test_data_dir_master, testCase,testPhase, 'c01_join_drf.pkl'))
+    copy_sqlite(proj_db_fp, testCase, 'c02')
      
      
  
@@ -90,14 +105,17 @@ def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
 @pytest.mark.parametrize('scale_m2',[None, 
                                      #True, False
                                      ], indirect=False)
-def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase):
+def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
     from cancurve.core import c02_group_story as func 
       
     result = func(proj_db_fp, scale_m2=scale_m2)
     
+    print(f'finished at\n    {tmp_path}')
     
-    #write result
-    ofp = os.path.join(test_data_dir_master, testCase,testPhase, 'c02_group_story_result.pkl')
-    with open(ofp, 'wb') as file:
-        pickle.dump(result, file)
-    print(f'wrote result to \n    {ofp}')
+    write_pick(result, os.path.join(test_data_dir_master, testCase,testPhase, 'c02_group_story.pkl'))
+    copy_sqlite(proj_db_fp, testCase, 'c03')
+    
+    
+    
+    
+    

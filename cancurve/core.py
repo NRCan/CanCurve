@@ -348,7 +348,7 @@ def c00_setup_project(
     
     assert_proj_db_fp(ofp)
     
-    return ci_df, drf_df2
+    return ci_df, drf_df2, ofp
  
 
 
