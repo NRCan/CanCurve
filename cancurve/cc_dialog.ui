@@ -53,7 +53,7 @@
    </font>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>CanCurve</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QPushButton {
