@@ -29,9 +29,12 @@ from qgis.PyQt import QtWidgets
 
 from qgis.core import Qgis, QgsLogger, QgsMessageLog
 
+import sys
+sys.path.append(os.path.dirname(__file__))
+
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'cc_dialog.ui'))
+    os.path.dirname(__file__), 'cc_dialog.ui'), resource_suffix='')
 
 
 

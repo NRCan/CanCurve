@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>700</width>
+    <width>784</width>
     <height>800</height>
    </rect>
   </property>
@@ -977,6 +977,7 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <resources>
+  <include location="resources.qrc"/>
  </resources>
  <connections/>
 </ui>
