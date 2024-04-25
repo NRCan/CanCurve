@@ -29,7 +29,7 @@ def write_pick(result, ofp, write=False):
         print(f'wrote result to \n    {ofp}')
         
         
-def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=False):
+def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=True):
     
     if write:
         dest_fp = os.path.join(test_data_dir_master, testCase, destinationPhase, os.path.basename(proj_db_fp))
@@ -60,18 +60,22 @@ def ci_fp(testCase):
 
 
 
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     'case2',
     ], indirect=False)
-def test_c00_setup_project(tmp_path, ci_fp, testCase):
+@pytest.mark.parametrize('fixed_costs_d',[
+    {0:10000, -1:8000},
+    #pytest.param({0:10000, -2:8000}, marks=pytest.mark.xfail(raises=KeyError, reason="bad story")), 
+    ])
+def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d):
     from cancurve.core import c00_setup_project as func
     
     result = func(ci_fp, 
          out_dir=tmp_path, 
          bldg_meta={'basement_height_m':1.8, 'mf_area_m2':232.0},
-         #settings_d = {'scale_m2':True}, 
+         fixed_costs_d=fixed_costs_d,
          curve_name=f'{testCase}_c00',
          ofp=os.path.join(tmp_path, f'{testCase}_c00.cancurve'))
     
@@ -84,7 +88,7 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase):
 
     
     
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
     pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 

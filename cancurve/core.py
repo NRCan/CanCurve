@@ -170,6 +170,7 @@ def c00_setup_project(
         drf_db_fp=None,
         
         bldg_meta=None,
+        fixed_costs_d=None,
         
         bldg_layout='default',
         
@@ -198,6 +199,9 @@ def c00_setup_project(
         
     bldg_meta: dict
         building metadata to be added to 'c00_bldg_meta'
+        
+    fixed_costs_d: dict
+        fixed costs per story
         
         
     settings_d: dict, optional
@@ -314,7 +318,20 @@ def c00_setup_project(
     #create a table 'bldg_meta' and populate it with the entries in bldg_meta
     """using single row to preserve dtypes"""
     meta_df = pd.DataFrame.from_dict({'attn':bldg_meta}, orient='index')
- 
+    
+    #===========================================================================
+    # fixed costs------
+    #===========================================================================
+    if not fixed_costs_d is None:
+        fc_ser = pd.Series(fixed_costs_d, name='rcv', dtype=float)
+        log.debug(f'loaded {len(fc_ser)} fixed costs')
+        
+        #check intersect
+        if not set(fc_ser.index).difference(ci_df['story'].unique())==set():
+            raise KeyError(f'fixed cost stories do not match CostItems')
+        
+    else:
+        fc_ser=None
     
     #===========================================================================
     # project settings------
