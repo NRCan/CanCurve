@@ -179,7 +179,7 @@ def plot_c00_costitems(df_raw,
         #=======================================================================
         txt = f'story \'{k0}\''+f'\nRCV sum: {gser.sum():,.0f}'
         if np.any(np.invert(gser.index.get_level_values('drf_intersect'))):
-            txt+=f'\nmissing RCV sum: {gser.xs(False, level=1).sum():,.2f}'                    
+            txt+=f'\nmissing RCV sum: {gser.xs(False, level=1).sum():,.0f}'                    
             
         ax.set_title(txt)
             

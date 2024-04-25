@@ -26,6 +26,15 @@ from tests.conftest import find_single_file_by_extension, src_dir, test_data_dir
 #===============================================================================
 
 #===============================================================================
+# helpers-----
+#===============================================================================
+def write_fig(figure, ofp, write=True):
+    if write:
+        figure.savefig(ofp, format='svg')
+        print(f'wrote figure to \n    {ofp}')
+
+
+#===============================================================================
 # fixtures-------
 #===============================================================================
 #===============================================================================
@@ -52,7 +61,7 @@ def action_result(testCase, testPhase):
 #===============================================================================
 # tests---------
 #===============================================================================
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',[
     'case1',
@@ -65,9 +74,9 @@ def test_plot_c00_costitems(action_result, tmp_path):
     
     figure = func(ci_df)
     
-    ofp = os.path.join(tmp_path, 'plot_c00_costitems.svg')
-    figure.savefig(ofp, format='svg')
-    print(f'wrote figure to \n    {ofp}')
+    write_fig(figure, os.path.join(tmp_path, 'plot_c00_costitems.svg'))
+    
+
     
     
  
@@ -79,8 +88,8 @@ def test_plot_c00_DRF(action_result, tmp_path):
     from cancurve.plots import plot_c00_DRF as func
     
     figure = func(drf_df)
-    
-    figure.savefig(os.path.join(tmp_path, 'plot_c00_DRF.svg'), format='svg')
+ 
+    write_fig(figure, os.path.join(tmp_path, 'plot_c00_DRF.svg'))
     
     
 
@@ -92,7 +101,9 @@ def test_plot_c01_depth_rcv(action_result, tmp_path):
     
     from cancurve.plots import plot_c01_depth_rcv as func
     
-    fig = func(data)
+    figure = func(data)
+    
+    write_fig(figure, os.path.join(tmp_path, 'plot_c01_depth_rcv.svg'))
     
     
 
@@ -104,7 +115,19 @@ def test_plot_c02_ddf(action_result, tmp_path):
     
     from cancurve.plots import plot_c02_ddf as func
     
-    fig = func(data)
+    figure = func(data)
+    
+    write_fig(figure, os.path.join(tmp_path, 'plot_c02_ddf.svg'))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

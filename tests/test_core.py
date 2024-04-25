@@ -20,7 +20,7 @@ from tests.conftest import find_single_file_by_extension, src_dir, test_data_dir
 #===============================================================================
 # helpers
 #===============================================================================
-def write_pick(result, ofp, write=True):
+def write_pick(result, ofp, write=False):
     if write:
         if not os.path.exists(os.path.dirname(ofp)):
             os.makedirs(os.path.dirname(ofp))
