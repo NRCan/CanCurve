@@ -41,7 +41,9 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
     def __init__(self, 
                  parent=None, #not sure what this is supposed to be... 
-                 iface=None):
+                 iface=None,
+                 debug_logger=None, #testing only
+                 ):
         """Constructor."""
         super(CanCurveDialog, self).__init__(parent)
         # Set up the user interface from Designer through FORM_CLASS.
@@ -55,9 +57,13 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
         self.iface=iface
         
         #setup logger
-        self.logger = plugLogger(self.iface, parent=self, statusQlab=self.progressText)
+        self.logger = plugLogger(self.iface, parent=self, statusQlab=self.progressText,
+                                 debug_logger=debug_logger)
         
         self.connect_slots()
+        
+        self.logger.debug('CanCurveDialog init finish')
+        #self.logger.info('this woriks?')
         
  
         
@@ -68,7 +74,7 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
             see self.launch()
         """
         log = self.logger.getChild('connect_slots')
-        
+        log.debug('connecting slots')
         
         
         #=======================================================================
@@ -87,6 +93,9 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
         self.pushButton_Tcc_run.clicked.connect(self.action_Tcc_run)
         
         
+        
+        
+        
     def action_Tcc_run(self):
         """pushButton_Tcc_run"""
         log = self.logger.getChild('action_Tcc_run')
@@ -98,6 +107,12 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
         #from core import c00_setup_project
         
         #retrieve
+        
+    def _get_child(self, childName, childType=QtWidgets.QPushButton):
+        child = self.findChild(childType, childName)
+        assert not child is None, f'failed to get {childName} of type \'{childType}\''
+        return child
+        
         
         
         
@@ -115,11 +130,20 @@ class plugLogger(object):
                  statusQlab=None,                 
                  parent=None,
                  log_nm = None,
+                 debug_logger=None,
                  ):
+        """
+        
+        params
+        ---------
+        debug_logger: python logging class
+            workaround to capture QgsLogger
+        """
         
         self.iface=iface
         self.statusQlab = statusQlab
         self.parent=parent
+        self.debug_logger=debug_logger
         
         if  log_nm is None: #normal calls
             self.log_nm = '%s.%s'%(self.log_nm, self.parent.__class__.__name__)
@@ -149,6 +173,9 @@ class plugLogger(object):
 
     def debug(self, msg):
         self._loghlp(msg, -1, push=False, status=False)
+        
+        if not self.debug_logger is None: 
+            self.debug_logger.debug(msg)
  
     def warning(self, msg):
         self._loghlp(msg, Qgis.Warning, push=False)
@@ -177,13 +204,14 @@ class plugLogger(object):
         msgDebug = '%s    %s: %s'%(datetime.datetime.now().strftime('%d-%H.%M.%S'), self.log_nm,  msg_raw)
         
         if qlevel < 0: #file logger only            
-            QgsLogger.debug('D_%s'%msgDebug)
+            QgsLogger.debug('D_%s'%msgDebug)            
             push, status = False, False #should never trip
+            
         else:#console logger
             msg = '%s:   %s'%(self.log_nm, msg_raw)
             QgsMessageLog.logMessage(msg, self.log_tabnm, level=qlevel)
             QgsLogger.debug('%i_%s'%(qlevel, msgDebug)) #also send to file
-        
+            
         #Qgis bar
         if push:
             try:
