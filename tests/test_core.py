@@ -113,7 +113,7 @@ def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
      
      
  
-@pytest.mark.dev
+ 
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c02'], indirect=False)
 @pytest.mark.parametrize('scale_m2',[None, 
@@ -128,6 +128,20 @@ def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
     
     write_pick(result, os.path.join(test_data_dir_master, testCase,testPhase, 'c02_group_story.pkl'))
     copy_sqlite(proj_db_fp, testCase, 'c03')
+    
+    
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+@pytest.mark.parametrize('testPhase',['c03'], indirect=False)
+def test_c03_export(proj_db_fp, testCase, testPhase, tmp_path):
+    from cancurve.core import c03_export as func 
+      
+    result = func(proj_db_fp, out_dir=tmp_path)
+    
+    print(f'finished at\n    {tmp_path}')
+    
+    write_pick(result, os.path.join(test_data_dir_master, testCase,testPhase, 'c03_export.pkl'))
+    copy_sqlite(proj_db_fp, testCase, 'c04')
     
     
     

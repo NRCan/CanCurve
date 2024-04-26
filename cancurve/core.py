@@ -19,7 +19,7 @@ from .hp.basic import view_web_df as view
 from .hp.basic import convert_to_bool
 
 
-from .parameters import drf_db_default_fp, colns_index, today_str, settings_default_d
+from .parameters import drf_db_default_fp, colns_index, today_str, settings_default_d, building_meta_dtypes
 from .assertions import assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db
 from cancurve import __version__
  
@@ -72,6 +72,11 @@ def get_setting(conn, param, table_name="project_settings"):
 
     except Exception as e:
         raise IOError(f'failed to retrieve {param} FROM {table_name} w/ \n    {e}')
+    
+def get_out_dir():
+    out_dir = os.path.join(os.path.expanduser('~'), 'CanCurve')
+    if not os.path.exists(out_dir):os.makedirs(out_dir)
+    return out_dir
  
 
 def load_ci_df(fp, log=None):
@@ -182,6 +187,355 @@ def _update_proj_meta(function_name, log, conn, **kwargs):
     proj_meta_df.to_sql('project_meta', conn, if_exists='append', index=False)    
     log.debug(f'updated \'project_meta\' w/ {proj_meta_df.shape}')
     return proj_meta_df
+
+
+class DFunc(object): 
+    """
+    2024 04 26: copied from CanFlood dev
+    
+    used by DFunc objects
+    also DFunc handlers:
+        model.dmg2.Dmg2
+        misc.curvePlot.CurvePlotr
+        misc.rfda.convert
+        
+    """
+    #===========================================================================
+    # pars from data
+    #===========================================================================
+    """see crve_d below"""
+    impact_units = '' #units of impact prediction (used in axis labelling)
+    
+    
+    #==========================================================================
+    # program pars
+    #==========================================================================
+
+    
+    #dd_df = pd.DataFrame() #depth-damage data
+    
+    """lets just do columns by location
+    exp_coln = []"""
+    
+    #default variables for building new curves
+    """see also parameters.building_meta_dtypes"""
+    crve_d = {
+            #function metadata
+            'tag':'?','desc':'?','source':'?','location':'?','date':'?',
+            #'file_conversion':'CanFlood',
+            
+            #function definitions
+            'impact_units':'$CAD', 'impact_var':'damage',
+            'exposure_units':'m', 'exposure_var':'flood depth above floor',
+            'scale_units':'m2', 'scale_var':'building footprint',            
+            
+            #headers for DDF
+            'exposure':'impact'}
+    
+    cdf_chk_d = {'tag':str, #parameters expected in crv_d (read from xls tab)
+                 'exposure':str,
+                 'impact_units':str}
+    
+    #==========================================================================
+    # user pars
+    #==========================================================================
+    tag = 'dfunc'
+    min_dep = None
+    pars_d = {}
+    #curves_fp=''
+    curve_deviation= 'base' #0: take first curve. otherwise, label lookup of curve deviation 
+    
+    def __init__(self,
+                 tabn='damage_func', #optional tab name for logging
+                 #curves_fp = '', #filepath loaded from (for reporting)
+                 curve_deviation = 'base', #which curve deviation to build
+                 monot=True,
+                 logger=None):
+        
+        #=======================================================================
+        # attach
+        #=======================================================================
+        self.tabn= tabn
+        
+        """
+        todo: reconcile tabn vs tag
+        """
+        #self.curves_fp = curves_fp
+        self.monot=monot
+        self.curve_deviation=curve_deviation
+        self.logger=logger
+        
+        #init the baseclass
+        #super().__init__(**kwargs) #initilzie Model
+        
+    
+    def build(self,
+              df_raw, #raw parameters to build the DFunc w/ . dummy index
+              logger,
+              curve_deviation=None,
+              ):
+        """"
+        Params
+        ---------
+        df_raw: pd.DataFrame
+            >=2 column frame with
+                first column (name '0') containing indexers
+                second column containing values
+                additional columns used for 'curve_deviations'
+                
+                
+        
+        """
+        
+        
+        #=======================================================================
+        # defaults
+        #=======================================================================
+        log = logger.getChild('%s'%self.tabn)
+        if curve_deviation is None: curve_deviation=self.curve_deviation
+        log.debug('on %s'%(str(df_raw.shape)))
+        
+        self.df_raw = df_raw.copy() #useful for retrieving later
+        #=======================================================================
+        # precheck
+        #=======================================================================
+        try:
+            assert self.check_cdf(df_raw)
+        except Exception as e:
+            """letting this pass for backwards compatability"""
+            log.error('curve failed check w/ \n    %s'%e)
+        
+
+        #slice and clean
+        df = df_raw.set_index(0, drop=True).dropna(how='all', axis=1)            
+        
+        #======================================================================
+        # identify depth-damage data
+        #======================================================================
+ 
+        
+        #get the value specifying the start of the dd
+ 
+        depthLoc_key='exposure'
+        
+        depth_loc = df.index.get_loc(depthLoc_key)
+        
+        boolidx = pd.Series(df.index.isin(df.iloc[depth_loc:len(df), :].index), index=df.index,
+                            name='dd_vals')
+        
+        """
+        this includes the 'exposure' row in the dd_df
+        view(df.join(boolidx))
+        """
+ 
+        #======================================================================
+        # attach other pars
+        #======================================================================
+        #get remainder of data
+        mser = df.loc[~boolidx, :].iloc[:,0]
+        mser.index =  mser.index.str.strip() #strip the whitespace
+        pars_d = mser.to_dict()
+        
+        #=======================================================================
+        # parameter value check
+        #=======================================================================
+        assert 'tag' in pars_d, '%s missing tag'%self.tabn
+        assert isinstance(pars_d['tag'], str), 'bad tag parameter type: %s'%type(pars_d['tag'])
+        
+        assert pars_d['tag']==self.tabn, 'tag/tab mismatch (\'%s\', \'%s\')'%(
+            pars_d['tag'], self.tabn)
+        
+        #handle curve deviation
+        if not curve_deviation=='base':
+            assert curve_deviation in df.loc['exposure', :].values, \
+                'requested curve_deviation \'%s\' not found on \'%s\''%(
+                    curve_deviation, self.tabn)
+                
+         
+        
+        for varnm, val in pars_d.items():  #loop and store on instance
+            setattr(self, varnm, val)
+            
+        log.debug('attached %i parameters to Dfunc: \n    %s'%(len(pars_d), pars_d))
+        self.pars_d = pars_d.copy()
+        
+        #======================================================================
+        # extract depth-damage data
+        #======================================================================
+ 
+        #get just the dd rows
+        ddf1 = df.loc[boolidx, :]
+        ddf1.index.name=None
+        
+        #set headers from a row
+        ddf1.columns = ddf1.loc[depthLoc_key]
+        ddf1 = ddf1.drop(depthLoc_key)
+        
+        
+        #select deviation
+        if curve_deviation=='base':
+            ddcol = ddf1.columns[0] #taking first
+        else:
+            ddcol = curve_deviation
+            
+        #reindex for this deviation
+        ddf2 = ddf1.loc[:, ddcol].to_frame().reset_index().rename(columns={'index':depthLoc_key})
+        
+ 
+        #typeset it
+        try:
+            ddf2 = ddf2.astype(float)
+        except Exception as e:
+            raise IOError('failed to typsset the ddf for \'%s\' w/ \n    %s'%(self.tabn, e))
+        
+        """
+        view(dd_df)
+        """
+        
+        ar = ddf2.sort_values(depthLoc_key).T.values
+        """NO! leave unsorted
+        ar = np.sort(np.array([dd_df.iloc[:,0].tolist(), dd_df.iloc[:,1].tolist()]), axis=1)"""
+        self.dd_ar = ar
+        
+        #=======================================================================
+        # check
+        #=======================================================================
+        """This is a requirement of the interp function"""
+        assert np.all(np.diff(ar[0])>0), 'exposure values must be increasing'
+        
+        #impact (y) vals
+        if not np.all(np.diff(ar[1])>=0):
+            msg = '\'%s\' impact values are decreasing'%self.tabn
+            if self.monot:
+                raise IOError(msg)
+            else:
+                log.debug(msg)
+            
+
+        #=======================================================================
+        # get stats
+        #=======================================================================
+        self.min_dep = min(ar[0])
+        self.max_dep = max(ar[0])
+        #=======================================================================
+        # wrap
+        #=======================================================================
+        log.debug('\'%s\' built w/ dep min/max %.2f/%.2f and dmg min/max %.2f/%.2f'%(
+            self.tag, min(ar[0]), max(ar[0]), min(ar[1]), max(ar[1])
+            ))
+        
+        return self
+        
+ 
+    def get_stats(self): #get basic stats from the dfunc
+        deps = self.dd_ar[0]
+        dmgs = self.dd_ar[1]
+        
+        
+        np.all(np.diff(deps)>=0)
+        
+ 
+        return {**{'min_dep':min(deps), 'max_dep':max(deps), 
+                'min_dmg':min(dmgs), 'max_dmg':max(dmgs), 'dcnt':len(deps),
+                'dep_mono':np.all(np.diff(deps)>=0), 'dmg_mono':np.all(np.diff(dmgs)>=0)
+                },
+                   
+                **self.pars_d}
+        
+ 
+    def _get_split(self,#split the raw df into function and metadata
+                   df_raw=None, #dummy index
+                   fmt='dict', #result format
+                   ): 
+        if df_raw is None: df_raw=self.df_raw.copy()
+        df = df_raw.set_index(0, drop=True)
+        
+        #get dd
+        assert 'exposure' in df.index
+        
+        dd_indx = df.index[df.index.get_loc('exposure')+1:] #get those after exposure
+        ddf = df.loc[dd_indx, :]
+        
+        #get meta
+        mdf = df.loc[~df.index.isin(dd_indx), :]
+        
+        if fmt=='df':
+            return ddf, mdf
+        elif fmt=='dict':
+            return ddf.iloc[:,0].to_dict(), mdf.iloc[:,0].to_dict()
+        
+        
+    def _get_ddf(self): #return a formatted dataframe of the dd_ar
+        return pd.DataFrame(self.dd_ar.T, columns=['exposure', 'impact'])
+        
+        
+ 
+    def check_cdf(self, #convenience for checking the df as loaded
+                  df, 
+ 
+                  **kwargs): 
+        
+        """
+        converting to dict for most checks
+        
+        not constructing, just simple field and type checks
+        
+        view(df)
+        """
+ 
+        
+        assert isinstance(df, pd.DataFrame)
+ 
+ 
+        crv_d = df.set_index(0, drop=True).iloc[:, 0].dropna().to_dict()
+        
+        
+        return self.check_crvd(crv_d, **kwargs)
+
+
+
+    def check_crvd(self, #validate the passed curve_d  
+                    crv_d,
+                    logger=None):
+        
+        if logger is None: logger=self.logger
+        log = logger.getChild('check_crvd')
+        
+        assert isinstance(crv_d, dict)
+        
+        #log.debug('on %i'%len(crv_d))
+        
+        #=======================================================================
+        # #check key presence
+        #=======================================================================
+        miss_l = set(self.cdf_chk_d.keys()).difference(crv_d.keys())
+        if not len(miss_l)==0:
+            log.error('dfunc \'%s\' missing keys: %s \n    %s'%(self.tabn, miss_l, self.curves_fp))
+            return False
+        
+        #=======================================================================
+        # value type
+        #=======================================================================
+        for k, v in self.cdf_chk_d.items():
+            if not isinstance(crv_d[k], v):
+                log.error( '%s got bad type on %s'%(self.tabn, k))
+                return False
+            
+        #=======================================================================
+        # order
+        #=======================================================================
+        """TODO: check order"""
+        
+
+        return True
+    
+    def __enter__(self):
+        return self
+    
+    def __exit__(self,*args,**kwargs):
+        pass
+
+    
     
 #===============================================================================
 # ACTIONS------------
@@ -212,7 +566,7 @@ def c00_setup_project(
         filepath to cost-item dataset
         
     drf_db_fp: str, optional
-        filepath to depth-replacement-fraction dataset
+        filepath to depth-replacement-factor dataset
         defaults to drf_db_default_fp (from params)
         
     bldg_layout: str
@@ -505,7 +859,7 @@ def c02_group_story(proj_db_fp,
         
     """
     
-        #===========================================================================
+    #===========================================================================
     # defaults
     #===========================================================================
    
@@ -664,15 +1018,138 @@ def c02_group_story(proj_db_fp,
     log.info(f'finished')
     
     return ddf3
-        
- 
-        
-        
-        
 
+
+def c03_export(
+        proj_db_fp,
+        output_format='CanFlood',
+        ofp=None, out_dir=None, 
+        log=None,
+            ):
+    """export the DDF in CanFlood format"""
     
-    
+    #===========================================================================
+    # defaults
+    #===========================================================================
+   
+    log = get_slog('c03', log)
  
+        
+ 
+    #===========================================================================
+    # prechecks
+    #===========================================================================
+    assert_proj_db_fp(proj_db_fp)
+
+    log.debug(f'openning database from \n    {proj_db_fp}')
+    with sqlite3.connect(proj_db_fp) as conn:
+        
+        #=======================================================================
+        # load from project database
+        #=======================================================================
+        #depth-damage
+        ddf = pd.read_sql('SELECT * FROM c02_ddf', conn)
+ 
+        log.debug(f'loaded DDF w/ {ddf.shape}')
+        
+        #building meta
+        bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn).iloc[0, :].to_dict()
+        log.debug(f'loaded c00_bldg_meta w/ \n    {bldg_meta_d}')
+        
+        #project settings
+        settings_d = pd.read_sql('SELECT * FROM project_settings', conn, index_col=['param']).iloc[:, 0].to_dict()
+                
+ 
+    if not output_format=='CanFlood':
+        raise NotImplementedError(output_format)
+    
+    #=======================================================================
+    # compose into CanFlood format-------
+    #=======================================================================
+    with DFunc(tabn=settings_d['curve_name'], logger=log) as wrkr:
+        
+        #=======================================================================
+        # build metadata
+        #=======================================================================
+        crve_d = wrkr.crve_d.copy() #start with a copy of the template        
+        
+        #update with user supplied metadata
+        crve_d['tag'] = settings_d['curve_name']
+        crve_d.update(bldg_meta_d) #preserves order
+        
+        #force exposure to the end
+        if not list(crve_d.keys())[-1]=='exposure': 
+            v1 = crve_d.pop('exposure')
+            crve_d = {**crve_d, **{'exposure':v1}}
+            
+        #scaling
+        scale_m2 = convert_to_bool(settings_d['scale_m2'])
+        if scale_m2:
+            crve_d['impact_units'] = '%s/%s'%(crve_d['impact_units'], crve_d['scale_units'])
+            assert not crve_d['scale_var']  is None
+        else:
+            crve_d['scale_var']='none'
+            
+        #=======================================================================
+        # #extract depth-damage
+        #=======================================================================
+        dd_d = ddf.loc[:, ['depths_m', 'combined']].astype(float).round(3).set_index('depths_m').iloc[:,0].to_dict()
+        
+        #=======================================================================
+        # #assemble
+        #=======================================================================
+        dcurve_d = {**crve_d, **dd_d}
+        
+        #check
+        assert wrkr.check_crvd(dcurve_d)
+        
+        #convert to frame
+        res_df = pd.Series(dcurve_d).to_frame().reset_index()
+        
+        #=======================================================================
+        # test
+        #=======================================================================
+        
+        try:
+            #maniuplate frame to match CanFlood expectations
+            df1 = res_df.copy()
+            df1.columns = [0, 1]
+            
+            #build        
+            wrkr.build(df1, log)
+        except Exception as e:
+            raise ValueError(f'DDF failed to build as a CanFlood.Dfunc w/ \n    {e}')
+        
+    #===========================================================================
+    # output
+    #===========================================================================
+    """TODO: let user specify xls library?"""
+    tabnm = settings_d['curve_name']
+    
+    #default paths
+    if ofp is None:
+        if out_dir is None: out_dir=get_out_dir()
+        ofp = os.path.join(out_dir, f'CanCurve_{tabnm}.xls')
+        
     
     
-3
+    with pd.ExcelWriter(ofp, engine='openpyxl') as writer: 
+            
+        if len(tabnm)>30:
+            log.warning('tabName exceeds excel limits... truncating')
+            tabnm = tabnm[:29] 
+            
+        res_df.to_excel(writer, sheet_name=tabnm, index=False, header=False)
+    log.info(f'wrote {res_df.shape} to \n    {ofp}')
+    
+    return res_df
+    
+            
+        
+        
+ 
+        
+        
+        
+        
+    
