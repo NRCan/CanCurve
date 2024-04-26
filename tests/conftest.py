@@ -31,3 +31,12 @@ def proj_db_fp(testCase, testPhase, tmp_path):
     
     #make a working copy        
     return shutil.copy(fp,os.path.join(tmp_path, 'copy_'+os.path.basename(fp)))
+
+
+
+@pytest.fixture(scope='function')
+def fixed_costs_d(testCase):
+    return {
+        'case1':{0:10000, -1:8000},
+        'case2':None,        
+        }[testCase]

@@ -22,19 +22,58 @@
  ***************************************************************************/
 """
 
-import os, datetime
+import os, datetime, sys
+import pandas as pd
+import numpy as np
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 
+from PyQt5.QtWidgets import QTableWidget, QWidget
+ 
+
 from qgis.core import Qgis, QgsLogger, QgsMessageLog
 
-import sys
+from .parameters import building_meta_dtypes
+
+
+#===============================================================================
+# helpers-------
+#===============================================================================
+def tableWidget_to_dataframe(tableWidget: QTableWidget):
+    """Converts the contents of a QTableWidget to a pandas DataFrame.
+
+    Args:
+        tableWidget: The QTableWidget instance to convert.
+
+    Returns:
+        A pandas DataFrame containing the data from the table.
+    """
+
+    headers = []
+    for column in range(tableWidget.columnCount()):
+        header_item = tableWidget.horizontalHeaderItem(column)
+        headers.append(header_item.text() if header_item else '')
+
+    data = []
+    for row in range(tableWidget.rowCount()):
+        row_data = []
+        for column in range(tableWidget.columnCount()):
+            item = tableWidget.item(row, column)
+            row_data.append(item.text() if item else '')
+        data.append(row_data)
+
+    return pd.DataFrame(data, columns=headers)
+
+
+#append the path (resources_rc workaround)
 sys.path.append(os.path.dirname(__file__))
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'cc_dialog.ui'), resource_suffix='')
+
+
 
 
 
@@ -101,17 +140,66 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
         log = self.logger.getChild('action_Tcc_run')
         log.push(f'start')
         
-        #import
-        """I guess the plugin dir is added to PYTHONPATH?"""
+        #=======================================================================
+        # #retrieve info from UI----------
+        #=======================================================================
+        ci_fp = self.lineEdit_di_cifp.text()
+        drf_db_fp = self.lineEdit_di_drf_db_fp.text()
         
-        #from core import c00_setup_project
+        out_dir = self.lineEdit_wdir.text()
+        #curve_name = self.lineEdit_di_curveName.text() in settings_d
+        bldg_meta = self.get_building_details()
+        fixed_costs_d = self.get_fixed_costs()
+        settings_d = self.get_settings()
         
-        #retrieve
+        
+        #=======================================================================
+        # run actions-------
+        #=======================================================================
+        from cancurve.core import c00_setup_project, c01_join_drf, c02_group_story, c03_export
+        
+        c00_setup_project(
+            ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
+            settings_d=settings_d,
+
+            
+            )
+        
+    def _get_building_details(self):
+        """retrieve dataa from Building Details tab"""
+        
+        #check all of the keys are present
+        building_meta_dtypes
+        
+    def _get_fixed_costs(self):
+        """retireve fixed costs from 'Data Input' tab"""
+        df_raw =  tableWidget_to_dataframe(self.tableWidget_di_fixedCosts)
+        
+        return df_raw.astype(float).set_index(df_raw.columns[0]).iloc[:, 0].to_dict()
+ 
+ 
+        
+    def _get_settings(self):
+        """retrieve project settings from Data Input  tab"""
+        return {
+            'curve_name':self.lineEdit_di_curveName.text(),
+            'scale_m2':self.radioButton_di_rcvm2.isChecked(), #retrieve from radio buttons
+            }
+
         
     def _get_child(self, childName, childType=QtWidgets.QPushButton):
         child = self.findChild(childType, childName)
         assert not child is None, f'failed to get {childName} of type \'{childType}\''
         return child
+    
+    def _change_tab(self, tabObjectName): #try to switch the tab on the gui
+        try:
+            tabw = self.tabWidget
+            index = tabw.indexOf(tabw.findChild(QWidget, tabObjectName))
+            assert index > 0, 'failed to find index?'
+            tabw.setCurrentIndex(index)
+        except Exception as e:
+            self.logger.error(f'failed to change to {tabObjectName} tab w/ \n    %s' % e)
         
         
         

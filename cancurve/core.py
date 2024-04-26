@@ -546,11 +546,11 @@ def c00_setup_project(
         drf_db_fp=None,
         
         bldg_meta=None,
-        fixed_costs_d=None,
+        bldg_layout=None,
         
-        bldg_layout='default',
+        fixed_costs_d=None,        
         
-        curve_name='curve_name',
+        curve_name=None,
         settings_d=None,
         
         log=None,ofp=None,out_dir=None,
@@ -569,8 +569,18 @@ def c00_setup_project(
         filepath to depth-replacement-factor dataset
         defaults to drf_db_default_fp (from params)
         
-    bldg_layout: str
+    bldg_layout: str, optional
         building layout used to slice the DRF
+        derfaults to value in bldg_meta
+        
+    curve_name: str, optional
+        filename base
+        defaults to value in settings_d
+        
+    settings_d: dict, optional
+        conatiner for settings values to apply to 'c00_settings'
+        defaults to settings_default_d (from params)
+        
     
         
     bldg_meta: dict
@@ -580,9 +590,7 @@ def c00_setup_project(
         fixed costs per story
         
         
-    settings_d: dict, optional
-        conatiner for settings values to apply to 'c00_settings'
-        defaults to settings_default_d (from params)
+
     
     """
     
@@ -616,6 +624,17 @@ def c00_setup_project(
         
     assert isinstance(settings_d, dict)
     assert isinstance(bldg_meta, dict)
+    
+    #===========================================================================
+    # from containers
+    #===========================================================================
+    if bldg_layout is None:
+        bldg_layout = bldg_meta['bldg_layout']
+    assert isinstance(bldg_layout, str)
+    
+    if curve_name is None:
+        curve_name = settings_d['curve_name']
+    assert isinstance(curve_name, str) 
  
 
     
@@ -714,7 +733,7 @@ def c00_setup_project(
     #===========================================================================
     # project settings------
     #===========================================================================
-    settings_d.update({'curve_name':curve_name})
+    #settings_d.update({'curve_name':curve_name})
     
     for k , v in settings_d.copy().items():
         if isinstance(v, bool):
@@ -1142,7 +1161,7 @@ def c03_export(
         res_df.to_excel(writer, sheet_name=tabnm, index=False, header=False)
     log.info(f'wrote {res_df.shape} to \n    {ofp}')
     
-    return res_df
+    return res_df, ofp
     
             
         

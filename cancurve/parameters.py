@@ -28,6 +28,9 @@ building_meta_dtypes = {
     'impact_units':str,'impact_var':str, #e.g., replacement costs
     'exposure_units':str, 'exposure_var':str, #e.g., flood depth above main floor
     'scale_units':str,'scale_var':str, #e.g., usable floor space
+    
+    'bldg_layout':str, #building layout used to slice the DRF
+    
     }
 
 floor_story_d = {'main':0, 'basement':-1}
@@ -35,7 +38,7 @@ floor_story_d = {'main':0, 'basement':-1}
 log_format_str =  "%(levelname)s.%(name)s.%(asctime)s:  %(message)s"
 
 
-settings_default_d = {'scale_m2':False}
+settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName'}
 
 
  

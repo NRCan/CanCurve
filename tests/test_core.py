@@ -51,12 +51,7 @@ def ci_fp(testCase):
     tdata_dir = os.path.join(test_data_dir_master, testCase)    
     return find_single_file_by_extension(tdata_dir, '.csv')
     
-@pytest.fixture(scope='function')
-def fixed_costs_d(testCase):
-    return {
-        'case1':{0:10000, -1:8000},
-        'case2':None,        
-        }[testCase]
+
 
 #===============================================================================
 # tests---------
