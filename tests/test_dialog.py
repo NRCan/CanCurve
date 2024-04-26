@@ -92,6 +92,21 @@ def test_get_fixed_costs(dialog,
  
     assert result_d==fixed_costs_d
     
+
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',[
+    'case1',
+    #'case2',
+    ], indirect=False)
+def test_get_building_details(dialog, 
+                         tableWidget_di_fixedCosts, #calling this sets the values on the UI
+                         bldg_meta
+                         ):
+    
+    result = dialog._get_building_details()
+ 
+ 
+    
     
     
     

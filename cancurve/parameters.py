@@ -40,6 +40,18 @@ log_format_str =  "%(levelname)s.%(name)s.%(asctime)s:  %(message)s"
 
 settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName'}
 
+building_details_options_d = {
+    'occupancyClassification': ['Residential', 'Commercial', 'Industrial', 'Other'],
+    'subClassification': ['Single Family', 'Construction', 'Duplex', 'entertainment and recreation'],
+    'storeys': ['1', '2', '3', 'Split'],
+    'heatingType': ['baseboard-electric', 'baseboard-hot water', 'Forced air - electric', 'forced air-gas'],
+    'coolingType': ['Central air', 'Heat pump'],
+    'garageType': ['Yes, Attached', 'Yes, Detached', 'None'],
+    'garageSize': ['Single', 'Single Plus', 'Double', 'Triple'],
+    'sizeOrAreaUnits':['m2', 'ft2'],
+    'qualityOfBuildingMaterials': ['Below Average', 'Average', 'Above Average', 'Custom'],
+    'Taxes': ['PST', 'PST & GST', 'GST', 'None']
+}
 
  
 

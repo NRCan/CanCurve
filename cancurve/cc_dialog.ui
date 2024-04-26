@@ -119,7 +119,7 @@ QLabel {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_01_welcome">
       <property name="palette">
@@ -175,207 +175,350 @@ p, li { white-space: pre-wrap; }
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
-        <widget class="QGroupBox" name="groupBox_8">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="widgetResizable">
+          <bool>true</bool>
          </property>
-         <property name="title">
-          <string>General Building Details</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_8">
-          <item>
-           <layout class="QFormLayout" name="formLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="occupancyClassificationLabel">
-              <property name="text">
-               <string>Occupancy Classification</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QComboBox" name="occupancyClassificationComboBox"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="subClassificationLabel">
-              <property name="text">
-               <string>Sub-classification</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="subClassificationComboBox"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="storeysLabel">
-              <property name="text">
-               <string>Storeys</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QComboBox" name="storeysComboBox"/>
-            </item>
-           </layout>
-          </item>
-         </layout>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>-102</y>
+            <width>729</width>
+            <height>763</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_16">
+           <item>
+            <widget class="QGroupBox" name="groupBox_t02_01_buildingDetails">
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="title">
+              <string>General Building Details</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_8">
+              <item>
+               <layout class="QFormLayout" name="formLayout_t02_01">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="occupancyClassificationLabel">
+                  <property name="text">
+                   <string>Occupancy Classification</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="occupancyClassification_ComboBox"/>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="subClassificationLabel">
+                  <property name="text">
+                   <string>Sub-classification</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="subClassification_ComboBox"/>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="storeysLabel">
+                  <property name="text">
+                   <string>Storeys/Levels</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QComboBox" name="storeys_ComboBox"/>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="BedroomCount">
+                  <property name="text">
+                   <string>Number of Bedrooms (Residential)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QSpinBox" name="BedroomCount_QSpinBox"/>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="BathroomCount">
+                  <property name="text">
+                   <string>Number of Bathrooms</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QDoubleSpinBox" name="BathroomCount_DoubleSpinBox"/>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="basementPresent">
+                  <property name="text">
+                   <string>Basement Present </string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QCheckBox" name="basementPresent_CheckBox"/>
+                </item>
+                <item row="6" column="0">
+                 <widget class="QLabel" name="percentOfBasementFinishedLabel">
+                  <property name="text">
+                   <string>Percent of Basement finished</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QDoubleSpinBox" name="percentOfBasementFinished_DoubleSpinBox"/>
+                </item>
+                <item row="7" column="0">
+                 <widget class="QLabel" name="heatingTypeLabel">
+                  <property name="text">
+                   <string>Heating Type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="QComboBox" name="heatingType_ComboBox"/>
+                </item>
+                <item row="8" column="0">
+                 <widget class="QLabel" name="coolingTypeLabel">
+                  <property name="text">
+                   <string>Cooling Type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1">
+                 <widget class="QComboBox" name="coolingType_ComboBox"/>
+                </item>
+                <item row="9" column="0">
+                 <widget class="QLabel" name="garageTypeLabel">
+                  <property name="text">
+                   <string>Garage Type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="1">
+                 <widget class="QComboBox" name="garageType_ComboBox"/>
+                </item>
+                <item row="10" column="0">
+                 <widget class="QLabel" name="garageSizeLabel">
+                  <property name="text">
+                   <string>Garage Size</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="10" column="1">
+                 <widget class="QComboBox" name="garageSize_ComboBox"/>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_t02_02_sizeage">
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="title">
+              <string>Size, Age, Materials</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <item>
+               <layout class="QGridLayout" name="gridLayout_t02_03" columnstretch="2,2,1,1">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="sizeOrAreaValueLabel">
+                  <property name="text">
+                   <string>Size or Area (value)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QComboBox" name="sizeOrAreaUnits_ComboBox"/>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QComboBox" name="qualityOfBuildingMaterials_ComboBox"/>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="yearOfBuildingConstructionLabel">
+                  <property name="text">
+                   <string>Year of building construction</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="firstFloorElevationLabel">
+                  <property name="text">
+                   <string>First floor elevation</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QSpinBox" name="yearOfBuildingConstruction_SpinBox">
+                  <property name="maximum">
+                   <number>9999</number>
+                  </property>
+                  <property name="value">
+                   <number>1994</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QDoubleSpinBox" name="sizeOrAreaValue_DoubleSpinBox"/>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QDoubleSpinBox" name="firstFloorElevation_DoubleSpinBox"/>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="qualityOfBuildingMaterialsLabel">
+                  <property name="text">
+                   <string>Quality of Building Materials</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLabel" name="sizeOrAreaUnitsLabel">
+                  <property name="text">
+                   <string>units</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="3">
+                 <widget class="QComboBox" name="comboBox_2"/>
+                </item>
+                <item row="4" column="2">
+                 <widget class="QLabel" name="label_8">
+                  <property name="text">
+                   <string>units</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_t02_03_location">
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="title">
+              <string>Location, Costs</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_10">
+              <item>
+               <layout class="QFormLayout" name="formLayout_t02_04">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="locationCityTownRegionLabel">
+                  <property name="text">
+                   <string>Location (city/town/region)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="locationCityTownRegionLineEdit"/>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="provinceTerritoryLabel">
+                  <property name="text">
+                   <string>Province/Territory</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QComboBox" name="provinceTerritoryComboBox"/>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="priceListSourceLabel">
+                  <property name="text">
+                   <string>Price List Source</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLineEdit" name="priceListSourceLineEdit">
+                  <property name="placeholderText">
+                   <string>e.g: Exactimate</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="taxesIncludedLabel">
+                  <property name="text">
+                   <string>Taxes included</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QComboBox" name="taxesIncluded_comboBox"/>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_t02_04_misc">
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="title">
+              <string>Misc</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_11">
+              <item>
+               <layout class="QFormLayout" name="formLayout_4">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="dateCurveCreatedLabel">
+                  <property name="text">
+                   <string>Date Curve Created</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="dateCurveCreatedLineEdit"/>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="createdByLabel">
+                  <property name="text">
+                   <string>Created by</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="createdByLineEdit"/>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_9">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="title">
-          <string>Size, Age &amp; Building Materials</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_9">
-          <item>
-           <layout class="QFormLayout" name="formLayout_2">
-            <item row="0" column="0">
-             <widget class="QLabel" name="sizeAreaM2OrFt2Label">
-              <property name="text">
-               <string>Size (Area - m2 or ft2)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="sizeAreaM2OrFt2LineEdit"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="qualityOfBuildingMaterialsLabel">
-              <property name="text">
-               <string>Quality of Building Materials</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="qualityOfBuildingMaterialsComboBox"/>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_10">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="title">
-          <string>Location &amp; Costs</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_10">
-          <item>
-           <layout class="QFormLayout" name="formLayout_3">
-            <item row="0" column="0">
-             <widget class="QLabel" name="locationCityTownRegionLabel">
-              <property name="text">
-               <string>Location (city/town/region)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="locationCityTownRegionLineEdit"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="provinceTerritoryLabel">
-              <property name="text">
-               <string>Province/Territory</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QComboBox" name="provinceTerritoryComboBox"/>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="priceListSourceLabel">
-              <property name="text">
-               <string>Price List Source</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLineEdit" name="priceListSourceLineEdit"/>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="taxesIncludedLabel">
-              <property name="text">
-               <string>Taxes included</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLineEdit" name="taxesIncludedLineEdit"/>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_11">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="title">
-          <string>Misc: </string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_11">
-          <item>
-           <layout class="QFormLayout" name="formLayout_4">
-            <item row="0" column="0">
-             <widget class="QLabel" name="dateCurveCreatedLabel">
-              <property name="text">
-               <string>Date Curve Created</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="dateCurveCreatedLineEdit"/>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="createdByLabel">
-              <property name="text">
-               <string>Created by: </string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="createdByLineEdit"/>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
