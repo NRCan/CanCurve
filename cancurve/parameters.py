@@ -10,8 +10,9 @@ from datetime import datetime
 # directories and files
 #===============================================================================
 src_dir = os.path.dirname(os.path.dirname(__file__))
-
 drf_db_default_fp = os.path.join(src_dir, 'cancurve', 'db', 'mrb_20240416.db')
+home_dir = os.path.join(os.path.expanduser('~'), 'CanCurve')
+
 
 #===============================================================================
 # params

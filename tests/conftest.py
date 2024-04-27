@@ -3,11 +3,11 @@ Created on Apr. 16, 2024
 
 @author: cef
 '''
-import pytest, os, shutil
+import pytest, os, shutil, random
 
 
 from cancurve.hp.basic import find_single_file_by_extension
-from cancurve.parameters import src_dir
+from cancurve.parameters import src_dir, building_details_options_d
 
 #===============================================================================
 # data
@@ -39,4 +39,19 @@ def fixed_costs_d(testCase):
     return {
         'case1':{0:10000, -1:8000},
         'case2':None,        
+        }[testCase]
+        
+        
+@pytest.fixture(scope='function')
+def bldg_meta_d(testCase):
+    
+    #just take first from parameters
+    case1_d = {k:v[0] for k,v in building_details_options_d.items()}
+    
+    #random choice
+    case2_d = {k: random.choice(v) for k, v in building_details_options_d.items()}
+    
+    return {
+        'case1':case1_d,
+        'case2':case2_d,        
         }[testCase]

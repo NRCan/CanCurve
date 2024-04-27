@@ -11,12 +11,14 @@ import pytest, time, sys
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt, QApplication
 from PyQt5.QtWidgets import QAction, QFileDialog, QListWidget, QTableWidgetItem
+from qgis.PyQt import QtWidgets
 
 import pandas as pd
 
  
 
 from cancurve.dialog import CanCurveDialog
+from cancurve.hp.qt import assert_string_in_combobox
 from tests.test_plugin import logger
 
 #===============================================================================
@@ -66,19 +68,36 @@ def tableWidget_di_fixedCosts(dialog, fixed_costs_d):
         tblW.setItem(i, 1, QTableWidgetItem(str(pval)))
     
        
-
+@pytest.fixture(scope='function')    
+def set_tab_02_bldgDetils(dialog, bldg_meta_d):
+    """populate the 'Building Details' tab with test metadata"""
+    
+    dialog._change_tab('tab_02_bldgDetils')
+    
+    #loop through and change the combobox to match whats in the dictionary
+    for k,v in bldg_meta_d.items():
+        comboBox = dialog._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
+        
+        #check if the requested value is one of the comboBox's options
+        assert_string_in_combobox(comboBox, v)
+        
+        #set this value
+        comboBox.setCurrentText(v)
 
 #===============================================================================
 # tests------
 #===============================================================================
-@pytest.mark.dev
+
 def test_init(dialog):
-    QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
-    #qtbot.addWidget(dialog)
-    #qtbot.stopForInteraction()
-    sys.exit(QApp.exec_()) #wrap
+    
+ #==============================================================================
+ #    """manual inspection only"""
+ #    QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+ # 
+ #    sys.exit(QApp.exec_()) #wrap
+ #==============================================================================
  
-    #time.sleep(60)  # keep the dialog open for 60 seconds
+ 
     
     assert hasattr(dialog, 'logger')
  
@@ -86,7 +105,21 @@ def test_init(dialog):
 #===============================================================================
 # private tests-------
 #===============================================================================
-"""function shidden from user"""
+"""functions hidden from user"""
+
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',[
+    'case1',
+    #'case2',
+    ], indirect=False)
+def test_get_building_details(dialog, 
+                         set_tab_02_bldgDetils, #calling this sets the values on the UI
+                         bldg_meta_d
+                         ):
+    
+    result = dialog._get_building_details()
+    
+    assert result==bldg_meta_d
 
 
 @pytest.mark.parametrize('testCase',[
@@ -104,16 +137,7 @@ def test_get_fixed_costs(dialog,
     
 
 
-@pytest.mark.parametrize('testCase',[
-    'case1',
-    #'case2',
-    ], indirect=False)
-def test_get_building_details(dialog, 
-                         tableWidget_di_fixedCosts, #calling this sets the values on the UI
-                         bldg_meta
-                         ):
-    
-    result = dialog._get_building_details()
+
  
  
     
