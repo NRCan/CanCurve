@@ -6,10 +6,10 @@ Created on Apr. 26, 2024
 tests dialogs
 '''
 
-import pytest
+import pytest, time, sys
 
 from PyQt5.QtTest import QTest
-from PyQt5.Qt import Qt
+from PyQt5.Qt import Qt, QApplication
 from PyQt5.QtWidgets import QAction, QFileDialog, QListWidget, QTableWidgetItem
 
 import pandas as pd
@@ -42,11 +42,13 @@ use fixtures to parameterize in blocks
     
 @pytest.fixture(scope='function') 
 def dialog(qgis_iface):
+    
     dialog =  CanCurveDialog(parent=None, iface=qgis_iface,
                           debug_logger=logger, #connect python logger for rtests
                           )
-    
+    dialog.setModal(False)
     dialog.show() #launch the window?
+    
     
     return dialog
     
@@ -69,16 +71,24 @@ def tableWidget_di_fixedCosts(dialog, fixed_costs_d):
 #===============================================================================
 # tests------
 #===============================================================================
-
+@pytest.mark.dev
 def test_init(dialog):
+    QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+    #qtbot.addWidget(dialog)
+    #qtbot.stopForInteraction()
+    sys.exit(QApp.exec_()) #wrap
+ 
+    #time.sleep(60)  # keep the dialog open for 60 seconds
+    
     assert hasattr(dialog, 'logger')
+ 
     
 #===============================================================================
 # private tests-------
 #===============================================================================
 """function shidden from user"""
 
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',
@@ -93,7 +103,7 @@ def test_get_fixed_costs(dialog,
     assert result_d==fixed_costs_d
     
 
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',

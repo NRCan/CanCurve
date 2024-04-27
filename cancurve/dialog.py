@@ -38,7 +38,7 @@ from PyQt5.QtWidgets import (
 
 from qgis.core import Qgis, QgsLogger, QgsMessageLog
 
-from .parameters import building_meta_dtypes
+from .parameters import building_meta_dtypes, building_details_options_d
 
 
 #===============================================================================
@@ -87,7 +87,8 @@ class plugLogger(object):
         #build a new logger
         child_log = plugLogger(self.parent, 
                            statusQlab=self.statusQlab,
-                           log_nm=log_nm)
+                           log_nm=log_nm,
+                           debug_logger=self.debug_logger)
         
 
         
@@ -263,20 +264,38 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
         """
         log = self.logger.getChild('connect_slots')
         log.debug('connecting slots')
+ 
         
         
         #=======================================================================
         # general----------------
         #=======================================================================
-        """are these needed?
-        #ok/cancel buttons
-        self.buttonBox.accepted.connect(self.reject) #back out of the dialog
-        self.buttonBox.rejected.connect(self.reject)
-        """
-        
+        self.close_pushButton.clicked.connect(self.close) 
+        self.cancel_pushButton.clicked.connect(self.action_cancel_process)
+        #=======================================================================
+        # Tab: 02 Building Details-------
+        #=======================================================================
         
         #=======================================================================
-        # Tab: Create Curve---------
+        # populate ui
+        #=======================================================================
+        #populate form options from parameters
+        for k,v in building_details_options_d.items():
+            #append empty
+            options_l = [''] + v
+            #retrieve the combo box matching the name
+            log.debug(f'setting \'{k}\':{options_l}')
+            comboBox = self._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
+            comboBox.addItems(options_l)
+            
+        #add the current date to the LineEdit
+        self.dateCurveCreatedLineEdit.setText(datetime.datetime.now().strftime('%Y %m %d %H:%M:%S'))
+        
+        #username
+        self.createdByLineEdit.setText(os.getlogin())
+        
+        #=======================================================================
+        # Tab: 04 Create Curve---------
         #=======================================================================
         self.pushButton_Tcc_run.clicked.connect(self.action_Tcc_run)
         
@@ -285,7 +304,11 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
         
         
     def action_Tcc_run(self):
-        """pushButton_Tcc_run"""
+        """pushButton_Tcc_run
+        
+        TODO: implement QgsTask
+        
+        """
         log = self.logger.getChild('action_Tcc_run')
         log.push(f'start')
         
@@ -313,6 +336,23 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
 
             
             )
+        
+    def action_cancel_process(self):
+        """handle user cancel request
+        
+        may need to implement QgsTask for this to work
+        
+        cancel_pushButton
+        
+        
+        """
+        # 1. Set a flag to signal cancellation 
+        self.process_should_cancel = True     
+ 
+    
+        # 3. Optionally provide feedback to the user and 
+        self.logger.warning('user requested \'Cancel\'')
+        #    (e.g., disable the cancel button, show a progress bar)
         
     def _get_building_details(self):
         """retrieve dataa from Building Details tab"""
@@ -351,6 +391,8 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS):
             tabw.setCurrentIndex(index)
         except Exception as e:
             self.logger.error(f'failed to change to {tabObjectName} tab w/ \n    %s' % e)
+            
+
         
         
         

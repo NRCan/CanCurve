@@ -154,7 +154,7 @@ def _get_proj_meta(log,
                    function_name=None,
                    misc=None):
     
- 
+    raise IOError('import this from Building Details tab')
     proj_meta_df = pd.DataFrame({
             #'curve_name':[curve_name], 
             #'date':[today_str],

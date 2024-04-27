@@ -90,6 +90,8 @@ QTextEdit {
     background-color: #99B7B3;  
 }
 
+
+
 QWidget { /* Targets most widgets */
     font-size: 14px; 
 } 
@@ -119,7 +121,7 @@ QLabel {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_01_welcome">
       <property name="palette">
@@ -149,21 +151,21 @@ QLabel {
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:14px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Welcome to CanCurve! This tool is designed to create depth (stage) damage functions from user input.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to CanCurve! This tool is designed to create depth (stage) damage functions from user input.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/plugins/cancurve/img/icon.png&quot; /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;In order for this tool to successfully run, the inputs you will need:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;General Data&lt;/span&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;: On the building details tab, there are a series of dropdown menus to fill in, which will populate metadata fields about the depth damage curve. Some of the fields may be used in the calculation process.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Cost Information: &lt;/span&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;CSV file of Items &amp;amp; Costs.Click HERE for an example file&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;CanCurve accepts the following additional files for more customization:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;- Depth-Replacement-Factor dataset&lt;/span&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;: By default, the CanCurve DRF dataset is used .&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Click the tabs at the top of the screen to navigate through the screens and create your CanCurve			&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;			&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;			&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:14pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In order for this tool to successfully run, the inputs you will need:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;General Data&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: On the building details tab, there are a series of dropdown menus to fill in, which will populate metadata fields about the depth damage curve. Some of the fields may be used in the calculation process.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Cost Information: &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;CSV file of Items &amp;amp; Costs.Click HERE for an example file&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;CanCurve accepts the following additional files for more customization:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;- Depth-Replacement-Factor dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: By default, the CanCurve DRF dataset is used .&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Click the tabs at the top of the screen to navigate through the screens and create your CanCurve			&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;			&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;			&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
        </item>
@@ -176,6 +178,13 @@ p, li { white-space: pre-wrap; }
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
         <widget class="QScrollArea" name="scrollArea">
+         <property name="palette">
+          <palette>
+           <active/>
+           <inactive/>
+           <disabled/>
+          </palette>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -183,10 +192,16 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-102</y>
+            <y>0</y>
             <width>729</width>
-            <height>763</height>
+            <height>816</height>
            </rect>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+QGroupBox {
+ background-color: #99B7B3;
+}</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_16">
            <item>
@@ -198,6 +213,12 @@ p, li { white-space: pre-wrap; }
                <bold>true</bold>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true">QLabel {
+    font-size: 12px; 
+}
+</string>
+             </property>
              <property name="title">
               <string>General Building Details</string>
              </property>
@@ -206,8 +227,19 @@ p, li { white-space: pre-wrap; }
                <layout class="QFormLayout" name="formLayout_t02_01">
                 <item row="0" column="0">
                  <widget class="QLabel" name="occupancyClassificationLabel">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>-1</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>Occupancy Classification</string>
+                  </property>
+                  <property name="textFormat">
+                   <enum>Qt::PlainText</enum>
                   </property>
                  </widget>
                 </item>
@@ -328,6 +360,11 @@ p, li { white-space: pre-wrap; }
                <bold>true</bold>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true">QLabel {
+    font-size: 12px; 
+}</string>
+             </property>
              <property name="title">
               <string>Size, Age, Materials</string>
              </property>
@@ -355,9 +392,9 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item row="4" column="0">
-                 <widget class="QLabel" name="firstFloorElevationLabel">
+                 <widget class="QLabel" name="basementHeightLabel">
                   <property name="text">
-                   <string>First floor elevation</string>
+                   <string>Basement height</string>
                   </property>
                  </widget>
                 </item>
@@ -375,7 +412,7 @@ p, li { white-space: pre-wrap; }
                  <widget class="QDoubleSpinBox" name="sizeOrAreaValue_DoubleSpinBox"/>
                 </item>
                 <item row="4" column="1">
-                 <widget class="QDoubleSpinBox" name="firstFloorElevation_DoubleSpinBox"/>
+                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox"/>
                 </item>
                 <item row="2" column="0">
                  <widget class="QLabel" name="qualityOfBuildingMaterialsLabel">
@@ -395,7 +432,7 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item row="4" column="3">
-                 <widget class="QComboBox" name="comboBox_2"/>
+                 <widget class="QComboBox" name="basementHeightUnits_ComboBox"/>
                 </item>
                 <item row="4" column="2">
                  <widget class="QLabel" name="label_8">
@@ -421,6 +458,11 @@ p, li { white-space: pre-wrap; }
                <bold>true</bold>
               </font>
              </property>
+             <property name="styleSheet">
+              <string notr="true">QLabel {
+    font-size: 12px; 
+}</string>
+             </property>
              <property name="title">
               <string>Location, Costs</string>
              </property>
@@ -428,14 +470,20 @@ p, li { white-space: pre-wrap; }
               <item>
                <layout class="QFormLayout" name="formLayout_t02_04">
                 <item row="0" column="0">
-                 <widget class="QLabel" name="locationCityTownRegionLabel">
+                 <widget class="QLabel" name="countryLabel">
                   <property name="text">
-                   <string>Location (city/town/region)</string>
+                   <string>Country</string>
                   </property>
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="locationCityTownRegionLineEdit"/>
+                 <widget class="QComboBox" name="country_ComboBox">
+                  <item>
+                   <property name="text">
+                    <string>Canada</string>
+                   </property>
+                  </item>
+                 </widget>
                 </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="provinceTerritoryLabel">
@@ -445,31 +493,51 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QComboBox" name="provinceTerritoryComboBox"/>
+                 <widget class="QComboBox" name="provinceTerritory_ComboBox"/>
                 </item>
                 <item row="2" column="0">
+                 <widget class="QLabel" name="locationCityTownRegionLabel">
+                  <property name="text">
+                   <string>Location (city/town/region)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLineEdit" name="locationCityTownRegionLineEdit"/>
+                </item>
+                <item row="3" column="0">
                  <widget class="QLabel" name="priceListSourceLabel">
                   <property name="text">
                    <string>Price List Source</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="3" column="1">
                  <widget class="QLineEdit" name="priceListSourceLineEdit">
                   <property name="placeholderText">
                    <string>e.g: Exactimate</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
+                <item row="4" column="0">
                  <widget class="QLabel" name="taxesIncludedLabel">
                   <property name="text">
                    <string>Taxes included</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
-                 <widget class="QComboBox" name="taxesIncluded_comboBox"/>
+                <item row="4" column="1">
+                 <widget class="QComboBox" name="taxesIncluded_ComboBox"/>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="pricingDateLabel">
+                  <property name="text">
+                   <string>Pricing Date</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QDateEdit" name="pricingDateDateEdit"/>
                 </item>
                </layout>
               </item>
@@ -484,6 +552,11 @@ p, li { white-space: pre-wrap; }
                <weight>75</weight>
                <bold>true</bold>
               </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLabel {
+    font-size: 12px; 
+}</string>
              </property>
              <property name="title">
               <string>Misc</string>
@@ -1146,7 +1219,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QProgressBar" name="progressBar_2">
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
          </widget>
         </item>
@@ -1155,14 +1228,17 @@ p, li { white-space: pre-wrap; }
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
-         <widget class="QPushButton" name="pushButton_6">
+         <widget class="QPushButton" name="cancel_pushButton">
           <property name="text">
            <string>Cancel</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="close_pushButton">
           <property name="text">
            <string>Close</string>
           </property>
