@@ -68,15 +68,39 @@ def get_formLayout_data(form_layout: QFormLayout) -> dict:
         corresponding widget values.
     """
 
+    assert form_layout.rowCount()>0
+    
     field_values = {}
     for row in range(form_layout.rowCount()):
-        label = form_layout.labelForField(form_layout.itemAt(row, QFormLayout.LabelRole).widget())
-        widget = form_layout.itemAt(row, QFormLayout.FieldRole).widget()
+        #retrieve widgets
+        labelWidget = form_layout.itemAt(row, QFormLayout.LabelRole).widget() 
+        valueWidget = form_layout.itemAt(row, QFormLayout.FieldRole).widget()
+        
+        #retrieve values
+        field_values[labelWidget.objectName() ] = _get_widget_value(valueWidget)
 
-        if label:
-            field_values[label.text()] = _get_widget_value(widget)
-
+    assert len(field_values)==form_layout.rowCount(), f'failed to retrieve all values'
     return field_values
+
+def get_gridLayout_data(grid_layout):
+    
+    num_rows = grid_layout.rowCount()
+    num_columns = grid_layout.columnCount()
+
+    res_lib = dict()
+    for row in range(num_rows):
+        res_lib[row] = dict()
+        for col in range(num_columns):
+            grid_item = grid_layout.itemAtPosition(row, col)
+            if grid_item is not None:
+                v = _get_widget_value(grid_item.widget())
+            else:
+                v=None
+            
+            res_lib[row][col] = v
+            
+
+    return res_lib
 
 def _get_widget_value(widget):
     """Handles common widget types to extract their value."""
@@ -84,6 +108,8 @@ def _get_widget_value(widget):
         return widget.text()
     elif isinstance(widget, QComboBox):
         return widget.currentText() 
+    elif isinstance(widget, QLabel):
+        return widget.text()
     # Add more cases for other widget types (QSpinBox, QCheckBox, etc.)
     else:
         return None  # Or raise an exception if unsupported

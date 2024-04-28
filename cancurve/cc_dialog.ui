@@ -121,7 +121,7 @@ QLabel {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab_01_welcome">
       <property name="palette">
@@ -192,7 +192,7 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-155</y>
             <width>729</width>
             <height>816</height>
            </rect>
@@ -370,7 +370,7 @@ QGroupBox {
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_9">
               <item>
-               <layout class="QGridLayout" name="gridLayout_t02_03" columnstretch="2,2,1,1">
+               <layout class="QGridLayout" name="gridLayout_t02_02" columnstretch="2,2,1,1">
                 <item row="0" column="0">
                  <widget class="QLabel" name="sizeOrAreaValueLabel">
                   <property name="text">
@@ -468,7 +468,7 @@ QGroupBox {
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_10">
               <item>
-               <layout class="QFormLayout" name="formLayout_t02_04">
+               <layout class="QFormLayout" name="formLayout_t02_03">
                 <item row="0" column="0">
                  <widget class="QLabel" name="countryLabel">
                   <property name="text">
@@ -563,7 +563,7 @@ QGroupBox {
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_11">
               <item>
-               <layout class="QFormLayout" name="formLayout_4">
+               <layout class="QFormLayout" name="formLayout_t02_04">
                 <item row="0" column="0">
                  <widget class="QLabel" name="dateCurveCreatedLabel">
                   <property name="text">

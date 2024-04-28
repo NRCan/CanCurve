@@ -276,14 +276,15 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # #retrieve info from UI----------
         #=======================================================================
+        
         ci_fp = self.lineEdit_di_cifp.text()
         drf_db_fp = self.lineEdit_di_drf_db_fp.text()
         
         out_dir = self.lineEdit_wdir.text()
         #curve_name = self.lineEdit_di_curveName.text() in settings_d
-        bldg_meta = self.get_building_details()
-        fixed_costs_d = self.get_fixed_costs()
-        settings_d = self.get_settings()
+        bldg_meta = self.get_building_details(logger=log)
+        fixed_costs_d = self.get_fixed_costs(logger=log)
+        settings_d = self.get_settings(logger=log)
         
         
         #=======================================================================
@@ -315,15 +316,45 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.logger.warning('user requested \'Cancel\'')
         #    (e.g., disable the cancel button, show a progress bar)
         
-    def _get_building_details(self):
+    def _get_building_details(self,
+                              logger=None):
         """retrieve dataa from Building Details tab"""
+        if logger is None: logger = self.logger
+        log = logger.getChild('_get_building_details')
         
-        get_formLayout_data(self.formLayout_t02_01)
+        #=======================================================================
+        # #general  building details
+        #=======================================================================
+        bldg_meta_d = get_formLayout_data(self.formLayout_t02_01)
         
-        #check all of the keys are present
+        #=======================================================================
+        # #size age materials (grid layout)
+        #=======================================================================
+        d=dict()
+        for row, vals_l in get_gridLayout_data(self.gridLayout_t02_02).items():
+            d[vals_l[0]] = vals_l[1] #main value
+            units_v = vals_l.pop(3)
+            if not units_v is None:
+                d['%s_units'%vals_l[0]] = units_v            
+        bldg_meta_d.update(d)
+        
+        #=======================================================================
+        # location costs
+        #=======================================================================
+        bldg_meta_d.update(get_formLayout_data(self.formLayout_t02_03))
+        
+        #=======================================================================
+        # misc
+        #=======================================================================
+        bldg_meta_d.update(get_formLayout_data(self.formLayout_t02_04))
+        
+        #=======================================================================
+        # #check all of the keys are present
+        #=======================================================================
+        log.debug(f'collected {len(bldg_meta_d)} entries from \'Building Details\' tab')
         building_meta_dtypes
         
-    def _get_fixed_costs(self):
+    def _get_fixed_costs(self, logger=None):
         """retireve fixed costs from 'Data Input' tab"""
         df_raw =  tableWidget_to_dataframe(self.tableWidget_di_fixedCosts)
         
@@ -331,7 +362,7 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
  
  
         
-    def _get_settings(self):
+    def _get_settings(self, logger=None):
         """retrieve project settings from Data Input  tab"""
         return {
             'curve_name':self.lineEdit_di_curveName.text(),

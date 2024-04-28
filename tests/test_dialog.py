@@ -117,6 +117,13 @@ def test_get_building_details(dialog,
                          bldg_meta_d
                          ):
     
+    """manual inspection only"""
+  #=============================================================================
+  #   QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+  # 
+  #   sys.exit(QApp.exec_()) #wrap
+  #=============================================================================
+    
     result = dialog._get_building_details()
     
     assert result==bldg_meta_d
