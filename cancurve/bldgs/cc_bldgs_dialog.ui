@@ -66,32 +66,13 @@ QPushButton:disabled {
 	color:#DDDDDD
 }
 
-
-
-QTabBar::tab { /* Targets individual tabs */
-    background-color: #507A78; 
-    color: white; 
-}
-
-QTabBar::tab:selected { /* Style for selected tabs */
-    background-color: #2B403F; 
-	color: white; 
-}
-
+ 
 QTextEdit {
     background-color: #99B7B3; 
 }
 
- QTabWidget { /* Targets the background of the tab widget's content area */
-    background-color: #99B7B3;  
-}
 
- QTabWidget::pane { /* Targets the background of the tab widget's content area */
-    background-color: #99B7B3;  
-}
-
-
-
+ 
 QWidget { /* Targets most widgets */
     font-size: 14px; 
 } 
@@ -118,10 +99,27 @@ QLabel {
 
  QTabWidget::pane { /* Targets the background of the tab widget's content area */
     background-color: #99B7B3;  
-}</string>
+}
+
+ 
+ 
+QTabBar::tab { 
+    background-color: #507A78;
+    color: white;
+    border: 1px solid gray; 
+    box-sizing: border-box; /* The key change */
+	padding: 5px; /* Adjust as needed */
+}
+
+QTabBar::tab:selected { /* Style for selected tabs */
+    background-color: #2B403F; 
+	color: white; 
+}
+
+</string>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab1welcome">
       <property name="palette">
@@ -130,15 +128,6 @@ QLabel {
         <inactive/>
         <disabled/>
        </palette>
-      </property>
-      <property name="styleSheet">
-       <string notr="true"> QTabWidget { /* Targets the background of the tab widget's content area */
-    background-color: #99B7B3;  
-}
-
- QTabWidget::pane { /* Targets the background of the tab widget's content area */
-    background-color: #99B7B3;  
-}</string>
       </property>
       <attribute name="title">
        <string>Welcome</string>
