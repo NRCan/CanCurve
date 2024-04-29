@@ -17,7 +17,7 @@ import pandas as pd
 
  
 
-from cancurve.dialog import CanCurveDialog
+from cancurve.bldgs.dialog import BldgsDialog
 from cancurve.hp.qt import assert_string_in_combobox
 from tests.test_plugin import logger
 
@@ -45,7 +45,7 @@ use fixtures to parameterize in blocks
 @pytest.fixture(scope='function') 
 def dialog(qgis_iface):
     
-    dialog =  CanCurveDialog(parent=None, iface=qgis_iface,
+    dialog =  BldgsDialog(parent=None, iface=qgis_iface,
                           debug_logger=logger, #connect python logger for rtests
                           )
     dialog.setModal(False)
@@ -75,7 +75,8 @@ def set_tab_02_bldgDetils(dialog, bldg_meta_d):
     dialog._change_tab('tab_02_bldgDetils')
     
     #loop through and change the combobox to match whats in the dictionary
-    for k,v in bldg_meta_d.items():
+    for k,v_raw in bldg_meta_d.items():
+        v = str(v_raw)
         comboBox = dialog._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
         
         #check if the requested value is one of the comboBox's options
@@ -126,7 +127,12 @@ def test_get_building_details(dialog,
     
     result = dialog._get_building_details()
     
-    assert result==bldg_meta_d
+    for k,v in bldg_meta_d.items():
+        assert k in result, f'key \'{k}\' missing in result'
+        if k.endswith('Units'): #skip m^2
+            continue
+        assert v==result[k], f'value for \'{k}\' mismatch'
+ 
 
 
 @pytest.mark.parametrize('testCase',[

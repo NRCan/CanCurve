@@ -14,9 +14,9 @@ import numpy as np
 import sqlite3
 from datetime import datetime
 
-from .hp.logr import get_log_stream
-from .hp.basic import view_web_df as view
-from .hp.basic import convert_to_bool
+from hp.logr import get_log_stream
+from hp.basic import view_web_df as view
+from hp.basic import convert_to_bool
 
 
 from .parameters import drf_db_default_fp, colns_index, today_str, settings_default_d, building_meta_dtypes

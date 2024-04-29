@@ -8,7 +8,7 @@ import os
 import sqlite3
 import pandas as pd
 
-from cancurve.parameters import colns_index, colns_dtypes
+from .parameters import colns_index, colns_dtypes
 
 
 

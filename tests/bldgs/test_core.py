@@ -9,12 +9,14 @@ tests for the core module
 
 import pytest, os, shutil, pickle
 
+ 
+
 import pandas as pd
 
 
-from tests.conftest import find_single_file_by_extension, src_dir, test_data_dir_master
+from .conftest import find_single_file_by_extension, test_data_dir_master
  
-
+ 
 
 
 #===============================================================================
@@ -72,11 +74,11 @@ def ci_fp(testCase):
 #     ])
 #===============================================================================
 def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d):
-    from cancurve.core import c00_setup_project as func
+    from cancurve.bldgs.core import c00_setup_project as func
     
     result = func(ci_fp, 
          out_dir=tmp_path, 
-         bldg_meta={'basement_height_m':1.8, 'mf_area_m2':232.0},
+         bldg_meta={'basement_height_m':1.8, 'mf_area_m2':232.0, 'bldg_layout':'default'},
          fixed_costs_d=fixed_costs_d,
          curve_name=f'{testCase}_c00',
          ofp=os.path.join(tmp_path, f'{testCase}_c00.cancurve'))
@@ -97,7 +99,7 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d):
     ], indirect=False)
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)
 def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
-    from cancurve.core import c01_join_drf as func   
+    from cancurve.bldgs.core import c01_join_drf as func   
  
     result = func(proj_db_fp)
     
@@ -115,7 +117,7 @@ def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
                                      #True, False
                                      ], indirect=False)
 def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
-    from cancurve.core import c02_group_story as func 
+    from cancurve.bldgs.core import c02_group_story as func 
       
     result = func(proj_db_fp, scale_m2=scale_m2)
     
@@ -129,7 +131,7 @@ def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c03'], indirect=False)
 def test_c03_export(proj_db_fp, testCase, testPhase, tmp_path):
-    from cancurve.core import c03_export as func 
+    from cancurve.bldgs.core import c03_export as func 
       
     result = func(proj_db_fp, out_dir=tmp_path)
     

@@ -56,3 +56,23 @@ def convert_to_bool(value):
         elif value.lower() == 'false':
             return False
     return value  # Keep other values as they are
+
+
+
+def convert_to_number(text):
+    """
+    Attempts to convert a string to a number (int or float) if possible.
+    
+    Args:
+        text: The string to convert.
+    
+    Returns:
+        The converted number (int or float) if successful, None otherwise.
+    """
+    try:
+        return int(text)
+    except ValueError:
+        try:
+            return float(text)
+        except ValueError:
+            return text

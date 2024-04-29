@@ -10,7 +10,7 @@ import numpy as np
 
 from PyQt5.QtWidgets import (
     QFormLayout, QWidgetItem, QLabel, QLineEdit, QComboBox,
-    QTableWidget, QWidget,
+    QTableWidget, QWidget, QDoubleSpinBox, QSpinBox, QCheckBox, QDateEdit
     )
 
 from qgis.PyQt import QtWidgets
@@ -31,7 +31,7 @@ def assert_string_in_combobox(combo_box: QComboBox, target_string: str):
     raise AssertionError(f"String '{target_string}' not found in ComboBox items")
 
 
-def tableWidget_to_dataframe(tableWidget: QTableWidget):
+def get_tabelWidget_data(tableWidget: QTableWidget):
     """Converts the contents of a QTableWidget to a pandas DataFrame.
 
     Args:
@@ -59,13 +59,9 @@ def tableWidget_to_dataframe(tableWidget: QTableWidget):
 
 def get_formLayout_data(form_layout: QFormLayout) -> dict:
     """Retrieves field (label) and value pairs from a QFormLayout.
+    
+    using valueWidget's objectname, but dropping the suffix
 
-    Args:
-        form_layout: The QFormLayout instance to extract data from.
-
-    Returns:
-        A dictionary where keys are field labels and values are the
-        corresponding widget values.
     """
 
     assert form_layout.rowCount()>0
@@ -73,16 +69,33 @@ def get_formLayout_data(form_layout: QFormLayout) -> dict:
     field_values = {}
     for row in range(form_layout.rowCount()):
         #retrieve widgets
-        labelWidget = form_layout.itemAt(row, QFormLayout.LabelRole).widget() 
+        #labelWidget = form_layout.itemAt(row, QFormLayout.LabelRole).widget() 
         valueWidget = form_layout.itemAt(row, QFormLayout.FieldRole).widget()
         
         #retrieve values
-        field_values[labelWidget.objectName() ] = _get_widget_value(valueWidget)
+        k = valueWidget.objectName().split('_')[0]
+        field_values[k] = _get_widget_value(valueWidget)
 
     assert len(field_values)==form_layout.rowCount(), f'failed to retrieve all values'
     return field_values
 
-def get_gridLayout_data(grid_layout):
+def get_gridLayout_data(grid_layout, 
+                        skip_types_l=[QLabel],
+                        flatten=True,
+                        ):
+    """retrieve data from a grid_layout
+    
+    Params
+    ---------
+    flatten: bool, True
+        return a flat dictionary of {name:value}
+        losses positional information
+    
+    Returns
+    ------------
+    dict
+        {row:{col:{name of widget (w/o suffix):value of widget}}}
+    """
     
     num_rows = grid_layout.rowCount()
     num_columns = grid_layout.columnCount()
@@ -93,12 +106,23 @@ def get_gridLayout_data(grid_layout):
         for col in range(num_columns):
             grid_item = grid_layout.itemAtPosition(row, col)
             if grid_item is not None:
-                v = _get_widget_value(grid_item.widget())
-            else:
-                v=None
-            
-            res_lib[row][col] = v
-            
+                w = grid_item.widget()
+                if type(w) in skip_types_l: continue #skip this one
+                res_lib[row][col] = {w.objectName().split('_')[0]: _get_widget_value(w)}
+                
+    if flatten:
+        d = dict()
+        for row, row_d in res_lib.items():
+            for col, val_d in row_d.items():
+                assert len(val_d)==1
+                for k,v in val_d.items():break #retrieve first
+                
+                d[k] = v
+                
+        res_lib = d
+        
+                
+ 
 
     return res_lib
 
@@ -110,9 +134,17 @@ def _get_widget_value(widget):
         return widget.currentText() 
     elif isinstance(widget, QLabel):
         return widget.text()
-    # Add more cases for other widget types (QSpinBox, QCheckBox, etc.)
+    elif isinstance(widget, QDoubleSpinBox):
+        return widget.value()
+    elif isinstance(widget, QSpinBox):
+        return widget.value()
+    elif isinstance(widget, QCheckBox):
+        return widget.isChecked()
+    elif isinstance(widget, QDateEdit):
+        return widget.date().toPyDate()
+    
     else:
-        return None  # Or raise an exception if unsupported
+        raise NotImplementedError(type(widget))
 
 
 class DialogQtBasic():

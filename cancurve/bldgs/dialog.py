@@ -32,13 +32,16 @@ from qgis.PyQt import QtWidgets
  
 from qgis.core import Qgis, QgsLogger, QgsMessageLog
 
-
-from .hp.qt import *
+from hp.basic import convert_to_number
+from hp.qt import (
+        DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data
+        )
 
 from .parameters import (
-    building_meta_dtypes, building_details_options_d, drf_db_default_fp,
-    home_dir
+    building_meta_dtypes, drf_db_default_fp,home_dir
     )
+
+from .parameters_ui import building_details_options_d
 
 
 #===============================================================================
@@ -169,20 +172,20 @@ sys.path.append(os.path.dirname(__file__))
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'cc_dialog.ui'), resource_suffix='')
+    os.path.dirname(__file__), 'cc_bldgs_dialog.ui'), resource_suffix='')
 
 
 
 
 
-class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
+class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     def __init__(self, 
                  parent=None, #not sure what this is supposed to be... 
                  iface=None,
                  debug_logger=None, #testing only
                  ):
         """Constructor."""
-        super(CanCurveDialog, self).__init__(parent)
+        super(BldgsDialog, self).__init__(parent)
         # Set up the user interface from Designer through FORM_CLASS.
         # After self.setupUi() you can access any designer object by doing
         # self.<objectname>, and you can use autoconnect slots - see
@@ -234,7 +237,7 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             #retrieve the combo box matching the name
             log.debug(f'setting \'{k}\':{options_l}')
             comboBox = self._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
-            comboBox.addItems(options_l)
+            comboBox.addItems([str(e) for e in options_l])
             comboBox.setCurrentIndex(-1)
             
         #add the current date to the LineEdit
@@ -290,7 +293,7 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # run actions-------
         #=======================================================================
-        from cancurve.core import c00_setup_project, c01_join_drf, c02_group_story, c03_export
+        from .core import c00_setup_project, c01_join_drf, c02_group_story, c03_export
         
         c00_setup_project(
             ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
@@ -323,20 +326,17 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log = logger.getChild('_get_building_details')
         
         #=======================================================================
+        # extract from layouts----------
+        #=======================================================================
+        #=======================================================================
         # #general  building details
         #=======================================================================
         bldg_meta_d = get_formLayout_data(self.formLayout_t02_01)
         
         #=======================================================================
         # #size age materials (grid layout)
-        #=======================================================================
-        d=dict()
-        for row, vals_l in get_gridLayout_data(self.gridLayout_t02_02).items():
-            d[vals_l[0]] = vals_l[1] #main value
-            units_v = vals_l.pop(3)
-            if not units_v is None:
-                d['%s_units'%vals_l[0]] = units_v            
-        bldg_meta_d.update(d)
+        #======================================================================= 
+        bldg_meta_d.update(get_gridLayout_data(self.gridLayout_t02_02))
         
         #=======================================================================
         # location costs
@@ -349,14 +349,40 @@ class CanCurveDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         bldg_meta_d.update(get_formLayout_data(self.formLayout_t02_04))
         
         #=======================================================================
+        # fixes----
+        #=======================================================================
+        for k,v in bldg_meta_d.copy().items():
+            new_v=None
+            if isinstance(v, str):
+                if '\u00B2' in v:
+                    new_v = v.replace('\u00B2', '2')
+                elif v=='':
+                    new_v = np.nan
+                else:
+                    new_v = convert_to_number(v) 
+                    
+                    
+            if not new_v is None:
+                bldg_meta_d[k] = new_v
+                
+        
+        #=======================================================================
         # #check all of the keys are present
         #=======================================================================
+        """
+        bldg_meta_d['locationCityTownRegionLineEdit']
+        for k,v in bldg_meta_d.items():
+            print(f'{k}\n    {v} ({type(v)})')
+        """
+        
         log.debug(f'collected {len(bldg_meta_d)} entries from \'Building Details\' tab')
         building_meta_dtypes
         
+        return bldg_meta_d
+        
     def _get_fixed_costs(self, logger=None):
         """retireve fixed costs from 'Data Input' tab"""
-        df_raw =  tableWidget_to_dataframe(self.tableWidget_di_fixedCosts)
+        df_raw =  get_tabelWidget_data(self.tableWidget_di_fixedCosts)
         
         return df_raw.astype(float).set_index(df_raw.columns[0]).iloc[:, 0].to_dict()
  
