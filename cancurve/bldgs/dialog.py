@@ -30,9 +30,10 @@ from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 
  
-from qgis.core import Qgis, QgsLogger, QgsMessageLog
+
 
 from hp.basic import convert_to_number
+from hp.plug import plugLogger
 from hp.qt import (
         DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data
         )
@@ -47,115 +48,7 @@ from .parameters_ui import building_details_options_d
 #===============================================================================
 # helpers-------
 #===============================================================================
-class plugLogger(object): 
-    """pythonic logging interface"""
-    
-    log_tabnm = 'CanCurve' # qgis logging panel tab name
-    
-    log_nm = 'cc' #logger name
-    
-    def __init__(self, 
-                 iface,
-                 statusQlab=None,                 
-                 parent=None,
-                 log_nm = None,
-                 debug_logger=None,
-                 ):
-        """
-        
-        params
-        ---------
-        debug_logger: python logging class
-            workaround to capture QgsLogger
-        """
-        
-        self.iface=iface
-        self.statusQlab = statusQlab
-        self.parent=parent
-        self.debug_logger=debug_logger
-        
-        if  log_nm is None: #normal calls
-            self.log_nm = '%s.%s'%(self.log_nm, self.parent.__class__.__name__)
-        else: #getChild calls
-            self.log_nm = log_nm
-        
-        
-    def getChild(self, new_childnm):
-        
-        if hasattr(self.parent, 'logger'):
-            log_nm = '%s.%s'%(self.parent.logger.log_nm, new_childnm)
-        else:
-            log_nm = new_childnm
-        
-        #build a new logger
-        child_log = plugLogger(self.parent, 
-                           statusQlab=self.statusQlab,
-                           log_nm=log_nm,
-                           debug_logger=self.debug_logger)
-        
-
-        
-        return child_log
-    
-    def info(self, msg):
-        self._loghlp(msg, Qgis.Info, push=False, status=True)
-
-
-    def debug(self, msg):
-        self._loghlp(msg, -1, push=False, status=False)
-        
-        if not self.debug_logger is None: 
-            self.debug_logger.debug(msg)
- 
-    def warning(self, msg):
-        self._loghlp(msg, Qgis.Warning, push=False)
-
-    def push(self, msg):
-        self._loghlp(msg, Qgis.Info, push=True)
-
-    def error(self, msg):
-        """similar behavior to raising a QError.. but without throwing the execption"""
-        self._loghlp(msg, Qgis.Critical, push=True)
-        
-    def _loghlp(self, #helper function for generalized logging
-                msg_raw, qlevel, 
-                push=False, #treat as a push message on Qgis' bar
-                status=False, #whether to send to the status widget
-                ):
-        """
-        QgsMessageLog writes to the message panel
-            optionally, users can enable file logging
-            this file logger 
-        """
-
-        #=======================================================================
-        # send message based on qlevel
-        #=======================================================================
-        msgDebug = '%s    %s: %s'%(datetime.datetime.now().strftime('%d-%H.%M.%S'), self.log_nm,  msg_raw)
-        
-        if qlevel < 0: #file logger only            
-            QgsLogger.debug('D_%s'%msgDebug)            
-            push, status = False, False #should never trip
-            
-        else:#console logger
-            msg = '%s:   %s'%(self.log_nm, msg_raw)
-            QgsMessageLog.logMessage(msg, self.log_tabnm, level=qlevel)
-            QgsLogger.debug('%i_%s'%(qlevel, msgDebug)) #also send to file
-            
-        #Qgis bar
-        if push:
-            try:
-                self.iface.messageBar().pushMessage(self.log_tabnm, msg_raw, level=qlevel)
-            except:
-                QgsLogger.debug('failed to push to interface') #used for standalone tests
-        
-        #Optional widget
-        if status or push:
-            if not self.statusQlab is None:
-                self.statusQlab.setText(msg_raw)
-    
-        
-        
+  
         
         
         
@@ -267,14 +160,41 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         
         
-    def action_Tcc_run(self):
-        """pushButton_Tcc_run
+    def action_tab_04_actions_run(self):
+        """main ALL runner button
+        
+        pushButton_tab_04_actions_run
         
         TODO: implement QgsTask
         
         """
-        log = self.logger.getChild('action_Tcc_run')
+        log = self.logger.getChild('tab_04_actions_run')
         log.push(f'start')
+        
+        out_dir = self.lineEdit_wdir.text()
+
+        
+        
+        #=======================================================================
+        # run actions-------
+        #=======================================================================
+        self._run_c00_setup_project(logger=log)
+        
+
+        
+    def action_tab_04_actions_step1(self):
+        """step1 run button
+        
+        pushButton_tab_04_actions_step1"""
+        self._run_c00_setup_project()
+        
+    def _run_c00_setup_project(self, logger=None):
+        """retrive and run project setup
+        
+        re-factored so we can call it from multiple push buttons
+        """
+        if logger is None: logger = self.logger
+        log = logger.getChild('_run')
         
         #=======================================================================
         # #retrieve info from UI----------
@@ -283,7 +203,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         ci_fp = self.lineEdit_di_cifp.text()
         drf_db_fp = self.lineEdit_di_drf_db_fp.text()
         
-        out_dir = self.lineEdit_wdir.text()
+        
         #curve_name = self.lineEdit_di_curveName.text() in settings_d
         bldg_meta = self.get_building_details(logger=log)
         fixed_costs_d = self.get_fixed_costs(logger=log)
@@ -291,16 +211,19 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         
         #=======================================================================
-        # run actions-------
+        # run action--------
         #=======================================================================
-        from .core import c00_setup_project, c01_join_drf, c02_group_story, c03_export
+        from .core import c00_setup_project
         
-        c00_setup_project(
+        
+        return c00_setup_project(
             ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
-            settings_d=settings_d,
-
+            settings_d=settings_d, log=log
             
             )
+        
+        
+        
         
     def action_cancel_process(self):
         """handle user cancel request

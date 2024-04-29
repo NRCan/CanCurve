@@ -121,7 +121,7 @@ QLabel {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_01_welcome">
       <property name="palette">
@@ -192,7 +192,7 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-155</y>
+            <y>0</y>
             <width>729</width>
             <height>816</height>
            </rect>
@@ -503,7 +503,7 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QLineEdit" name="locationCityTownRegionLineEdit"/>
+                 <widget class="QLineEdit" name="locationCityTownRegion_LineEdit"/>
                 </item>
                 <item row="3" column="0">
                  <widget class="QLabel" name="priceListSourceLabel">
@@ -513,7 +513,7 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="3" column="1">
-                 <widget class="QLineEdit" name="priceListSourceLineEdit">
+                 <widget class="QLineEdit" name="priceListSource_LineEdit">
                   <property name="placeholderText">
                    <string>e.g: Exactimate</string>
                   </property>
@@ -537,7 +537,7 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="5" column="1">
-                 <widget class="QDateEdit" name="pricingDateDateEdit"/>
+                 <widget class="QDateEdit" name="pricingDate_DateEdit"/>
                 </item>
                </layout>
               </item>
@@ -572,7 +572,7 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QLineEdit" name="dateCurveCreatedLineEdit"/>
+                 <widget class="QLineEdit" name="dateCurveCreated_LineEdit"/>
                 </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="createdByLabel">
@@ -582,7 +582,7 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QLineEdit" name="createdByLineEdit"/>
+                 <widget class="QLineEdit" name="createdBy_LineEdit"/>
                 </item>
                </layout>
               </item>
@@ -929,7 +929,7 @@ QGroupBox {
           </widget>
          </item>
          <item alignment="Qt::AlignHCenter">
-          <widget class="QPushButton" name="pushButton_Tcc_run">
+          <widget class="QPushButton" name="pushButton_tab_04_actions_run">
            <property name="text">
             <string>Run</string>
            </property>
@@ -945,7 +945,7 @@ QGroupBox {
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QGroupBox" name="groupBox_4">
+             <widget class="QGroupBox" name="groupBox_step01">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -954,7 +954,7 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
-                <widget class="QPushButton" name="pushButton_3">
+                <widget class="QPushButton" name="pushButton_tab_04_actions_step1">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -992,7 +992,7 @@ QGroupBox {
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_2">
+                <widget class="QCheckBox" name="checkBox_tab_04_actions_step1_ciPlot">
                  <property name="text">
                   <string>cost-item summary plot</string>
                  </property>
@@ -1002,7 +1002,7 @@ QGroupBox {
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_5">
+                <widget class="QCheckBox" name="checkBox_tab_04_actions_step1_drfPlot">
                  <property name="text">
                   <string>DRF summary plot</string>
                  </property>
@@ -1012,7 +1012,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_5">
+             <widget class="QGroupBox" name="groupBox_step02">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1021,7 +1021,7 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
-                <widget class="QPushButton" name="pushButton_4">
+                <widget class="QPushButton" name="pushButton_tab_04_actions_step2">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -1056,7 +1056,7 @@ QGroupBox {
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_3">
+                <widget class="QCheckBox" name="checkBox_tab_04_actions_step2_plot">
                  <property name="text">
                   <string>depth-RCV summary plot</string>
                  </property>
@@ -1066,7 +1066,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_6">
+             <widget class="QGroupBox" name="groupBox_step03">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1075,7 +1075,7 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
-                <widget class="QPushButton" name="pushButton_5">
+                <widget class="QPushButton" name="pushButton_tab_04_actions_step3">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -1110,7 +1110,7 @@ QGroupBox {
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_4">
+                <widget class="QCheckBox" name="checkBox_tab_04_actions_step3_plot">
                  <property name="text">
                   <string>depth-damage per-story plot</string>
                  </property>
@@ -1120,7 +1120,7 @@ QGroupBox {
              </widget>
             </item>
             <item>
-             <widget class="QGroupBox" name="groupBox_3">
+             <widget class="QGroupBox" name="groupBox_step04">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1129,7 +1129,7 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
                <item>
-                <widget class="QPushButton" name="pushButton_2">
+                <widget class="QPushButton" name="pushButton_tab_04_actions_step4">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
