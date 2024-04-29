@@ -6,7 +6,7 @@ Created on Apr. 26, 2024
 tests dialogs
 '''
 
-import pytest, time, sys
+import pytest, time, sys, inspect
 
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt, QApplication
@@ -16,10 +16,12 @@ from qgis.PyQt import QtWidgets
 import pandas as pd
 
  
-
+from cancurve.bldgs.parameters import drf_db_default_fp
 from cancurve.bldgs.dialog import BldgsDialog
-from cancurve.hp.qt import assert_string_in_combobox
+from cancurve.hp.qt import assert_string_in_combobox, enable_widget_and_parents
 from tests.test_plugin import logger
+
+ 
 
 #===============================================================================
 # helpers-----
@@ -48,28 +50,24 @@ def dialog(qgis_iface):
     dialog =  BldgsDialog(parent=None, iface=qgis_iface,
                           debug_logger=logger, #connect python logger for rtests
                           )
-    dialog.setModal(False)
+ 
     dialog.show() #launch the window?
     
     
     return dialog
+
+#===============================================================================
+# populating dialog for tests
+#===============================================================================
+@pytest.fixture(scope='function') 
+def set_all_tabs(set_tab2bldgDetils, set_tab3dataInput):
+    """call all the fixtures"""
+    
+    return True
+    
     
 @pytest.fixture(scope='function')    
-def tableWidget_di_fixedCosts(dialog, fixed_costs_d):
-    """assign the dictionary to the input table widget"""
-    dialog._change_tab('tab_03_dataInput')
-    tblW = dialog.tableWidget_di_fixedCosts
-    
-    ser = pd.Series(fixed_costs_d)
- 
-    tblW.setRowCount(len(ser)) #add this many rows
-    for i, (eName, pval) in enumerate(ser.items()):
-        tblW.setItem(i, 0, QTableWidgetItem(str(eName)))
-        tblW.setItem(i, 1, QTableWidgetItem(str(pval)))
-    
-       
-@pytest.fixture(scope='function')    
-def set_tab_02_bldgDetils(dialog, bldg_meta_d):
+def set_tab2bldgDetils(dialog, bldg_meta_d):
     """populate the 'Building Details' tab with test metadata"""
     
     dialog._change_tab('tab_02_bldgDetils')
@@ -84,6 +82,51 @@ def set_tab_02_bldgDetils(dialog, bldg_meta_d):
         
         #set this value
         comboBox.setCurrentText(v)
+        
+    print('tab2bldgDetils setup')
+    
+    return True
+
+@pytest.fixture(scope='function') 
+def set_tab3dataInput(dialog, set_tableWidget_tab3dataInput_fixedCosts, 
+                      testCase, ci_fp, scale_m2,
+                      tmp_path):
+    
+    dialog.lineEdit_wdir.setText(str(tmp_path))
+    dialog.lineEdit_tab3dataInput_curveName.setText(testCase)
+    dialog.lineEdit_tab3dataInput_cifp.setText(ci_fp)
+    
+    if scale_m2: 
+        dialog.radioButton_tab3dataInput_rcvm2.setChecked(True)
+    else:
+        dialog.radioButton_tab3dataInput_rcvm2.setChecked(False)
+        
+    """not needed... the default is set during connect_slots
+    dialog.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)"""
+    
+    print('tab3dataInput setup')
+    
+    return True
+    
+@pytest.fixture(scope='function')    
+def set_tableWidget_tab3dataInput_fixedCosts(dialog, fixed_costs_d):
+    """assign the dictionary to the input table widget"""
+    dialog._change_tab('tab3dataInput')
+    
+    tblW = dialog.tableWidget_tab3dataInput_fixedCosts #get the table widget
+    
+    ser = pd.Series(fixed_costs_d)
+ 
+    tblW.setRowCount(len(ser)) #add this many rows
+    for i, (eName, pval) in enumerate(ser.items()):
+        tblW.setItem(i, 0, QTableWidgetItem(str(eName)))
+        tblW.setItem(i, 1, QTableWidgetItem(str(pval)))
+    
+    return True
+       
+
+        
+
 
 #===============================================================================
 # tests------
@@ -91,12 +134,12 @@ def set_tab_02_bldgDetils(dialog, bldg_meta_d):
 
 def test_init(dialog):
     
- #==============================================================================
- #    """manual inspection only"""
- #    QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
- # 
- #    sys.exit(QApp.exec_()) #wrap
- #==============================================================================
+  #=============================================================================
+  #   """manual inspection only"""
+  #   QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+  # 
+  #   sys.exit(QApp.exec_()) #wrap
+  #=============================================================================
  
  
     
@@ -108,13 +151,13 @@ def test_init(dialog):
 #===============================================================================
 """functions hidden from user"""
 
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',
     ], indirect=False)
 def test_get_building_details(dialog, 
-                         set_tab_02_bldgDetils, #calling this sets the values on the UI
+                         set_tab2bldgDetils, #calling this sets the values on the UI
                          bldg_meta_d
                          ):
     
@@ -140,30 +183,56 @@ def test_get_building_details(dialog,
     #'case2',
     ], indirect=False)
 def test_get_fixed_costs(dialog, 
-                         tableWidget_di_fixedCosts, #calling this sets the values on the UI
-                         fixed_costs_d
+                         set_tableWidget_tab3dataInput_fixedCosts, #calling this sets the values on the UI
+                         fixed_costs_d 
                          ):
     
     result_d = dialog._get_fixed_costs()
  
     assert result_d==fixed_costs_d
     
-
-
-
  
- 
-    
-    
-    
-    
 #===============================================================================
 # action tests--------
 #===============================================================================
 """simulate user interface"""
- 
-def test_Tcc_run(dialog):
- 
-    QTest.mouseClick(dialog._get_child('pushButton_Tcc_run'), Qt.LeftButton)  
+
+
+    
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',[
+    'case1',
+    #'case2',
+    ], indirect=False)
+@pytest.mark.parametrize('scale_m2',[True], indirect=False)
+def test_action_tab4actions_step1(dialog,
+                                  set_all_tabs,
+                                  ):
+    w = dialog.pushButton_tab4actions_step1
+    enable_widget_and_parents(w) #need to enable the button for it to work 
+    QTest.mouseClick(w, Qt.LeftButton)  
+    
+    print('finished')
+    
+    
+    
+
+
+@pytest.mark.parametrize('testCase',[
+    'case1',
+    #'case2',
+    ], indirect=False)
+@pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
+def test_action_tab4actions_run(dialog, set_all_tabs): 
+    QTest.mouseClick(dialog._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     

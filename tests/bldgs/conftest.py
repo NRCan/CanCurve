@@ -34,6 +34,12 @@ def proj_db_fp(testCase, testPhase, tmp_path):
     return shutil.copy(fp,os.path.join(tmp_path, 'copy_'+os.path.basename(fp)))
 
 
+@pytest.fixture(scope='function')
+def ci_fp(testCase):
+    """cost item filepath retrival by testCase name"""
+    tdata_dir = os.path.join(test_data_dir_master, testCase)    
+    return find_single_file_by_extension(tdata_dir, '.csv')
+
 
 @pytest.fixture(scope='function')
 def fixed_costs_d(testCase):

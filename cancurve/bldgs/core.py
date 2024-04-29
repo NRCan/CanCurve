@@ -19,7 +19,11 @@ from hp.basic import view_web_df as view
 from hp.basic import convert_to_bool
 
 
-from .parameters import drf_db_default_fp, colns_index, today_str, settings_default_d, building_meta_dtypes
+from .parameters import (
+    drf_db_default_fp, colns_index, today_str, settings_default_d, building_meta_dtypes,
+    bldg_layout_options_l,
+    )
+ 
 from .assertions import assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db
 from cancurve import __version__
  
@@ -84,7 +88,7 @@ def load_ci_df(fp, log=None):
     
     
     
-    assert os.path.exists(fp)
+    assert os.path.exists(fp), f'cost-item datafile does not exist\n    {fp}'
     assert fp.endswith('.csv')
     
     log = get_slog('load_ci_df', log)
@@ -195,6 +199,53 @@ def _update_proj_meta(log, conn, meta_d=dict()):
     proj_meta_df.to_sql('project_meta', conn, if_exists='append', index=False)    
     log.debug(f'updated \'project_meta\' w/ {proj_meta_df.shape}')
     return proj_meta_df
+
+
+def _get_building_layout_from_meta(d):
+    """construct the DRF 'bldg_layout' key from granular metadata
+    
+    '1storeybase', '2storeybase','1storeycrawl', '2storeycrawl'
+    
+    legacy carry-over from DRF format
+    would be better to have keys directly in DRF
+    """
+    from .parameters_ui import building_details_options_d
+    
+    #check expectations
+    assert d['occupancyClassification']=='Residential'
+    assert d['foundationType'] in building_details_options_d['foundationType']
+    if not isinstance(d['storeys'], int):
+        assert d['storeys']=='Split'
+ 
+    
+    
+    """
+    for k,v in bldg_meta_d.items():
+        print(k,v)
+    """
+    #===========================================================================
+    # construct from logic
+    #===========================================================================
+    bldg_layout='default'
+    
+    if d['foundationType']=='basement':        
+        if d['storeys']==1:            
+                bldg_layout='1storeybase'            
+        elif d['storeys']==2:
+            bldg_layout='2storeybase'
+            
+    elif d['foundationType']=='crawlspace':
+        if d['storeys']==1:            
+                bldg_layout='1storeycrawl'            
+        elif d['storeys']==2:
+            bldg_layout='2storeycrawl'
+        
+            
+            
+    return bldg_layout
+        
+            
+    
 
 
 class DFunc(object): 
@@ -603,18 +654,41 @@ def c00_setup_project(
     """
     
     #===========================================================================
-    # defaults
+    # defaults*---------
     #===========================================================================
  
     
-    if out_dir is None: 
-        out_dir = os.getcwd()
+    log = get_slog('c00', log)
         
     if bldg_meta is None: bldg_meta=dict()
     assert isinstance(bldg_meta, dict)
-        
-    log = get_slog('c00', log)
     
+    if settings_d is None:
+        settings_d = settings_default_d
+        
+    assert isinstance(settings_d, dict)
+    assert isinstance(bldg_meta, dict)
+        
+ 
+    
+    #===========================================================================
+    # from containers
+    #===========================================================================
+    if bldg_layout is None:
+        bldg_layout = bldg_meta['bldg_layout']
+    assert isinstance(bldg_layout, str)
+    assert bldg_layout in bldg_layout_options_l
+    
+    if curve_name is None:
+        curve_name = settings_d['curve_name']
+    assert isinstance(curve_name, str) 
+    
+    #===========================================================================
+    # filepaths
+    #===========================================================================
+    if out_dir is None: 
+        out_dir = os.getcwd()
+        
     if ofp is None:
         ofp = os.path.join(out_dir, f'{curve_name}_{today_str}.cancurve')
         
@@ -626,26 +700,10 @@ def c00_setup_project(
     else:
         log.info(f'using user-provided depth-replacement-fraction dataset')
         
-        
-    if settings_d is None:
-        settings_d = settings_default_d
-        
-    assert isinstance(settings_d, dict)
-    assert isinstance(bldg_meta, dict)
-    
-    #===========================================================================
-    # from containers
-    #===========================================================================
-    if bldg_layout is None:
-        bldg_layout = bldg_meta['bldg_layout']
-    assert isinstance(bldg_layout, str)
-    
-    if curve_name is None:
-        curve_name = settings_d['curve_name']
-    assert isinstance(curve_name, str) 
  
-
-    
+    log.debug(f'function defaults set as \n    %s'%
+              dict(curve_name=curve_name, bldg_layout=bldg_layout, 
+                   drf_db_fp=drf_db_fp, settings_d=settings_d, ofp=ofp))
     #===========================================================================
     # load datasets---------
     #===========================================================================
@@ -658,6 +716,10 @@ def c00_setup_project(
     # load depth-replacement-factor database
     #===========================================================================
     drf_df_raw = load_drf(drf_db_fp, log=log)
+    
+    """
+    drf_df_raw.index.unique('bldg_layout')
+    """
     
     
     #slice by building layout
@@ -686,15 +748,8 @@ def c00_setup_project(
         msg+=f'\noutput missing entries {ci_df[bx].shape} to {ofp1}'
         
         msg+=f'\nupdate the DRF and re-run this step before proceeding'
-        
  
-        
         log.warning(msg)
-        
-        
-        """
-        view(ci_df)
-        """
  
     else:
         log.debug(f'all keys intersect')
@@ -720,7 +775,8 @@ def c00_setup_project(
     #===========================================================================
     # building metadata------
     #===========================================================================
-    bldg_meta['bldg_layout'] = bldg_layout
+    if not 'bldg_layout' in bldg_meta:
+        bldg_meta['bldg_layout'] = bldg_layout
     
     #create a table 'bldg_meta' and populate it with the entries in bldg_meta
     """using single row to preserve dtypes"""

@@ -29,13 +29,17 @@ import numpy as np
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
 
+from PyQt5.QtTest import QTest
+from PyQt5.Qt import Qt
+
  
 
 
 from hp.basic import convert_to_number
 from hp.plug import plugLogger
 from hp.qt import (
-        DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data
+        DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
+        enable_widget_and_parents
         )
 
 from .parameters import (
@@ -134,10 +138,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             comboBox.setCurrentIndex(-1)
             
         #add the current date to the LineEdit
-        self.dateCurveCreatedLineEdit.setText(datetime.datetime.now().strftime('%Y %m %d %H:%M:%S'))
+        self.dateCurveCreated_LineEdit.setText(datetime.datetime.now().strftime('%Y %m %d %H:%M:%S'))
         
         #username
-        self.createdByLineEdit.setText(os.getlogin())
+        self.createdBy_LineEdit.setText(os.getlogin())
         
         
         #=======================================================================
@@ -147,28 +151,40 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # populate ui
         #=======================================================================
-        self.lineEdit_di_drf_db_fp.setText(drf_db_default_fp)
+        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)
         self.lineEdit_wdir.setText(home_dir)
         
         
         #=======================================================================
         # Tab: 04 Create Curve---------
         #=======================================================================
-        self.pushButton_Tcc_run.clicked.connect(self.action_Tcc_run)
+        self.pushButton_tab4actions_run.clicked.connect(self.action_tab4actions_run)
+        
+        
+        """NOTE: these are disabled by default"""
+        self.pushButton_tab4actions_step1.clicked.connect(
+            self.action_tab4actions_step1
+            #lambda: print('pushButton_tab4actions_step1 clicked')
+            )        
+        self.pushButton_tab4actions_step2.clicked.connect(self.action_tab4actions_step2)
+        self.pushButton_tab4actions_step3.clicked.connect(self.action_tab4actions_step3)
+        self.pushButton_tab4actions_step4.clicked.connect(self.action_tab4actions_step4)
         
         
         
         
         
-    def action_tab_04_actions_run(self):
+        
+        
+    def action_tab4actions_run(self):
         """main ALL runner button
         
-        pushButton_tab_04_actions_run
+        pushButton_tab4actions_run
         
         TODO: implement QgsTask
         
         """
-        log = self.logger.getChild('tab_04_actions_run')
+        log = self.logger.getChild('tab4actions_run')
         log.push(f'start')
         
         out_dir = self.lineEdit_wdir.text()
@@ -178,17 +194,75 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # run actions-------
         #=======================================================================
-        self._run_c00_setup_project(logger=log)
+        #self._run_c00_setup_project(logger=log)
         
 
         
-    def action_tab_04_actions_step1(self):
+    def action_tab4actions_step1(self):
         """step1 run button
         
-        pushButton_tab_04_actions_step1"""
+        pushButton_tab4actions_step1"""
+        log = self.logger.getChild('tab4actions_run')
+        log.push(f'start')
+        
         self._run_c00_setup_project()
         
-    def _run_c00_setup_project(self, logger=None):
+    def _run_c00_setup_project(self, 
+                               logger=None, out_dir=None):
+        """retrive and run project setup
+        
+        re-factored so we can call it from multiple push buttons
+        """
+        #=======================================================================
+        # defaults
+        #=======================================================================
+        if logger is None: logger = self.logger
+        log = logger.getChild('_run')
+        
+        if out_dir is None: out_dir = self.lineEdit_wdir.text()
+        
+        #=======================================================================
+        # #retrieve info from UI----------
+        #=======================================================================
+        
+        ci_fp =         self.lineEdit_tab3dataInput_cifp.text()
+        drf_db_fp =     self.lineEdit_tab3dataInput_drfFp.text()        
+        
+        #curve_name = self.lineEdit_di_curveName.text() in settings_d
+        bldg_meta =     self._get_building_details(logger=log)
+        
+        #fixed costs from table
+        try:
+            fixed_costs_d = self._get_fixed_costs(logger=log)
+        except Exception as e:
+            raise IOError(f'failed to retrieve fixed costs data w/ \n    {e}')
+        
+        settings_d =    self._get_settings(logger=log)
+        
+        #get buidling layout
+        from .core import _get_building_layout_from_meta
+        bldg_layout = _get_building_layout_from_meta(bldg_meta)
+        
+        bldg_meta['bldg_layout'] = bldg_layout
+        #=======================================================================
+        # run action--------
+        #=======================================================================
+        from .core import c00_setup_project as func
+        
+        
+        return func(
+            ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
+            settings_d=settings_d, log=log, out_dir=out_dir
+            )
+        
+    
+    def action_tab4actions_step2(self):
+        """step2 run button
+        
+        pushButton_tab4actions_step2"""
+        self._run_c01_join_drf()
+        
+    def _run_c01_join_drf(self, logger=None):
         """retrive and run project setup
         
         re-factored so we can call it from multiple push buttons
@@ -197,30 +271,47 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log = logger.getChild('_run')
         
         #=======================================================================
-        # #retrieve info from UI----------
+        # run
         #=======================================================================
+        from .core import c01_join_drf as func
         
-        ci_fp = self.lineEdit_di_cifp.text()
-        drf_db_fp = self.lineEdit_di_drf_db_fp.text()
+        return func()
         
+    def action_tab4actions_step3(self):
+        """step3 run button
+    
+        pushButton_tab4actions_step3"""
+        self._run_c02_group_story()
+
+    def _run_c02_group_story(self, logger=None):
+        """retrieve and run group story
+    
+        re-factored so we can call it from multiple push buttons
+        """
+        if logger is None: logger = self.logger
+        log = logger.getChild('_run')
+    
+        from .core import c02_group_story as func
         
-        #curve_name = self.lineEdit_di_curveName.text() in settings_d
-        bldg_meta = self.get_building_details(logger=log)
-        fixed_costs_d = self.get_fixed_costs(logger=log)
-        settings_d = self.get_settings(logger=log)
+        return func()
+    
+    def action_tab4actions_step4(self):
+        """step4 run button
+    
+        pushButton_tab4actions_step4"""
+        self._run_c03_export()
+    
+    def _run_c03_export(self, logger=None):
+        """retrieve and run export
+    
+        re-factored so we can call it from multiple push buttons
+        """
+        if logger is None: logger = self.logger
+        log = logger.getChild('_run')
+    
+        from .core import c03_export as func
         
-        
-        #=======================================================================
-        # run action--------
-        #=======================================================================
-        from .core import c00_setup_project
-        
-        
-        return c00_setup_project(
-            ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
-            settings_d=settings_d, log=log
-            
-            )
+        return func()
         
         
         
@@ -251,14 +342,14 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # extract from layouts----------
         #=======================================================================
-        #=======================================================================
+
         # #general  building details
-        #=======================================================================
         bldg_meta_d = get_formLayout_data(self.formLayout_t02_01)
         
-        #=======================================================================
+        #foundation
+        bldg_meta_d.update(get_formLayout_data(self.formLayout_t02_02a))
+
         # #size age materials (grid layout)
-        #======================================================================= 
         bldg_meta_d.update(get_gridLayout_data(self.gridLayout_t02_02))
         
         #=======================================================================
@@ -272,7 +363,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         bldg_meta_d.update(get_formLayout_data(self.formLayout_t02_04))
         
         #=======================================================================
-        # fixes----
+        # format conversions----
         #=======================================================================
         for k,v in bldg_meta_d.copy().items():
             new_v=None
@@ -305,7 +396,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
     def _get_fixed_costs(self, logger=None):
         """retireve fixed costs from 'Data Input' tab"""
-        df_raw =  get_tabelWidget_data(self.tableWidget_di_fixedCosts)
+        df_raw =  get_tabelWidget_data(self.tableWidget_tab3dataInput_fixedCosts)
         
         return df_raw.astype(float).set_index(df_raw.columns[0]).iloc[:, 0].to_dict()
  
@@ -314,8 +405,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     def _get_settings(self, logger=None):
         """retrieve project settings from Data Input  tab"""
         return {
-            'curve_name':self.lineEdit_di_curveName.text(),
-            'scale_m2':self.radioButton_di_rcvm2.isChecked(), #retrieve from radio buttons
+            'curve_name':self.lineEdit_tab3dataInput_curveName.text(),
+            'scale_m2':self.radioButton_tab3dataInput_rcvm2.isChecked(), #retrieve from radio buttons
             }
 
 

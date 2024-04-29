@@ -121,9 +121,9 @@ QLabel {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
-     <widget class="QWidget" name="tab_01_welcome">
+     <widget class="QWidget" name="tab1welcome">
       <property name="palette">
        <palette>
         <active/>
@@ -171,7 +171,7 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_02_bldgDetils">
+     <widget class="QWidget" name="tab2bldgDetils">
       <attribute name="title">
        <string>Building Details</string>
       </attribute>
@@ -194,7 +194,7 @@ p, li { white-space: pre-wrap; }
             <x>0</x>
             <y>0</y>
             <width>729</width>
-            <height>816</height>
+            <height>891</height>
            </rect>
           </property>
           <property name="styleSheet">
@@ -287,63 +287,43 @@ QGroupBox {
                  <widget class="QDoubleSpinBox" name="BathroomCount_DoubleSpinBox"/>
                 </item>
                 <item row="5" column="0">
-                 <widget class="QLabel" name="basementPresent">
-                  <property name="text">
-                   <string>Basement Present </string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QCheckBox" name="basementPresent_CheckBox"/>
-                </item>
-                <item row="6" column="0">
-                 <widget class="QLabel" name="percentOfBasementFinishedLabel">
-                  <property name="text">
-                   <string>Percent of Basement finished</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="1">
-                 <widget class="QDoubleSpinBox" name="percentOfBasementFinished_DoubleSpinBox"/>
-                </item>
-                <item row="7" column="0">
                  <widget class="QLabel" name="heatingTypeLabel">
                   <property name="text">
                    <string>Heating Type</string>
                   </property>
                  </widget>
                 </item>
-                <item row="7" column="1">
+                <item row="5" column="1">
                  <widget class="QComboBox" name="heatingType_ComboBox"/>
                 </item>
-                <item row="8" column="0">
+                <item row="6" column="0">
                  <widget class="QLabel" name="coolingTypeLabel">
                   <property name="text">
                    <string>Cooling Type</string>
                   </property>
                  </widget>
                 </item>
-                <item row="8" column="1">
+                <item row="6" column="1">
                  <widget class="QComboBox" name="coolingType_ComboBox"/>
                 </item>
-                <item row="9" column="0">
+                <item row="7" column="0">
                  <widget class="QLabel" name="garageTypeLabel">
                   <property name="text">
                    <string>Garage Type</string>
                   </property>
                  </widget>
                 </item>
-                <item row="9" column="1">
+                <item row="7" column="1">
                  <widget class="QComboBox" name="garageType_ComboBox"/>
                 </item>
-                <item row="10" column="0">
+                <item row="8" column="0">
                  <widget class="QLabel" name="garageSizeLabel">
                   <property name="text">
                    <string>Garage Size</string>
                   </property>
                  </widget>
                 </item>
-                <item row="10" column="1">
+                <item row="8" column="1">
                  <widget class="QComboBox" name="garageSize_ComboBox"/>
                 </item>
                </layout>
@@ -352,7 +332,83 @@ QGroupBox {
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="groupBox_t02_02_sizeage">
+            <widget class="QGroupBox" name="groupBox_t02_02a_foundation">
+             <property name="font">
+              <font>
+               <pointsize>-1</pointsize>
+               <weight>75</weight>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">QLabel {
+    font-size: 12px; 
+}
+</string>
+             </property>
+             <property name="title">
+              <string>Foundation/Basement</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_17">
+              <item>
+               <layout class="QFormLayout" name="formLayout_t02_02a">
+                <property name="horizontalSpacing">
+                 <number>12</number>
+                </property>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="foundationBasementTypeLabel">
+                  <property name="text">
+                   <string>Foundation/Basement Type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="foundationType_ComboBox"/>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="basementHeightLabel_2">
+                  <property name="text">
+                   <string>Basement height (value)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox_2"/>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="basementHeightUnitsLabel">
+                  <property name="text">
+                   <string>Basement height (units)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QComboBox" name="basementHeightUnits_ComboBox"/>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="basementFinishLabel">
+                  <property name="text">
+                   <string>Basement finish (percent)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QDoubleSpinBox" name="basementFinish_DoubleSpinBox">
+                  <property name="maximum">
+                   <double>100.000000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>100.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox_t02_02b_sizeage">
              <property name="font">
               <font>
                <pointsize>-1</pointsize>
@@ -371,33 +427,6 @@ QGroupBox {
              <layout class="QVBoxLayout" name="verticalLayout_9">
               <item>
                <layout class="QGridLayout" name="gridLayout_t02_02" columnstretch="2,2,1,1">
-                <item row="0" column="0">
-                 <widget class="QLabel" name="sizeOrAreaValueLabel">
-                  <property name="text">
-                   <string>Size or Area (value)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="3">
-                 <widget class="QComboBox" name="sizeOrAreaUnits_ComboBox"/>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QComboBox" name="qualityOfBuildingMaterials_ComboBox"/>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="yearOfBuildingConstructionLabel">
-                  <property name="text">
-                   <string>Year of building construction</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="basementHeightLabel">
-                  <property name="text">
-                   <string>Basement height</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="3" column="1">
                  <widget class="QSpinBox" name="yearOfBuildingConstruction_SpinBox">
                   <property name="maximum">
@@ -411,13 +440,27 @@ QGroupBox {
                 <item row="0" column="1">
                  <widget class="QDoubleSpinBox" name="sizeOrAreaValue_DoubleSpinBox"/>
                 </item>
-                <item row="4" column="1">
-                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox"/>
+                <item row="2" column="1">
+                 <widget class="QComboBox" name="qualityOfBuildingMaterials_ComboBox"/>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="sizeOrAreaValueLabel">
+                  <property name="text">
+                   <string>Size or Area (value)</string>
+                  </property>
+                 </widget>
                 </item>
                 <item row="2" column="0">
                  <widget class="QLabel" name="qualityOfBuildingMaterialsLabel">
                   <property name="text">
                    <string>Quality of Building Materials</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="yearOfBuildingConstructionLabel">
+                  <property name="text">
+                   <string>Year of building construction</string>
                   </property>
                  </widget>
                 </item>
@@ -431,18 +474,8 @@ QGroupBox {
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="3">
-                 <widget class="QComboBox" name="basementHeightUnits_ComboBox"/>
-                </item>
-                <item row="4" column="2">
-                 <widget class="QLabel" name="label_8">
-                  <property name="text">
-                   <string>units</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
+                <item row="0" column="3">
+                 <widget class="QComboBox" name="sizeOrAreaUnits_ComboBox"/>
                 </item>
                </layout>
               </item>
@@ -595,7 +628,7 @@ QGroupBox {
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_03_dataInput">
+     <widget class="QWidget" name="tab3dataInput">
       <attribute name="title">
        <string>Data Input</string>
       </attribute>
@@ -656,7 +689,7 @@ QGroupBox {
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_13">
           <item>
-           <widget class="QLineEdit" name="lineEdit_di_curveName">
+           <widget class="QLineEdit" name="lineEdit_tab3dataInput_curveName">
             <property name="statusTip">
              <string extracomment="Used for default naming"/>
             </property>
@@ -678,7 +711,7 @@ QGroupBox {
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
-           <widget class="QLineEdit" name="lineEdit_di_cifp">
+           <widget class="QLineEdit" name="lineEdit_tab3dataInput_cifp">
             <property name="statusTip">
              <string extracomment="CSV file of cost-item information"/>
             </property>
@@ -707,7 +740,7 @@ QGroupBox {
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_14">
           <item alignment="Qt::AlignHCenter">
-           <widget class="QTableWidget" name="tableWidget_di_fixedCosts">
+           <widget class="QTableWidget" name="tableWidget_tab3dataInput_fixedCosts">
             <attribute name="horizontalHeaderMinimumSectionSize">
              <number>100</number>
             </attribute>
@@ -761,7 +794,7 @@ QGroupBox {
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="radioButton_di_rcvm2">
+           <widget class="QRadioButton" name="radioButton_tab3dataInput_rcvm2">
             <property name="text">
              <string>RCV/m^2</string>
             </property>
@@ -796,7 +829,7 @@ QGroupBox {
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
-           <widget class="QLineEdit" name="lineEdit_di_drf_db_fp">
+           <widget class="QLineEdit" name="lineEdit_tab3dataInput_drfFp">
             <property name="toolTip">
              <string extracomment="A file does come with the program, but it may not contain all the line-items found in your cost file. If you have your own file, you can load it here, alternatively, the program will default to the internal database and prompt you to add records as needed"/>
             </property>
@@ -833,7 +866,7 @@ QGroupBox {
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_04_actions">
+     <widget class="QWidget" name="tab4actions">
       <property name="font">
        <font>
         <pointsize>-1</pointsize>
@@ -929,7 +962,7 @@ QGroupBox {
           </widget>
          </item>
          <item alignment="Qt::AlignHCenter">
-          <widget class="QPushButton" name="pushButton_tab_04_actions_run">
+          <widget class="QPushButton" name="pushButton_tab4actions_run">
            <property name="text">
             <string>Run</string>
            </property>
@@ -954,7 +987,7 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
-                <widget class="QPushButton" name="pushButton_tab_04_actions_step1">
+                <widget class="QPushButton" name="pushButton_tab4actions_step1">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -992,7 +1025,7 @@ QGroupBox {
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_tab_04_actions_step1_ciPlot">
+                <widget class="QCheckBox" name="checkBox_tab4actions_step1_ciPlot">
                  <property name="text">
                   <string>cost-item summary plot</string>
                  </property>
@@ -1002,7 +1035,7 @@ QGroupBox {
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_tab_04_actions_step1_drfPlot">
+                <widget class="QCheckBox" name="checkBox_tab4actions_step1_drfPlot">
                  <property name="text">
                   <string>DRF summary plot</string>
                  </property>
@@ -1021,7 +1054,7 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
-                <widget class="QPushButton" name="pushButton_tab_04_actions_step2">
+                <widget class="QPushButton" name="pushButton_tab4actions_step2">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -1056,7 +1089,7 @@ QGroupBox {
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_tab_04_actions_step2_plot">
+                <widget class="QCheckBox" name="checkBox_tab4actions_step2_plot">
                  <property name="text">
                   <string>depth-RCV summary plot</string>
                  </property>
@@ -1075,7 +1108,7 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
-                <widget class="QPushButton" name="pushButton_tab_04_actions_step3">
+                <widget class="QPushButton" name="pushButton_tab4actions_step3">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -1110,7 +1143,7 @@ QGroupBox {
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkBox_tab_04_actions_step3_plot">
+                <widget class="QCheckBox" name="checkBox_tab4actions_step3_plot">
                  <property name="text">
                   <string>depth-damage per-story plot</string>
                  </property>
@@ -1129,7 +1162,7 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
                <item>
-                <widget class="QPushButton" name="pushButton_tab_04_actions_step4">
+                <widget class="QPushButton" name="pushButton_tab4actions_step4">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>

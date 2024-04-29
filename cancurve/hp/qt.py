@@ -126,6 +126,15 @@ def get_gridLayout_data(grid_layout,
 
     return res_lib
 
+
+def enable_widget_and_parents(widget):
+    """Enable a widget and all of its parents."""
+    while widget is not None:
+        #print(widget.objectName())
+        widget.setEnabled(True)
+        widget = widget.parent()
+
+
 def _get_widget_value(widget):
     """Handles common widget types to extract their value."""
     if isinstance(widget, QLineEdit):

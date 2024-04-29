@@ -37,7 +37,10 @@ building_meta_dtypes = {
 
 floor_story_d = {'main':0, 'basement':-1}
 
-
+#queried from mrb_20240416.db
+bldg_layout_options_l = ['default', 
+                         'mech-base', 'mech-main', #not sure what is going on with these... they are duplicated in default
+                         '1storeybase', '2storeybase','1storeycrawl', '2storeycrawl']
 
 
 settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName'}

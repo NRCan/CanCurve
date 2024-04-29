@@ -47,11 +47,7 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=False):
 #===============================================================================
  
 
-@pytest.fixture(scope='function')
-def ci_fp(testCase):
-    """cost item filepath retrival by testCase name"""
-    tdata_dir = os.path.join(test_data_dir_master, testCase)    
-    return find_single_file_by_extension(tdata_dir, '.csv')
+
     
 
 
