@@ -10,7 +10,8 @@ import numpy as np
 
 from PyQt5.QtWidgets import (
     QFormLayout, QWidgetItem, QLabel, QLineEdit, QComboBox,
-    QTableWidget, QWidget, QDoubleSpinBox, QSpinBox, QCheckBox, QDateEdit
+    QTableWidget, QWidget, QDoubleSpinBox, QSpinBox, QCheckBox, QDateEdit,
+    QFileDialog
     )
 
 from qgis.PyQt import QtWidgets
@@ -184,3 +185,11 @@ class DialogQtBasic():
             tabw.setCurrentIndex(index)
         except Exception as e:
             self.logger.error(f'failed to change to {tabObjectName} tab w/ \n    %s' % e)
+            
+def _connect_open_file(self, browse_pushButton, filepath_lineEdit):
+    """connect a default 'open file' dialog to the browse_button
+    display the result in the lineEdit""" 
+
+
+
+    browse_pushButton.clicked.connect(handle_browse)

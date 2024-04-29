@@ -31,6 +31,9 @@ from qgis.PyQt import QtWidgets
 
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt
+from PyQt5.QtWidgets import (
+    QFileDialog,
+    )
 
  
 
@@ -132,7 +135,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             #append empty
             options_l = v
             #retrieve the combo box matching the name
-            log.debug(f'setting \'{k}\':{options_l}')
+            #log.debug(f'setting \'{k}\':{options_l}')
             comboBox = self._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
             comboBox.addItems([str(e) for e in options_l])
             comboBox.setCurrentIndex(-1)
@@ -160,9 +163,12 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # Tab: 04 Create Curve---------
         #=======================================================================
+        #=======================================================================
+        # run buttons
+        #=======================================================================
         self.pushButton_tab4actions_run.clicked.connect(self.action_tab4actions_run)
         
-        
+ 
         """NOTE: these are disabled by default"""
         self.pushButton_tab4actions_step1.clicked.connect(self.action_tab4actions_step1)        
         self.pushButton_tab4actions_step2.clicked.connect(self.action_tab4actions_step2)
@@ -174,18 +180,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #create a function to enable the four actions
         def toggle_actions_enabled(checked):
             """Enables or disables actions based on radioButton_tab4actions_runControl_all state"""
-            enabled = checked  # 'checked' will be True if the radio button is checked
-            
-            """need to enable siblings as well
-            for w in [
-                        self.pushButton_tab4actions_step1,
-                        self.pushButton_tab4actions_step2,
-                        self.pushButton_tab4actions_step3,
-                        self.pushButton_tab4actions_step4]:
-                enable_widget_and_parents(w, enabled=enabled)"""
-                
-            
-                
+            enabled = checked  # 'checked' will be True if the radio button is checked 
             
             enable_widget_and_children(self.groupBox_tab4actions_individ, enabled)
             self.pushButton_tab4actions_run.setEnabled(np.invert(enabled))
@@ -196,16 +191,21 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         
         #=======================================================================
-        # self.radioButton_tab4actions_runControl_all.toggled.connect(lambda: print('toggled'))
-        # self.radioButton_tab4actions_runControl_all.clicked.connect(lambda: print('clicked'))
-        # self.radioButton_tab4actions_runControl_all.released.connect(lambda: print('released'))
-        # 
-        # self.radioButton_tab4actions_runControl_individ.toggled.connect(lambda: print('i toggled'))
-        # self.radioButton_tab4actions_runControl_individ.clicked.connect(lambda: print('i clicked'))
-        # self.radioButton_tab4actions_runControl_individ.released.connect(lambda: print('i released'))
+        # project database
         #=======================================================================
-        
-        
+        def proj_db_browse_QFileDialog():
+            filename, _ = QFileDialog.getOpenFileName(
+                self,  # Parent widget (your dialog)
+                "Open CanCurve project database file",  # Dialog title
+                home_dir,  # Initial directory (optional, use current working dir by default)
+                "CanCurve project files (*.cancurve);;database files (*.db)"  # Example file filters
+                )
+            if filename:
+                self.lineEdit_tab4actions_projdb.setText(filename)
+                
+            print('\'proj_db_browse\' finished')
+                
+        self.pushButton_tab4actions_browse.clicked.connect(proj_db_browse_QFileDialog)
         #=======================================================================
         # wrap
         #=======================================================================
@@ -308,12 +308,13 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         if logger is None: logger = self.logger
         log = logger.getChild('_run')
         
+        drf_db_fp =     self.lineEdit_tab3dataInput_drfFp.text() 
         #=======================================================================
         # run
         #=======================================================================
         from .core import c01_join_drf as func
         
-        return func()
+        return func(drf_db_fp, log=log)
         
     def action_tab4actions_step3(self):
         """step3 run button

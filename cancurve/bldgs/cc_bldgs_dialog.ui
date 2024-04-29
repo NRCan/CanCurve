@@ -998,6 +998,41 @@ QGroupBox {
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
+             <widget class="QGroupBox" name="groupBox_01wd_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="title">
+               <string>Project Database:</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_17">
+               <item>
+                <widget class="QLineEdit" name="lineEdit_tab4actions_projdb">
+                 <property name="statusTip">
+                  <string extracomment="Filepath to project SQLite database"/>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Filepath to project SQLite database</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_tab4actions_browse">
+                 <property name="text">
+                  <string>Browse</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
              <widget class="QGroupBox" name="groupBox_step01">
               <property name="enabled">
                <bool>false</bool>

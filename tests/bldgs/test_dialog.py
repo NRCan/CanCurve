@@ -8,6 +8,8 @@ tests dialogs
 
 import pytest, time, sys, inspect
 
+from unittest.mock import patch
+
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt, QApplication, QPoint
 from PyQt5.QtWidgets import QAction, QFileDialog, QListWidget, QTableWidgetItem
@@ -193,9 +195,9 @@ def test_get_fixed_costs(dialog,
     
     
 #===============================================================================
-# dialog logic tests--------
+# Dialog tests--------
 #===============================================================================
-@pytest.mark.dev
+
 def test_radioButton_tab4actions_runControl_all(dialog):
     
    #============================================================================
@@ -251,11 +253,22 @@ def test_radioButton_tab4actions_runControl_all(dialog):
                      
                  
     
-    
+@pytest.mark.dev
+def test_pushButton_tab4actions_browse(dialog):
+    enable_widget_and_parents(dialog.pushButton_tab4actions_browse)
  
+    
+    # Mock QFileDialog.getOpenFileName to return a predetermined filename
+    with patch('PyQt5.QtWidgets.QFileDialog.getOpenFileName', return_value=('test_filename', '')):
+        # Simulate a mouse click on the browse button
+        print('clicking browse from within mock')
+        QTest.mouseClick(dialog.pushButton_tab4actions_browse, Qt.LeftButton)
+
+        # Check that the line edit's text is the expected filename
+        assert dialog.lineEdit_tab4actions_projdb.text() == 'test_filename'
  
 #===============================================================================
-# action tests--------
+# Dialog Action tests--------
 #===============================================================================
 """simulate user interface"""
 
@@ -276,6 +289,21 @@ def test_action_tab4actions_step1(dialog,
     
     print('finished')
     
+    
+
+@pytest.mark.parametrize('testCase',[
+    'case1',
+    #'case2',
+    ], indirect=False)
+@pytest.mark.parametrize('scale_m2',[True], indirect=False)
+def test_action_tab4actions_step2(dialog,
+                                  set_all_tabs,
+                                  ):
+    w = dialog.pushButton_tab4actions_step2
+    enable_widget_and_parents(w) #need to enable the button for it to work 
+    QTest.mouseClick(w, Qt.LeftButton)  
+    
+    print('finished')
     
     
 
