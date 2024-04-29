@@ -11,7 +11,8 @@ import pytest, os, shutil, pickle
 
 import pandas as pd
 
-from tests.conftest import find_single_file_by_extension, src_dir, test_data_dir_master
+
+from .conftest import find_single_file_by_extension, test_data_dir_master
 
 
 #===============================================================================
@@ -70,7 +71,7 @@ def action_result(testCase, testPhase):
 def test_plot_c00_costitems(action_result, tmp_path):
     ci_df, _, _ = action_result #c00 returns both of these
     
-    from cancurve.plots import plot_c00_costitems as func
+    from cancurve.bldgs.plots import plot_c00_costitems as func
     
     figure = func(ci_df)
     
@@ -85,7 +86,7 @@ def test_plot_c00_costitems(action_result, tmp_path):
 def test_plot_c00_DRF(action_result, tmp_path):
     _, drf_df, _ = action_result #c00 returns both of these
     
-    from cancurve.plots import plot_c00_DRF as func
+    from cancurve.bldgs.plots import plot_c00_DRF as func
     
     figure = func(drf_df)
  
@@ -99,7 +100,7 @@ def test_plot_c00_DRF(action_result, tmp_path):
 def test_plot_c01_depth_rcv(action_result, tmp_path):
     data = action_result #c00 returns both of these
     
-    from cancurve.plots import plot_c01_depth_rcv as func
+    from cancurve.bldgs.plots import plot_c01_depth_rcv as func
     
     figure = func(data)
     
@@ -113,7 +114,7 @@ def test_plot_c01_depth_rcv(action_result, tmp_path):
 def test_plot_c02_ddf(action_result, tmp_path):
     data = action_result #c00 returns both of these
     
-    from cancurve.plots import plot_c02_ddf as func
+    from cancurve.bldgs.plots import plot_c02_ddf as func
     
     figure = func(data)
     

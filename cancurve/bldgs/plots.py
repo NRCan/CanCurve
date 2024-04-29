@@ -27,8 +27,8 @@ import os, itertools, math
 import pandas as pd
 import numpy as np
 
-from .hp.logr import get_log_stream
-from .hp.basic import view_web_df as view
+from cancurve.hp.logr import get_log_stream
+from cancurve.hp.basic import view_web_df as view
 
 #===============================================================================
 # helper funcs----------
