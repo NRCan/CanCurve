@@ -92,7 +92,7 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d):
 
     
     
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
@@ -127,7 +127,7 @@ def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
     copy_sqlite(proj_db_fp, testCase, 'c03')
     
     
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c03'], indirect=False)
 def test_c03_export(proj_db_fp, testCase, testPhase, tmp_path):

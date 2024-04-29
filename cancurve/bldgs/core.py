@@ -149,17 +149,21 @@ def load_drf(fp, log=None):
     
     
 
-def _get_proj_meta(log, 
+def _get_proj_meta_d(log, 
                    #curve_name=None,
-                   function_name=None,
-                   misc=None):
+                   #function_name=None,
+                   #misc=None,
+                   ):
+    """database metadata for tracking progress of core functions
     
-    raise IOError('import this from Building Details tab')
-    proj_meta_df = pd.DataFrame({
+    different from teh building metadata
+    """
+    
+    d = {
             #'curve_name':[curve_name], 
             #'date':[today_str],
             
-            'function_name':function_name, 
+            #'function_name':function_name, 
             'script_name':[os.path.basename(__file__)],
             'script_path':[os.path.dirname(__file__)],
             'now':[datetime.now()], 
@@ -169,21 +173,25 @@ def _get_proj_meta(log,
             'python_version':[sys.version.split()[0]],
             'platform':f"{platform.system()} {platform.release()}"            
             
-            })
+            }
     #add qgis
     try:
         from qgis.core import Qgis
-        proj_meta_df['qgis_version'] = Qgis.QGIS_VERSION
+        d['qgis_version'] = Qgis.QGIS_VERSION
     except Exception as e:
         log.warning(f'failed to retrieve QGIS version\n    {e}')
         
-    #add misc
-    if not misc is None:
-        proj_meta_df['misc'] = misc
-    return proj_meta_df
+ 
+    return d
 
-def _update_proj_meta(function_name, log, conn, **kwargs):
-    proj_meta_df = _get_proj_meta(log,function_name=function_name, **kwargs)
+def _update_proj_meta(log, conn, meta_d=dict()):
+    
+    #retrieve data
+    d = _get_proj_meta_d(log)
+    d.update(meta_d) #overwrite/update
+    
+    #push to database
+    proj_meta_df = pd.DataFrame(d)
     proj_meta_df.to_sql('project_meta', conn, if_exists='append', index=False)    
     log.debug(f'updated \'project_meta\' w/ {proj_meta_df.shape}')
     return proj_meta_df
@@ -699,11 +707,15 @@ def c00_setup_project(
     # setup project meta----------
     #===========================================================================
     log.debug(f'setting up project metadata')
-    proj_meta_df = _get_proj_meta(log, function_name='c00_setup_project')
     
-    #set specials
-    proj_meta_df['misc'] = str({'ci_fp':ci_fp, 'drf_db_fp':drf_db_fp})
-    #proj_meta_df['scale_m2'] = str(scale_m2)
+    d = _get_proj_meta_d(log)
+    d.update(dict(
+        function_name='c00_setup_project', misc=str({'ci_fp':ci_fp, 'drf_db_fp':drf_db_fp}),
+        #scale_m2 = str(scale_m2),
+        ))
+    proj_meta_df = pd.DataFrame(d)
+    
+ 
     
     #===========================================================================
     # building metadata------
@@ -842,7 +854,7 @@ def c01_join_drf(
         depth_rcv_df.to_sql('c01_depth_rcv', conn, if_exists='replace', index=True)
         
         #update project meta
-        _update_proj_meta('c01_join_drf', log, conn)
+        _update_proj_meta(log, conn, meta_d =dict(function_name='c01_join_drf'))
  
         
     log.info(f'finished')
@@ -1031,7 +1043,9 @@ def c02_group_story(proj_db_fp,
         ddf3.to_sql(tabnm, conn, if_exists='replace', index=True)
         
         #update project meta
-        _update_proj_meta('c02_group_story', log, conn, misc=str(params_d))
+        _update_proj_meta(log, conn, 
+                          meta_d = dict(function_name='c02_group_story', misc=str(params_d))
+                                        )
  
         
     log.info(f'finished')
