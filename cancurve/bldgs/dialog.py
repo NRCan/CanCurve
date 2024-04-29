@@ -35,9 +35,9 @@ from PyQt5.Qt import Qt
  
 
 
-from hp.basic import convert_to_number
-from hp.plug import plugLogger
-from hp.qt import (
+from ..hp.basic import convert_to_number
+from ..hp.plug import plugLogger
+from ..hp.qt import (
         DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
         enable_widget_and_parents
         )

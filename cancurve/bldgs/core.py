@@ -14,9 +14,9 @@ import numpy as np
 import sqlite3
 from datetime import datetime
 
-from hp.logr import get_log_stream
-from hp.basic import view_web_df as view
-from hp.basic import convert_to_bool
+from ..hp.logr import get_log_stream
+from ..hp.basic import view_web_df as view
+from ..hp.basic import convert_to_bool
 
 
 from .parameters import (
@@ -25,7 +25,7 @@ from .parameters import (
     )
  
 from .assertions import assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db
-from cancurve import __version__
+from .. import __version__
  
  
 #===============================================================================

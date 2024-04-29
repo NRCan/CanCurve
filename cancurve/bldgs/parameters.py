@@ -8,7 +8,7 @@ buildings module parameters
 import os
 from datetime import datetime
 
-from parameters import src_dir, home_dir, today_str
+from ..parameters import src_dir, home_dir, today_str
 
 #===============================================================================
 # directories and files
