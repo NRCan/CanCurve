@@ -262,6 +262,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         if out_dir is None: out_dir = self.lineEdit_wdir.text()
         
+        progress = self.progressBar_tab4actions_step1 #progress bar for this function
+        
+        progress.setValue(5)
         #=======================================================================
         # #retrieve info from UI----------
         #=======================================================================
@@ -285,6 +288,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         bldg_layout = _get_building_layout_from_meta(bldg_meta)
         
         bldg_meta['bldg_layout'] = bldg_layout
+        
+        progress.setValue(50)
         #=======================================================================
         # run action--------
         #=======================================================================
@@ -296,10 +301,15 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             settings_d=settings_d, log=log, out_dir=out_dir
             )
         
+        progress.setValue(95)
         #=======================================================================
         # post ui actions-------
         #=======================================================================
         self.lineEdit_tab4actions_projdb.setText(ofp)
+        
+        progress.setValue(100)
+        
+        return ci_df, drf_df2, ofp
         
         
         
@@ -319,12 +329,24 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log = logger.getChild('_run')
         
         proj_db_fp = self._get_proj_db_fp() 
+        
+        progress = self.progressBar_tab4actions_step2 #progress bar for this function
+        
+        progress.setValue(5)
         #=======================================================================
         # run
         #=======================================================================
         from .core import c01_join_drf as func
+        progress.setValue(10)
+        depth_rcv_df =  func(proj_db_fp, log=log)
         
-        return func(proj_db_fp, log=log)
+        #=======================================================================
+        # wrap
+        #=======================================================================
+        progress.setValue(100)
+        
+        return depth_rcv_df
+        
     
     
     
@@ -345,10 +367,24 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log = logger.getChild('_run')
         
         proj_db_fp = self._get_proj_db_fp() 
-    
-        from .core import c02_group_story as func
         
-        return func(proj_db_fp, log=log)
+        progress = self.progressBar_tab4actions_step3 #progress bar for this function
+        
+        progress.setValue(5)
+    
+        #=======================================================================
+        # run
+        #=======================================================================
+        from .core import c02_group_story as func
+        progress.setValue(10)
+        ddf3 =  func(proj_db_fp, log=log)
+        
+        #=======================================================================
+        # wrap
+        #=======================================================================
+        progress.setValue(100)
+        
+        return ddf3
     
     
     
@@ -370,10 +406,25 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log = logger.getChild('_run')
         
         proj_db_fp = self._get_proj_db_fp() 
+        
+        progress = self.progressBar_tab4actions_step4 #progress bar for this function
+        
+        progress.setValue(5)
+    
+        #=======================================================================
+        # run
+        #=======================================================================
     
         from .core import c03_export as func
+        progress.setValue(10)
         
-        return func(proj_db_fp, log=log)
+        res_df, ofp =  func(proj_db_fp, log=log)
+        
+        #=======================================================================
+        # wrap
+        #=======================================================================
+        progress.setValue(100)
+        return res_df, ofp
         
         
         

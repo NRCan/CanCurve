@@ -193,6 +193,7 @@ class DialogQtBasic():
             assert index > 0, 'failed to find index?'
             tabw.setCurrentIndex(index)
         except Exception as e:
+            raise IOError(f'bad tabname \'{tabObjectName}\'')
             self.logger.error(f'failed to change to {tabObjectName} tab w/ \n    %s' % e)
             
 def _connect_open_file(self, browse_pushButton, filepath_lineEdit):

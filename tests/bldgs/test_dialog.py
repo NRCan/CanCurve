@@ -73,7 +73,7 @@ def set_all_tabs(set_tab2bldgDetils, set_tab3dataInput):
 def set_tab2bldgDetils(dialog, bldg_meta_d):
     """populate the 'Building Details' tab with test metadata"""
     
-    dialog._change_tab('tab_02_bldgDetils')
+    dialog._change_tab('tab2bldgDetils')
     
     #loop through and change the combobox to match whats in the dictionary
     for k,v_raw in bldg_meta_d.items():
@@ -138,19 +138,36 @@ def set_projdb(dialog, proj_db_fp):
 #===============================================================================
 # tests------
 #===============================================================================
-
-def test_init(dialog):
+ 
+def test_init(dialog,):
     
-  #=============================================================================
-  #   """manual inspection only"""
-  #   QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
-  # 
-  #   sys.exit(QApp.exec_()) #wrap
-  #=============================================================================
+   #============================================================================
+   #  """manual inspection only"""
+   #  QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+   # 
+   #  sys.exit(QApp.exec_()) #wrap
+   #============================================================================
  
  
     
     assert hasattr(dialog, 'logger')
+    
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',[
+    'case1',
+    #'case2',
+    ], indirect=False)
+@pytest.mark.parametrize('scale_m2',[True], indirect=False)
+def test_init_prepopulate(dialog, set_all_tabs):
+    """init and pre-populate the inputs
+    useful for manual tests"""
+     
+    """manual inspection only"""
+    dialog._change_tab('tab4actions')
+     
+    QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+    
+    sys.exit(QApp.exec_()) #wrap
  
     
 #===============================================================================
@@ -202,7 +219,7 @@ def test_get_fixed_costs(dialog,
 #===============================================================================
 # Dialog tests--------
 #===============================================================================
-@pytest.mark.dev
+
 def test_radioButton_tab4actions_runControl_all(dialog):
     
    #============================================================================
@@ -280,7 +297,7 @@ def test_pushButton_tab4actions_browse(dialog):
 
 
     
-
+ 
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',
@@ -289,14 +306,27 @@ def test_pushButton_tab4actions_browse(dialog):
 def test_action_tab4actions_step1(dialog,
                                   set_all_tabs,
                                   ):
+    
+    
+    
+    
      
     #===========================================================================
     # execute test
     #===========================================================================
+    dialog._change_tab('tab4actions')
+    
     w = dialog.pushButton_tab4actions_step1
-    enable_widget_and_parents(w) #need to enable the button for it to work 
-    QTest.mouseClick(w, Qt.LeftButton)  
+    
+    enable_widget_and_parents(w) #need to enable the button for it to work
      
+    QTest.mouseClick(w, Qt.LeftButton)  
+    
+    
+    #===========================================================================
+    # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+    # sys.exit(QApp.exec_()) #wrap
+    #===========================================================================
     #===========================================================================
     # check
     #===========================================================================
@@ -317,11 +347,13 @@ def test_action_tab4actions_step1(dialog,
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
 def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_tables):
     """run test on actions 2, 3, and 4 (see above for action 1)"""
+    
+    dialog._change_tab('tab4actions')
     # Get the button to test
-    w = getattr(dialog, button)
+    w = getattr(dialog, button) 
 
     # Enable the button
-    enable_widget_and_parents(w)
+    enable_widget_and_parents(w) #doesn't enable check boxes
 
     # Simulate a mouse click on the button
     QTest.mouseClick(w, Qt.LeftButton)

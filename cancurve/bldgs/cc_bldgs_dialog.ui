@@ -858,7 +858,7 @@ QGroupBox {
      </widget>
      <widget class="QWidget" name="tab4actions">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -910,9 +910,12 @@ QGroupBox {
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout">
               <item>
-               <widget class="QRadioButton" name="radioButton_tab4actions_runControl_individ">
+               <widget class="QRadioButton" name="radioButton_tab4actions_runControl_all">
                 <property name="text">
-                 <string>Individual Steps</string>
+                 <string>All</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                 <attribute name="buttonGroup">
                  <string notr="true">buttonGroup_runControl</string>
@@ -920,12 +923,9 @@ QGroupBox {
                </widget>
               </item>
               <item>
-               <widget class="QRadioButton" name="radioButton_tab4actions_runControl_all">
+               <widget class="QRadioButton" name="radioButton_tab4actions_runControl_individ">
                 <property name="text">
-                 <string>All</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
+                 <string>Individual Steps</string>
                 </property>
                 <attribute name="buttonGroup">
                  <string notr="true">buttonGroup_runControl</string>
@@ -1000,7 +1000,7 @@ QGroupBox {
             <item>
              <widget class="QGroupBox" name="groupBox_01wd_2">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -1011,8 +1011,20 @@ QGroupBox {
               <layout class="QHBoxLayout" name="horizontalLayout_17">
                <item>
                 <widget class="QLineEdit" name="lineEdit_tab4actions_projdb">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="statusTip">
                   <string extracomment="Filepath to project SQLite database"/>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">/* For more specific elements */
+QLabel {
+    font-size: 10px; 
+}</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -1024,6 +1036,12 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QPushButton" name="pushButton_tab4actions_browse">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="text">
                   <string>Browse</string>
                  </property>
@@ -1041,6 +1059,22 @@ QGroupBox {
                <string>Step 1</string>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QProgressBar" name="progressBar_tab4actions_step1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                 <property name="textVisible">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
                <item>
                 <widget class="QPushButton" name="pushButton_tab4actions_step1">
                  <property name="enabled">
@@ -1069,14 +1103,14 @@ QGroupBox {
                   <bool>false</bool>
                  </property>
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>300</width>
+                   <width>0</width>
                    <height>0</height>
                   </size>
                  </property>
@@ -1084,6 +1118,19 @@ QGroupBox {
                   <string>Setup project</string>
                  </property>
                 </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_tab4actions_step1_ciPlot">
@@ -1121,6 +1168,22 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
+                <widget class="QProgressBar" name="progressBar_tab4actions_step2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                 <property name="textVisible">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QPushButton" name="pushButton_tab4actions_step2">
                  <property name="enabled">
                   <bool>false</bool>
@@ -1149,7 +1212,7 @@ QGroupBox {
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>300</width>
+                   <width>0</width>
                    <height>0</height>
                   </size>
                  </property>
@@ -1157,6 +1220,19 @@ QGroupBox {
                   <string>Data join and multiply costs</string>
                  </property>
                 </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_tab4actions_step2_plot">
@@ -1180,6 +1256,22 @@ QGroupBox {
                <string>Step 3</string>
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QProgressBar" name="progressBar_tab4actions_step3">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                 <property name="textVisible">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
                <item>
                 <widget class="QPushButton" name="pushButton_tab4actions_step3">
                  <property name="enabled">
@@ -1209,7 +1301,7 @@ QGroupBox {
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>300</width>
+                   <width>0</width>
                    <height>0</height>
                   </size>
                  </property>
@@ -1217,6 +1309,19 @@ QGroupBox {
                   <string>Data group and concat stories</string>
                  </property>
                 </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_5">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_tab4actions_step3_plot">
@@ -1241,6 +1346,22 @@ QGroupBox {
               </property>
               <layout class="QHBoxLayout" name="horizontalLayout_3">
                <item>
+                <widget class="QProgressBar" name="progressBar_tab4actions_step4">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="value">
+                  <number>0</number>
+                 </property>
+                 <property name="textVisible">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <widget class="QPushButton" name="pushButton_tab4actions_step4">
                  <property name="enabled">
                   <bool>false</bool>
@@ -1262,14 +1383,14 @@ QGroupBox {
                   <bool>false</bool>
                  </property>
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>300</width>
+                   <width>0</width>
                    <height>0</height>
                   </size>
                  </property>
@@ -1321,6 +1442,18 @@ QGroupBox {
    </item>
    <item>
     <widget class="QGroupBox" name="status">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>50</height>
+      </size>
+     </property>
      <property name="title">
       <string/>
      </property>
@@ -1328,17 +1461,95 @@ QGroupBox {
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_6">
         <item>
-         <widget class="QLabel" name="progressText">
-          <property name="text">
-           <string>Waiting on user input...</string>
+         <widget class="QScrollArea" name="scrollArea_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QProgressBar" name="progressBar_2">
-          <property name="value">
-           <number>0</number>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>55</height>
+           </size>
           </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>578</width>
+             <height>55</height>
+            </rect>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>55</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>55</height>
+            </size>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_18">
+            <item>
+             <widget class="QLabel" name="progressText">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>50</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>200</height>
+               </size>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">/* For more specific elements */
+QLabel {
+    font-size: 10px; 
+}</string>
+              </property>
+              <property name="text">
+               <string>Welcome to CanCurve!</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -1347,6 +1558,12 @@ QGroupBox {
        <layout class="QHBoxLayout" name="horizontalLayout_7">
         <item>
          <widget class="QPushButton" name="cancel_pushButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Cancel</string>
           </property>
@@ -1357,6 +1574,12 @@ QGroupBox {
         </item>
         <item>
          <widget class="QPushButton" name="close_pushButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
            <string>Close</string>
           </property>
