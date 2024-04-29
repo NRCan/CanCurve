@@ -121,7 +121,7 @@ QLabel {
 }</string>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab1welcome">
       <property name="palette">
@@ -194,7 +194,7 @@ p, li { white-space: pre-wrap; }
             <x>0</x>
             <y>0</y>
             <width>729</width>
-            <height>891</height>
+            <height>862</height>
            </rect>
           </property>
           <property name="styleSheet">
@@ -598,23 +598,13 @@ QGroupBox {
               <item>
                <layout class="QFormLayout" name="formLayout_t02_04">
                 <item row="0" column="0">
-                 <widget class="QLabel" name="dateCurveCreatedLabel">
-                  <property name="text">
-                   <string>Date Curve Created</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QLineEdit" name="dateCurveCreated_LineEdit"/>
-                </item>
-                <item row="1" column="0">
                  <widget class="QLabel" name="createdByLabel">
                   <property name="text">
                    <string>Created by</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="0" column="1">
                  <widget class="QLineEdit" name="createdBy_LineEdit"/>
                 </item>
                </layout>
@@ -867,6 +857,12 @@ QGroupBox {
       </layout>
      </widget>
      <widget class="QWidget" name="tab4actions">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="font">
        <font>
         <pointsize>-1</pointsize>
@@ -876,6 +872,9 @@ QGroupBox {
        <string>Create Curve</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetNoConstraint</enum>
+       </property>
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
@@ -888,8 +887,17 @@ QGroupBox {
        </item>
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_5">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetNoConstraint</enum>
+         </property>
          <item alignment="Qt::AlignHCenter">
-          <widget class="QGroupBox" name="groupBox">
+          <widget class="QGroupBox" name="groupBox_tab4actions_1">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="font">
             <font>
              <pointsize>-1</pointsize>
@@ -909,7 +917,7 @@ QGroupBox {
                </widget>
               </item>
               <item>
-               <widget class="QRadioButton" name="radioButton_2">
+               <widget class="QRadioButton" name="radioButton_tab4actions_runControl_all">
                 <property name="text">
                  <string>All</string>
                 </property>
@@ -969,9 +977,15 @@ QGroupBox {
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="groupBox_2">
+          <widget class="QGroupBox" name="groupBox_tab4actions_2">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>700</width>
+             <height>0</height>
+            </size>
            </property>
            <property name="title">
             <string>Run Individually</string>

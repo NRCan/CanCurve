@@ -138,7 +138,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             comboBox.setCurrentIndex(-1)
             
         #add the current date to the LineEdit
+        """this is added by the core functions... no need to let the user edit
         self.dateCurveCreated_LineEdit.setText(datetime.datetime.now().strftime('%Y %m %d %H:%M:%S'))
+        """
         
         #username
         self.createdBy_LineEdit.setText(os.getlogin())
@@ -162,14 +164,25 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         
         """NOTE: these are disabled by default"""
-        self.pushButton_tab4actions_step1.clicked.connect(
-            self.action_tab4actions_step1
-            #lambda: print('pushButton_tab4actions_step1 clicked')
-            )        
+        self.pushButton_tab4actions_step1.clicked.connect(self.action_tab4actions_step1)        
         self.pushButton_tab4actions_step2.clicked.connect(self.action_tab4actions_step2)
         self.pushButton_tab4actions_step3.clicked.connect(self.action_tab4actions_step3)
         self.pushButton_tab4actions_step4.clicked.connect(self.action_tab4actions_step4)
         
+        #set up radio button to control whether the sub-actions are enabled
+        
+        #create a function to enable the four actions
+        def toggle_actions_enabled(checked):
+            """Enables or disables actions based on radioButton_tab4actions_runControl_all state"""
+            enabled = checked  # 'checked' will be True if the radio button is checked
+            self.pushButton_tab4actions_step1.setEnabled(enabled)
+            self.pushButton_tab4actions_step2.setEnabled(enabled)
+            self.pushButton_tab4actions_step3.setEnabled(enabled)
+            self.pushButton_tab4actions_step4.setEnabled(enabled)
+            self.pushButton_tab4actions_run.setEnabled(np.inverse(enabled))
+        
+        #assign the function as an action to be enabled anytime the radio button is checked
+        self.radioButton_tab4actions_runControl_all.toggled.connect(toggle_actions_enabled)
         
         
         
