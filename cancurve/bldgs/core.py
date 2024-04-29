@@ -900,7 +900,7 @@ def c01_join_drf(
         depth_rcv_df = df1.multiply(rcv_df.values, axis=0)
         
         #===========================================================================
-        # update proejct database
+        # update proejct database---------
         #===========================================================================    
         
         log.info(f'adding \'depth_rcv_df\' project database w/ {depth_rcv_df.shape}\n    {proj_db_fp}')
@@ -911,9 +911,11 @@ def c01_join_drf(
         
         #update project meta
         _update_proj_meta(log, conn, meta_d =dict(function_name='c01_join_drf'))
+        
+ 
  
         
-    log.info(f'finished')
+    log.info(f'finished and added \'c01_depth_rcv\' to project database')
     
     return depth_rcv_df
     

@@ -20,6 +20,7 @@ import pandas as pd
  
 from cancurve.bldgs.parameters import drf_db_default_fp
 from cancurve.bldgs.dialog import BldgsDialog
+from cancurve.bldgs.assertions import assert_proj_db_fp, expected_tables_base
 from cancurve.hp.qt import assert_string_in_combobox, enable_widget_and_parents
 from tests.test_plugin import logger
 
@@ -126,7 +127,11 @@ def set_tableWidget_tab3dataInput_fixedCosts(dialog, fixed_costs_d):
     
     return True
        
-
+@pytest.fixture(scope='function')        
+def set_projdb(dialog, proj_db_fp):
+    """set the project database filepath onto the dialog"""
+    dialog.lineEdit_tab4actions_projdb.setText(proj_db_fp)
+    
         
 
 
@@ -253,7 +258,7 @@ def test_radioButton_tab4actions_runControl_all(dialog):
                      
                  
     
-@pytest.mark.dev
+
 def test_pushButton_tab4actions_browse(dialog):
     enable_widget_and_parents(dialog.pushButton_tab4actions_browse)
  
@@ -283,25 +288,40 @@ def test_pushButton_tab4actions_browse(dialog):
 def test_action_tab4actions_step1(dialog,
                                   set_all_tabs,
                                   ):
+    
+    #===========================================================================
+    # execute test
+    #===========================================================================
     w = dialog.pushButton_tab4actions_step1
     enable_widget_and_parents(w) #need to enable the button for it to work 
     QTest.mouseClick(w, Qt.LeftButton)  
     
+    #===========================================================================
+    # check
+    #===========================================================================
+    assert_proj_db_fp(dialog._get_proj_db_fp())
+    
     print('finished')
     
     
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',
     ], indirect=False)
-@pytest.mark.parametrize('scale_m2',[True], indirect=False)
+@pytest.mark.parametrize('testPhase',['c01'])
+#@pytest.mark.parametrize('scale_m2',[True])
 def test_action_tab4actions_step2(dialog,
-                                  set_all_tabs,
+                                  set_projdb,
                                   ):
     w = dialog.pushButton_tab4actions_step2
     enable_widget_and_parents(w) #need to enable the button for it to work 
     QTest.mouseClick(w, Qt.LeftButton)  
+    
+    #===========================================================================
+    # check
+    #===========================================================================
+    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables = expected_tables_base+['c01_depth_rcv'])
     
     print('finished')
     

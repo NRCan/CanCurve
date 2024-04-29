@@ -288,10 +288,15 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         from .core import c00_setup_project as func
         
         
-        return func(
+        ci_df, drf_df2, ofp =  func(
             ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
             settings_d=settings_d, log=log, out_dir=out_dir
             )
+        
+        #=======================================================================
+        # post ui actions-------
+        #=======================================================================
+        self.lineEdit_tab4actions_projdb.setText(ofp)
         
     
     def action_tab4actions_step2(self):
@@ -300,6 +305,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         pushButton_tab4actions_step2"""
         self._run_c01_join_drf()
         
+
+
+
     def _run_c01_join_drf(self, logger=None):
         """retrive and run project setup
         
@@ -308,13 +316,13 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         if logger is None: logger = self.logger
         log = logger.getChild('_run')
         
-        drf_db_fp =     self.lineEdit_tab3dataInput_drfFp.text() 
+        proj_db_fp = self._get_proj_db_fp() 
         #=======================================================================
         # run
         #=======================================================================
         from .core import c01_join_drf as func
         
-        return func(drf_db_fp, log=log)
+        return func(proj_db_fp, log=log)
         
     def action_tab4actions_step3(self):
         """step3 run button
@@ -371,6 +379,14 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # 3. Optionally provide feedback to the user and 
         self.logger.warning('user requested \'Cancel\'')
         #    (e.g., disable the cancel button, show a progress bar)
+        
+    
+    def _get_proj_db_fp(self):
+        """retrieve the project filedatabse"""
+        proj_db_fp = self.lineEdit_tab4actions_projdb.text()
+        if not os.path.exists(proj_db_fp):
+            raise IOError(f'must specify a valid project database filepath. got \n    {proj_db_fp}')
+        return proj_db_fp
         
     def _get_building_details(self,
                               logger=None):
