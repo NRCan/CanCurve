@@ -39,7 +39,7 @@ from ..hp.basic import convert_to_number
 from ..hp.plug import plugLogger
 from ..hp.qt import (
         DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
-        enable_widget_and_parents
+        enable_widget_and_parents, enable_widget_and_children
         )
 
 from .parameters import (
@@ -175,16 +175,41 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         def toggle_actions_enabled(checked):
             """Enables or disables actions based on radioButton_tab4actions_runControl_all state"""
             enabled = checked  # 'checked' will be True if the radio button is checked
-            self.pushButton_tab4actions_step1.setEnabled(enabled)
-            self.pushButton_tab4actions_step2.setEnabled(enabled)
-            self.pushButton_tab4actions_step3.setEnabled(enabled)
-            self.pushButton_tab4actions_step4.setEnabled(enabled)
-            self.pushButton_tab4actions_run.setEnabled(np.inverse(enabled))
+            
+            """need to enable siblings as well
+            for w in [
+                        self.pushButton_tab4actions_step1,
+                        self.pushButton_tab4actions_step2,
+                        self.pushButton_tab4actions_step3,
+                        self.pushButton_tab4actions_step4]:
+                enable_widget_and_parents(w, enabled=enabled)"""
+                
+            
+                
+            
+            enable_widget_and_children(self.groupBox_tab4actions_individ, enabled)
+            self.pushButton_tab4actions_run.setEnabled(np.invert(enabled))
+            print('toggle_actions_enabled finished')
         
         #assign the function as an action to be enabled anytime the radio button is checked
-        self.radioButton_tab4actions_runControl_all.toggled.connect(toggle_actions_enabled)
+        self.radioButton_tab4actions_runControl_individ.toggled.connect(toggle_actions_enabled)
         
         
+        #=======================================================================
+        # self.radioButton_tab4actions_runControl_all.toggled.connect(lambda: print('toggled'))
+        # self.radioButton_tab4actions_runControl_all.clicked.connect(lambda: print('clicked'))
+        # self.radioButton_tab4actions_runControl_all.released.connect(lambda: print('released'))
+        # 
+        # self.radioButton_tab4actions_runControl_individ.toggled.connect(lambda: print('i toggled'))
+        # self.radioButton_tab4actions_runControl_individ.clicked.connect(lambda: print('i clicked'))
+        # self.radioButton_tab4actions_runControl_individ.released.connect(lambda: print('i released'))
+        #=======================================================================
+        
+        
+        #=======================================================================
+        # wrap
+        #=======================================================================
+        log.debug(f'slots connected')
         
         
         

@@ -127,12 +127,23 @@ def get_gridLayout_data(grid_layout,
     return res_lib
 
 
-def enable_widget_and_parents(widget):
+def enable_widget_and_parents(widget, enabled=True):
     """Enable a widget and all of its parents."""
     while widget is not None:
         #print(widget.objectName())
-        widget.setEnabled(True)
+        widget.setEnabled(enabled)
         widget = widget.parent()
+        
+        
+def enable_widget_and_children(widget, enabled):
+    """ Enables widget and all its child widgets recursively. """
+    widget.setEnabled(enabled)
+    for child in widget.children():
+        enable_widget_and_children(child, enabled)
+ 
+
+ 
+
 
 
 def _get_widget_value(widget):

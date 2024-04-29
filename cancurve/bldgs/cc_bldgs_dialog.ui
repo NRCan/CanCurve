@@ -910,10 +910,13 @@ QGroupBox {
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout">
               <item>
-               <widget class="QRadioButton" name="radioButton">
+               <widget class="QRadioButton" name="radioButton_tab4actions_runControl_individ">
                 <property name="text">
                  <string>Individual Steps</string>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">buttonGroup_runControl</string>
+                </attribute>
                </widget>
               </item>
               <item>
@@ -924,6 +927,9 @@ QGroupBox {
                 <property name="checked">
                  <bool>true</bool>
                 </property>
+                <attribute name="buttonGroup">
+                 <string notr="true">buttonGroup_runControl</string>
+                </attribute>
                </widget>
               </item>
              </layout>
@@ -977,7 +983,7 @@ QGroupBox {
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="groupBox_tab4actions_2">
+          <widget class="QGroupBox" name="groupBox_tab4actions_individ">
            <property name="enabled">
             <bool>false</bool>
            </property>
@@ -1002,6 +1008,9 @@ QGroupBox {
               <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
                 <widget class="QPushButton" name="pushButton_tab4actions_step1">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1021,6 +1030,9 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QLabel" name="label_2">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -1040,6 +1052,9 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_tab4actions_step1_ciPlot">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>cost-item summary plot</string>
                  </property>
@@ -1050,6 +1065,9 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_tab4actions_step1_drfPlot">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>DRF summary plot</string>
                  </property>
@@ -1085,6 +1103,9 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QLabel" name="label_3">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -1104,6 +1125,9 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_tab4actions_step2_plot">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>depth-RCV summary plot</string>
                  </property>
@@ -1139,6 +1163,9 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QLabel" name="label_4">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -1158,6 +1185,9 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QCheckBox" name="checkBox_tab4actions_step3_plot">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="text">
                   <string>depth-damage per-story plot</string>
                  </property>
@@ -1193,6 +1223,9 @@ QGroupBox {
                </item>
                <item>
                 <widget class="QLabel" name="label">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -1212,6 +1245,9 @@ QGroupBox {
                </item>
                <item>
                 <spacer name="horizontalSpacer_2">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -1304,5 +1340,6 @@ QGroupBox {
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup_costbasis"/>
+  <buttongroup name="buttonGroup_runControl"/>
  </buttongroups>
 </ui>

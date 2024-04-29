@@ -9,7 +9,7 @@ tests dialogs
 import pytest, time, sys, inspect
 
 from PyQt5.QtTest import QTest
-from PyQt5.Qt import Qt, QApplication
+from PyQt5.Qt import Qt, QApplication, QPoint
 from PyQt5.QtWidgets import QAction, QFileDialog, QListWidget, QTableWidgetItem
 from qgis.PyQt import QtWidgets
 
@@ -191,6 +191,68 @@ def test_get_fixed_costs(dialog,
  
     assert result_d==fixed_costs_d
     
+    
+#===============================================================================
+# dialog logic tests--------
+#===============================================================================
+@pytest.mark.dev
+def test_radioButton_tab4actions_runControl_all(dialog):
+    
+   #============================================================================
+   #  QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+   # 
+   #  sys.exit(QApp.exec_()) #wrap
+   #============================================================================
+    b1 = dialog.radioButton_tab4actions_runControl_all
+    b2 = dialog.radioButton_tab4actions_runControl_individ
+    
+    button_l = [
+        dialog.pushButton_tab4actions_step1,
+        dialog.pushButton_tab4actions_step2,
+        dialog.pushButton_tab4actions_step3,
+        dialog.pushButton_tab4actions_step4        
+        ]
+ 
+
+    # Initial state (assuming buttons start disabled)
+    for w in button_l:
+        assert not w.isEnabled(), w.objectName()
+    print('init state is good')
+    
+    
+    assert b1.isChecked(), 'All should be selected by default'    
+    assert not b2.isChecked()
+    
+    #===========================================================================
+    # #click b2
+    #===========================================================================
+    QTest.mouseClick(b2, Qt.LeftButton)
+    
+    assert b2.isChecked()
+    assert not b1.isChecked()
+ 
+    
+    #changed state
+    for w in button_l:
+        assert w.isEnabled(), w.objectName()
+        
+    #===========================================================================
+    # click again
+    #===========================================================================
+    """not sure why these don't work"""
+    #QTest.mouseClick(b1, Qt.LeftButton)
+    #b2.toggle()
+    b1.toggle()
+    assert b1.isChecked() #thils fails
+    assert not b2.isChecked()
+    
+    for w in button_l:
+        assert not w.isEnabled(), w.objectName()
+                     
+                 
+    
+    
+ 
  
 #===============================================================================
 # action tests--------
@@ -199,7 +261,7 @@ def test_get_fixed_costs(dialog,
 
 
     
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',
