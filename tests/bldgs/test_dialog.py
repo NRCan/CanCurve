@@ -152,22 +152,24 @@ def test_init(dialog,):
     
     assert hasattr(dialog, 'logger')
     
-@pytest.mark.dev
-@pytest.mark.parametrize('testCase',[
-    'case1',
-    #'case2',
-    ], indirect=False)
-@pytest.mark.parametrize('scale_m2',[True], indirect=False)
-def test_init_prepopulate(dialog, set_all_tabs):
-    """init and pre-populate the inputs
-    useful for manual tests"""
-     
-    """manual inspection only"""
-    dialog._change_tab('tab4actions')
-     
-    QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
-    
-    sys.exit(QApp.exec_()) #wrap
+
+#===============================================================================
+# @pytest.mark.parametrize('testCase',[
+#     'case1',
+#     #'case2',
+#     ], indirect=False)
+# @pytest.mark.parametrize('scale_m2',[True], indirect=False)
+# def test_init_prepopulate(dialog, set_all_tabs):
+#     """init and pre-populate the inputs
+#     useful for manual tests"""
+#      
+#     """manual inspection only"""
+#     dialog._change_tab('tab4actions')
+#      
+#     QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
+#     
+#     sys.exit(QApp.exec_()) #wrap
+#===============================================================================
  
     
 #===============================================================================
@@ -219,7 +221,7 @@ def test_get_fixed_costs(dialog,
 #===============================================================================
 # Dialog tests--------
 #===============================================================================
-
+@pytest.mark.dev
 def test_radioButton_tab4actions_runControl_all(dialog):
     
    #============================================================================

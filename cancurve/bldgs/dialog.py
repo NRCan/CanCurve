@@ -86,6 +86,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                  parent=None, #not sure what this is supposed to be... 
                  iface=None,
                  debug_logger=None, #testing only
+                 pluginObject=None, #actual parent
                  ):
         """Constructor."""
         super(BldgsDialog, self).__init__(parent)
@@ -96,7 +97,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         
-        
+        self.pluginObject=pluginObject
         self.iface=iface
         
         #setup logger
@@ -124,7 +125,13 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # general----------------
         #=======================================================================
-        self.close_pushButton.clicked.connect(self.close) 
+        def close_dialog():
+            self.logger.push(f'dialog reset')
+            self.pluginObject.dlg=None
+            self.pluginObject.first_start=True #not ideal
+            self.close()
+        
+        self.close_pushButton.clicked.connect(close_dialog) 
         self.cancel_pushButton.clicked.connect(self.action_cancel_process)
         #=======================================================================
         # Tab: 02 Building Details-------
@@ -186,7 +193,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             enabled = checked  # 'checked' will be True if the radio button is checked 
             
             enable_widget_and_children(self.groupBox_tab4actions_individ, enabled)
-            self.pushButton_tab4actions_run.setEnabled(np.invert(enabled))
+            self.pushButton_tab4actions_run.setEnabled(not enabled)
             print('toggle_actions_enabled finished')
         
         #assign the function as an action to be enabled anytime the radio button is checked
