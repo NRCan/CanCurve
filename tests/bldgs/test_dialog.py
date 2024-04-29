@@ -202,7 +202,7 @@ def test_get_fixed_costs(dialog,
 #===============================================================================
 # Dialog tests--------
 #===============================================================================
-
+@pytest.mark.dev
 def test_radioButton_tab4actions_runControl_all(dialog):
     
    #============================================================================
@@ -233,7 +233,8 @@ def test_radioButton_tab4actions_runControl_all(dialog):
     #===========================================================================
     # #click b2
     #===========================================================================
-    QTest.mouseClick(b2, Qt.LeftButton)
+    #QTest.mouseClick(b2, Qt.LeftButton)
+    b2.toggle()
     
     assert b2.isChecked()
     assert not b1.isChecked()
@@ -288,45 +289,49 @@ def test_pushButton_tab4actions_browse(dialog):
 def test_action_tab4actions_step1(dialog,
                                   set_all_tabs,
                                   ):
-    
+     
     #===========================================================================
     # execute test
     #===========================================================================
     w = dialog.pushButton_tab4actions_step1
     enable_widget_and_parents(w) #need to enable the button for it to work 
     QTest.mouseClick(w, Qt.LeftButton)  
-    
+     
     #===========================================================================
     # check
     #===========================================================================
     assert_proj_db_fp(dialog._get_proj_db_fp())
-    
+     
     print('finished')
     
-    
-@pytest.mark.dev
-@pytest.mark.parametrize('testCase',[
-    'case1',
-    #'case2',
-    ], indirect=False)
-@pytest.mark.parametrize('testPhase',['c01'])
-#@pytest.mark.parametrize('scale_m2',[True])
-def test_action_tab4actions_step2(dialog,
-                                  set_projdb,
-                                  ):
-    w = dialog.pushButton_tab4actions_step2
-    enable_widget_and_parents(w) #need to enable the button for it to work 
-    QTest.mouseClick(w, Qt.LeftButton)  
-    
-    #===========================================================================
-    # check
-    #===========================================================================
-    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables = expected_tables_base+['c01_depth_rcv'])
-    
-    print('finished')
-    
-    
+ 
+ 
 
+@pytest.mark.parametrize('testCase', ['case1'])
+@pytest.mark.parametrize('button, testPhase, expected_tables', [
+    ##('pushButton_tab4actions_step1', expected_tables_base), #this test is sufficnetly different... see above
+    ('pushButton_tab4actions_step2', 'c01', expected_tables_base+['c01_depth_rcv']),
+    ('pushButton_tab4actions_step3', 'c02', expected_tables_base+['c01_depth_rcv', 'c02_ddf']),
+    ('pushButton_tab4actions_step4', 'c03', expected_tables_base+['c01_depth_rcv', 'c02_ddf']), #export step doesnt write
+])
+@pytest.mark.parametrize('scale_m2',[True], indirect=False)
+def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_tables):
+    """run test on actions 2, 3, and 4 (see above for action 1)"""
+    # Get the button to test
+    w = getattr(dialog, button)
+
+    # Enable the button
+    enable_widget_and_parents(w)
+
+    # Simulate a mouse click on the button
+    QTest.mouseClick(w, Qt.LeftButton)
+
+    # Check the result
+    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+
+    print('finished')
+
+    
 
 @pytest.mark.parametrize('testCase',[
     'case1',
@@ -334,6 +339,7 @@ def test_action_tab4actions_step2(dialog,
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
 def test_action_tab4actions_run(dialog, set_all_tabs): 
+    """test combined"""
     QTest.mouseClick(dialog._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
     
     

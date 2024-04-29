@@ -22,6 +22,9 @@
  ***************************************************************************/
 """
 
+#===============================================================================
+# Imports----------
+#===============================================================================
 import os, datetime, sys
 import pandas as pd
 import numpy as np
@@ -298,15 +301,14 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         self.lineEdit_tab4actions_projdb.setText(ofp)
         
+        
+        
     
     def action_tab4actions_step2(self):
         """step2 run button
         
         pushButton_tab4actions_step2"""
         self._run_c01_join_drf()
-        
-
-
 
     def _run_c01_join_drf(self, logger=None):
         """retrive and run project setup
@@ -323,6 +325,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         from .core import c01_join_drf as func
         
         return func(proj_db_fp, log=log)
+    
+    
+    
+    
         
     def action_tab4actions_step3(self):
         """step3 run button
@@ -337,10 +343,17 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         """
         if logger is None: logger = self.logger
         log = logger.getChild('_run')
+        
+        proj_db_fp = self._get_proj_db_fp() 
     
         from .core import c02_group_story as func
         
-        return func()
+        return func(proj_db_fp, log=log)
+    
+    
+    
+    
+    
     
     def action_tab4actions_step4(self):
         """step4 run button
@@ -355,10 +368,12 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         """
         if logger is None: logger = self.logger
         log = logger.getChild('_run')
+        
+        proj_db_fp = self._get_proj_db_fp() 
     
         from .core import c03_export as func
         
-        return func()
+        return func(proj_db_fp, log=log)
         
         
         

@@ -1106,7 +1106,7 @@ def c02_group_story(proj_db_fp,
                                         )
  
         
-    log.info(f'finished')
+    log.info(f'finished adding \'{tabnm}\'')
     
     return ddf3
 

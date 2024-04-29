@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import (
     )
 
 from qgis.PyQt import QtWidgets
+from PyQt5.QtCore import QObject
 
 def assert_string_in_combobox(combo_box: QComboBox, target_string: str):
     """
@@ -138,6 +139,14 @@ def enable_widget_and_parents(widget, enabled=True):
         
 def enable_widget_and_children(widget, enabled):
     """ Enables widget and all its child widgets recursively. """
+    if not hasattr(widget, 'setEnabled'):
+        return 
+        widget.objectName()
+        print('???')
+    #===========================================================================
+    # if isinstance(widget, QObject):
+    #     print('???')
+    #===========================================================================
     widget.setEnabled(enabled)
     for child in widget.children():
         enable_widget_and_children(child, enabled)
