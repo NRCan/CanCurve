@@ -949,7 +949,7 @@ def c02_group_story(proj_db_fp,
             log=None,
             scale_m2=None,
             
-            basement_height_m=None, scale_value=None,
+            basement_height_m=None, scale_value_m2=None,
             
             
  
@@ -967,7 +967,7 @@ def c02_group_story(proj_db_fp,
         vertical distance with which to shift the basement curve in meters
         defaults to value in c00_bldg_meta
         
-    scale_value: float, optional
+    scale_value_m2: float, optional
         area with which to scare replacement values (e.g., floor area in m2)
         defaults to value in c00_bldg_meta
         
@@ -1014,12 +1014,12 @@ def c02_group_story(proj_db_fp,
             
         
         if scale_m2:
-            if scale_value is None:
-                assert 'scale_value' in bldg_meta_d, f'passed scale_m2=True but no \'scale_value\' provided'
-                scale_value = float(bldg_meta_d['scale_value'])
-            assert isinstance(scale_value, float)
+            if scale_value_m2 is None:
+                assert 'scale_value_m2' in bldg_meta_d, f'passed scale_m2=True but no \'scale_value_m2\' provided'
+                scale_value_m2 = float(bldg_meta_d['scale_value_m2'])
+            assert isinstance(scale_value_m2, float)
         
-        params_d = dict(scale_m2=scale_m2, basement_height_m=basement_height_m, scale_value=scale_value)
+        params_d = dict(scale_m2=scale_m2, basement_height_m=basement_height_m, scale_value_m2=scale_value_m2)
 
             
         log.debug(f'extracted data from proj_db w/ f\n    {params_d}')
@@ -1093,14 +1093,14 @@ def c02_group_story(proj_db_fp,
         #=======================================================================
         if scale_m2:
 
-            log.info(f'scaling by {scale_value:.2f} m2')
+            log.info(f'scaling by {scale_value_m2:.2f} m2')
             
-            ddf3 = (ddf2/scale_value).round(2)
+            ddf3 = (ddf2/scale_value_m2).round(2)
             
         else:
             ddf3=ddf2.round(2)
             
-        #get_setting(conn, table_name='bldg_meta', attn="scale_value")
+        #get_setting(conn, table_name='bldg_meta', attn="scale_value_m2")
         
         #=======================================================================
         # sum stores

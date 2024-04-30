@@ -75,7 +75,7 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d,
     
     result = func(ci_fp, 
          out_dir=tmp_path, 
-         #bldg_meta={'basement_height_m':1.8, 'scale_value':232.0, 'bldg_layout':'default'},
+         #bldg_meta={'basement_height_m':1.8, 'scale_value_m2':232.0, 'bldg_layout':'default'},
          bldg_meta=bldg_meta_d,
          fixed_costs_d=fixed_costs_d,
          curve_name=f'{testCase}_c00',

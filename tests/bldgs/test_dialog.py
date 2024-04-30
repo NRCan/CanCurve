@@ -5,7 +5,9 @@ Created on Apr. 26, 2024
 
 tests dialogs
 '''
-
+#===============================================================================
+# IMPORTS----------
+#===============================================================================
 import pytest, time, sys, inspect
 
 from unittest.mock import patch
@@ -14,14 +16,18 @@ import matplotlib.pyplot as plt
 
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt, QApplication, QPoint
-from PyQt5.QtWidgets import QAction, QFileDialog, QListWidget, QTableWidgetItem
+from PyQt5.QtWidgets import (
+    QAction, QFileDialog, QListWidget, QTableWidgetItem,
+    QComboBox,
+    )
 from qgis.PyQt import QtWidgets
 
 import pandas as pd
+import numpy as np
 
  
-from cancurve.bldgs.parameters import drf_db_default_fp
-from cancurve.bldgs.parameters_ui import building_details_translation_d
+from cancurve.bldgs.parameters import drf_db_default_fp, bldg_meta_rqmt_df
+from cancurve.bldgs.parameters_ui import building_details_options_d
 from cancurve.bldgs.dialog import BldgsDialog
 from cancurve.bldgs.assertions import assert_proj_db_fp, expected_tables_base
 from cancurve.hp.qt import (
@@ -79,31 +85,47 @@ def set_all_tabs(set_tab2bldgDetils, set_tab3dataInput):
     
     
 @pytest.fixture(scope='function')    
-def set_tab2bldgDetils(dialog, bldg_meta_d_ui, bldg_meta_d_strict):
+def set_tab2bldgDetils(dialog, testCase, bldg_meta_d):
     """populate the 'Building Details' tab with test metadata"""
     
     dialog._change_tab('tab2bldgDetils')
     
+    df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type', 'case1']].dropna(
+        subset='varName_ui').set_index('varName_ui')
+    
     #loop through and change the combobox to match whats in the dictionary
-    for k,v_raw in bldg_meta_d_ui.items():
-        v = str(v_raw)
-        comboBox = dialog._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
+    for k,row in df.iterrows():
+        if not pd.isnull(row[testCase]):
+            v = row[testCase]
+        elif k in building_details_options_d:
+            v = building_details_options_d[k][0] #just take first
+        else:
+            continue #skip this one
+            
+        #v = str(v_raw)
+        #comboBox = dialog._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
+        widget = getattr(dialog, row['widgetName'])
         
         #check if the requested value is one of the comboBox's options
-        assert_string_in_combobox(comboBox, v)
+        if isinstance(widget, QComboBox):
+            assert_string_in_combobox(widget, v)
+            
+        set_widget_value(widget, v)
         
-        #set this value
-        comboBox.setCurrentText(v)
+ 
         
     #===========================================================================
-    # populate specials
+    # check against core parmeters
     #===========================================================================
+    assert bldg_meta_d['bldg_layout']==dialog.buildingLayout_ComboBox.currentText()
     
-    assert bldg_meta_d_ui['buildingLayout']==bldg_meta_d_strict['bldg_layout'], 'conflicting parameters'
+    if dialog.basementHeightUnits_ComboBox.currentText()=='m':
+        assert bldg_meta_d['basement_height_m']==dialog.basementHeight_DoubleSpinBox.value()
     
-    for k, widgetName in building_details_translation_d.items():
-        widget = getattr(dialog, widgetName)
-        set_widget_value(widget, bldg_meta_d_strict[k])
+    if dialog.sizeOrAreaUnits_ComboBox.currentText()=='m²':
+        assert bldg_meta_d['scale_value_m2']==dialog.sizeOrAreaValue_DoubleSpinBox.value()
+ 
+ 
         
     """
     bldg_meta_d_strict.keys()
@@ -162,6 +184,11 @@ def set_projdb(dialog, proj_db_fp):
 #===============================================================================
 # tests------
 #===============================================================================
+
+def test_parameters():
+    df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type']].dropna(subset='varName_ui').set_index('varName_ui')
+    assert set(building_details_options_d.keys()).difference(df.index)==set(), 'parameters_ui doesnt match paramter csv'
+    
  
 def test_init(dialog,):
     
@@ -201,7 +228,7 @@ def test_init(dialog,):
 #===============================================================================
 """functions hidden from user"""
 
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',
@@ -435,7 +462,7 @@ def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_t
     print('finished')
 
     
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',

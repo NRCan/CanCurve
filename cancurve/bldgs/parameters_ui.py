@@ -13,7 +13,7 @@ building_details_options_d = {
     #general
     'occupancyClassification': ['Residential', 'Commercial', 'Industrial', 'Other'],
     'subClassification': ['Single Family', 'Construction', 'Duplex', 'entertainment and recreation'],
-    'storeys': [1, 2, 3, 'Split'],
+    'storeys': ['1', '2', '3', 'Split'],
     
     'heatingType': ['baseboard-electric', 'baseboard-hot water', 'Forced air - electric', 'forced air-gas'],
     'coolingType': ['Central air', 'Heat pump'],
@@ -29,7 +29,7 @@ building_details_options_d = {
     
     
     #size age materials
-    'sizeOrAreaUnits':['m\u00B2', 'ft\u00B2'],
+    'sizeOrAreaUnits':['m2', 'ft\u00B2'],
     'qualityOfBuildingMaterials': ['Below Average', 'Average', 'Above Average', 'Custom'],
     
     
@@ -55,8 +55,4 @@ building_details_options_d = {
 }
 
 
-building_details_translation_d = {
-    'basement_height_m':'basementHeight_DoubleSpinBox',
-    'scale_value':'sizeOrAreaValue_DoubleSpinBox',
-    'bldg_layout':'buildingLayout_ComboBox',
-    }
+ 

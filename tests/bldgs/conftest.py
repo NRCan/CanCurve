@@ -80,5 +80,5 @@ def bldg_meta_d(testCase):
 # @pytest.fixture(scope='function')
 # def bldg_meta_d_strict(testCase):
 #     """strict building meta parameters needed by core"""
-#     return {'basement_height_m':1.8, 'scale_value':232.0, 'bldg_layout':'default'}
+#     return {'basement_height_m':1.8, 'scale_value_m2':232.0, 'bldg_layout':'default'}
 #===============================================================================

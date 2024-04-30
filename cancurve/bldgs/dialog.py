@@ -25,7 +25,8 @@
 #===============================================================================
 # Imports----------
 #===============================================================================
-import os, datetime, sys
+import os, sys
+from datetime import datetime
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -50,7 +51,7 @@ from ..hp.qt import (
         )
 
 from .parameters import (
-    building_meta_dtypes, drf_db_default_fp,home_dir
+    drf_db_default_fp,home_dir, bldg_meta_rqmt_df
     )
 
 from .parameters_ui import building_details_options_d
@@ -631,6 +632,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 bldg_meta_d[k] = new_v
                 
         
+                
+        
         #=======================================================================
         # #check all of the keys are present
         #=======================================================================
@@ -639,9 +642,50 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         for k,v in bldg_meta_d.items():
             print(f'{k}\n    {v} ({type(v)})')
         """
+        df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type', 'case1']].dropna(
+            subset='varName_ui').set_index('varName_ui')
+            
+        miss_s = set(df.index).symmetric_difference(bldg_meta_d.keys())
+        assert miss_s==set(), f'bldg_meta mismatch from expectations'
+        
+        #typeset
+        for k, type_str in df['type'].to_dict().items():
+            try:
+                bldg_meta_d[k] = eval(type_str)(bldg_meta_d[k])
+            except Exception as e:
+                raise TypeError(f'failed to set type %s on \'%s\'=\'%s\' w/ \n    {e}'%(
+                    type_str, k, bldg_meta_d[k]))
+                
+        log.debug(f'forced types onto {len(bldg_meta_d)} vars')
+        
+        #=======================================================================
+        # set core VarNames
+        #=======================================================================
+        """seems better to keep the varnames in as well"""
+        bldg_meta_d['bldg_layout'] = bldg_meta_d['buildingLayout']
+        
+        if bldg_meta_d['basementHeightUnits']=='m':
+            bldg_meta_d['basement_height_m'] = bldg_meta_d['basementHeight']
+        else:
+            raise NotImplementedError(bldg_meta_d['basementHeightUnits'])
+        
+        if bldg_meta_d['sizeOrAreaUnits']=='m2':
+            bldg_meta_d['scale_value_m2'] = bldg_meta_d['sizeOrAreaValue']
+        else:
+            raise NotImplementedError(bldg_meta_d['sizeOrAreaUnits'])
+            
+        #=======================================================================
+        # check expectations
+        #=======================================================================
+        req_d = bldg_meta_rqmt_df.loc[:, ['varName_core', 'type']].dropna().set_index('varName_core').iloc[:, 0].to_dict()
+        req_d = {k:eval(v) for k,v in req_d.items()}
+        
+        for k,type_class in req_d.items():
+            assert isinstance(bldg_meta_d[k], type_class), f'bad type on {k}'
+            
         
         log.debug(f'collected {len(bldg_meta_d)} entries from \'Building Details\' tab')
-        building_meta_dtypes
+        
         
         return bldg_meta_d
         
