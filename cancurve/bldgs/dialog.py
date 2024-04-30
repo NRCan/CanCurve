@@ -263,17 +263,24 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         out_dir = self.lineEdit_wdir.text()
 
         
-        
+        step_log = lambda x:log.info(f'Step {x}\n----------------------\n\n')
         #=======================================================================
         # run actions-------
         #=======================================================================
+        
+        step_log(1)
         self._run_c00_setup_project(logger=log, out_dir=out_dir)
         
+        step_log(2)
         self._run_c01_join_drf(logger=log)
         
+        step_log(3)
         self._run_c02_group_story(logger=log)
         
+        step_log(4)
         self._run_c03_export(logger=log)
+        
+        log.push('complete')
         
 
         
@@ -287,12 +294,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self._run_c00_setup_project()
         
 
-    def _launch_dialog_dbMismatch(self, msg):
-        
-
- 
-        self.dialog_dbMismatch = dbMismatchDialog(message=msg) 
- 
+    def _launch_dialog_dbMismatch(self, msg): 
+        self.dialog_dbMismatch = dbMismatchDialog(message=msg)  
         self.dialog_dbMismatch.exec_() # Show modally
 
     def _run_c00_setup_project(self, 
@@ -549,7 +552,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # wrap
         #=======================================================================
         progress.setValue(100)
-        log.info(f'Step 3 complete w/ {res_df.shape}')
+        log.info(f'Step 4 complete w/ {res_df.shape}')
         
         return res_df, ofp
         

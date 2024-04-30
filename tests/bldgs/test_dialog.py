@@ -431,6 +431,9 @@ def test_action_tab4actions_runAll(dialog, set_all_tabs):
     dialog._change_tab('tab4actions')
     QTest.mouseClick(dialog._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
     
+    #check
+    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables_base+['c01_depth_rcv', 'c02_ddf'])
+    
     
     
     
