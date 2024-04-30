@@ -21,15 +21,22 @@
  *                                                                         *
  ***************************************************************************/
 """
+
+import sys, os
+
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 
 # Initialize Qt resources from file resources.py
 #from .bldgs.resources import * #not sure how this will work with multiple resources....
+
+ 
+
+
+
 # Import the code for the dialog
 from .bldgs.dialog import BldgsDialog
-import os.path
 
 
 class CanCurve:

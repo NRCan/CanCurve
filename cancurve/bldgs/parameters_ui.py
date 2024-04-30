@@ -4,6 +4,10 @@ Created on Apr. 28, 2024
 @author: cef
 '''
 
+import os
+
+#os.path.dirname(os.path.dirname(__file__))
+
 #options for populating the building details tab
 building_details_options_d = {
     #general

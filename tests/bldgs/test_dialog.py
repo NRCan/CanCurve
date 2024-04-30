@@ -221,7 +221,7 @@ def test_get_fixed_costs(dialog,
 #===============================================================================
 # Dialog tests--------
 #===============================================================================
-@pytest.mark.dev
+
 def test_radioButton_tab4actions_runControl_all(dialog):
     
    #============================================================================
@@ -299,10 +299,10 @@ def test_pushButton_tab4actions_browse(dialog):
 
 
     
- 
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
-    'case1',
-    #'case2',
+    #'case1',
+    'case2',
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
 def test_action_tab4actions_step1(dialog,
@@ -372,8 +372,9 @@ def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_t
     #'case2',
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
-def test_action_tab4actions_run(dialog, set_all_tabs): 
+def test_action_tab4actions_runAll(dialog, set_all_tabs): 
     """test combined"""
+    dialog._change_tab('tab4actions')
     QTest.mouseClick(dialog._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
     
     

@@ -6,9 +6,11 @@ call %~dp0../env/activate_py.bat
 :: change to plugin directory
 cd %SRC_DIR%/%PROJ_NAME%
 
-::It internally calls pyrcc5 to handle the conversion of .qrc files.
-pb_tool compile
+ECHO on
 
-:: pyrcc5 -o resources.py resources.qrc
+::It internally calls pyrcc5 to handle the conversion of .qrc files.
+:: pb_tool compile
+
+pyrcc5 -o resources.py resources.qrc
 
 cmd.exe /k

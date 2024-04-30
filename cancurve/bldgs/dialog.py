@@ -71,15 +71,23 @@ from .parameters_ui import building_details_options_d
 # Main Dialog----------
 #===============================================================================
 #append the path (resources_rc workaround)
-sys.path.append(os.path.dirname(__file__))
+from ..parameters import plugin_dir
+resources_module_fp = os.path.join(plugin_dir, 'resources.py')
+assert os.path.exists(resources_module_fp), resources_module_fp 
+if not os.path.dirname(resources_module_fp) in sys.path:
+    sys.path.append(os.path.dirname(resources_module_fp))
+
+
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'cc_bldgs_dialog.ui'), resource_suffix='')
-
-
-
-
+"""
+help(uic)
+help(uic.loadUiType)
+print(sys.path)
+"""
+ui_fp = os.path.join(os.path.dirname(__file__), 'cc_bldgs_dialog.ui')
+assert os.path.exists(ui_fp)
+FORM_CLASS, _ = uic.loadUiType(ui_fp, resource_suffix='')
 
 class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     def __init__(self, 
@@ -105,6 +113,11 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                                  debug_logger=debug_logger)
         
         self.connect_slots()
+        
+        #=======================================================================
+        # children
+        #=======================================================================
+        self.dialog_dbMismatch=None
         
         self.logger.debug('CanCurveDialog init finish')
         #self.logger.info('this woriks?')
@@ -242,7 +255,13 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # run actions-------
         #=======================================================================
-        #self._run_c00_setup_project(logger=log)
+        self._run_c00_setup_project(logger=log, out_dir=out_dir)
+        
+        self._run_c01_join_drf(logger=log)
+        
+        self._run_c02_group_story(logger=log)
+        
+        self._run_c03_export(logger=log)
         
 
         
@@ -255,6 +274,15 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self._run_c00_setup_project()
         
+
+    def _launch_dialog_dbMismatch(self, msg):
+        
+        raise IOError('stopped here')
+ 
+        self.dialog_dbMismatch = dbMismatchDialog(message=msg) 
+ 
+        self.dialog_dbMismatch.exec_() # Show modally
+
     def _run_c00_setup_project(self, 
                                logger=None, out_dir=None):
         """retrive and run project setup
@@ -291,10 +319,12 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         settings_d =    self._get_settings(logger=log)
         
         #get buidling layout
+        """seems like only the 'default' entries are working
         from .core import _get_building_layout_from_meta
         bldg_layout = _get_building_layout_from_meta(bldg_meta)
         
-        bldg_meta['bldg_layout'] = bldg_layout
+        bldg_meta['bldg_layout'] = bldg_layout"""
+        bldg_meta['bldg_layout']='default'
         
         progress.setValue(50)
         #=======================================================================
@@ -303,15 +333,25 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         from .core import c00_setup_project as func
         
         
-        ci_df, drf_df2, ofp =  func(
+        ci_df, drf_df2, ofp, err_msg =  func(
             ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
             settings_d=settings_d, log=log, out_dir=out_dir
             )
         
-        progress.setValue(95)
+        progress.setValue(80)
+        
+        
+        
         #=======================================================================
         # post ui actions-------
         #=======================================================================
+        #missing entries
+        bx = ci_df['drf_intersect']
+        if not bx.all():
+            log.warning(f'intersection incomplete')
+            self._launch_dialog_dbMismatch(err_msg)
+                    
+        
         self.lineEdit_tab4actions_projdb.setText(ofp)
         
         progress.setValue(100)
@@ -538,8 +578,14 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             }
 
 
-            
 
+FORM_CLASS2, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'dbMismatch_dialog.ui'), resource_suffix='')           
+class dbMismatchDialog(QtWidgets.QDialog, FORM_CLASS2, DialogQtBasic):
+    def __init__(self, message='Warning'):  # Accept message
+            super().__init__()
+            self.setupUi(self)
+            self.label.setText(message)  # Set the label if a message is given
         
         
         

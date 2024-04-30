@@ -11,6 +11,7 @@ from datetime import datetime
 # directories and files
 #===============================================================================
 src_dir = os.path.dirname(os.path.dirname(__file__))
+plugin_dir = os.path.dirname(__file__)
 
 home_dir = os.path.join(os.path.expanduser('~'), 'CanCurve')
 

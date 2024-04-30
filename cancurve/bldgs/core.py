@@ -753,6 +753,7 @@ def c00_setup_project(
  
     else:
         log.debug(f'all keys intersect')
+        msg=None
     
         
     #add column
@@ -833,7 +834,7 @@ def c00_setup_project(
     
     assert_proj_db_fp(ofp)
     
-    return ci_df, drf_df2, ofp
+    return ci_df, drf_df2, ofp, msg
  
 
 
