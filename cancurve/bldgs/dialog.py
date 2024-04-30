@@ -277,7 +277,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
 
     def _launch_dialog_dbMismatch(self, msg):
         
-        raise IOError('stopped here')
+
  
         self.dialog_dbMismatch = dbMismatchDialog(message=msg) 
  
@@ -585,7 +585,12 @@ class dbMismatchDialog(QtWidgets.QDialog, FORM_CLASS2, DialogQtBasic):
     def __init__(self, message='Warning'):  # Accept message
             super().__init__()
             self.setupUi(self)
-            self.label.setText(message)  # Set the label if a message is given
+            self.textBrowser.append(message)  # Set the label if a message is given
+            self.connect_slots()
+            
+    def connect_slots(self):
+        
+        self.pushButton.clicked.connect(self.close)
         
         
         

@@ -745,7 +745,7 @@ def c00_setup_project(
         ofp1 = os.path.join(out_dir, f'missing_DRF.csv')
         ci_df[bx].to_csv(ofp1)
         
-        msg+=f'\noutput missing entries {ci_df[bx].shape} to {ofp1}'
+        msg+=f'\noutput missing entries {ci_df[bx].shape} to:\n    {ofp1}'
         
         msg+=f'\nupdate the DRF and re-run this step before proceeding'
  
