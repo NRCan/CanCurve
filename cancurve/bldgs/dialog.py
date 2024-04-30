@@ -28,6 +28,7 @@
 import os, datetime, sys
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
@@ -95,8 +96,17 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                  iface=None,
                  debug_logger=None, #testing only
                  pluginObject=None, #actual parent
+                 show_plots=True,
                  ):
-        """Constructor."""
+        """Dialog constructor
+        
+        Params
+        ------
+        show_plots: bool, True
+            whether to call plt.show()
+            useful for tests
+            
+        """
         super(BldgsDialog, self).__init__(parent)
         # Set up the user interface from Designer through FORM_CLASS.
         # After self.setupUi() you can access any designer object by doing
@@ -107,6 +117,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self.pluginObject=pluginObject
         self.iface=iface
+        self.show_plots=show_plots
         
         #setup logger
         self.logger = plugLogger(self.iface, parent=self, statusQlab=self.progressText,
@@ -140,8 +151,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         def close_dialog():
             self.logger.push(f'dialog reset')
-            self.pluginObject.dlg=None
-            self.pluginObject.first_start=True #not ideal
+            if not self.pluginObject is None:
+                self.pluginObject.dlg=None
+                self.pluginObject.first_start=True #not ideal
             self.close()
         
         self.close_pushButton.clicked.connect(close_dialog) 
@@ -333,14 +345,53 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         from .core import c00_setup_project as func
         
         
-        ci_df, drf_df2, ofp, err_msg =  func(
+        ci_df, drf_df, ofp, err_msg =  func(
             ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
             settings_d=settings_d, log=log, out_dir=out_dir
             )
         
-        progress.setValue(80)
+        progress.setValue(70)
         
+        #=======================================================================
+        # plots-----
+        #=======================================================================
+        cbox_d = {
+            'ci':{'cbox':self.checkBox_tab4actions_step1_ciPlot,'df':ci_df},
+            'drf':{'cbox':self.checkBox_tab4actions_step1_drfPlot, 'df':drf_df},
+            }
         
+        #setup both
+        show_plot=False
+        for k,v in cbox_d.items():
+            if v['cbox'].isChecked():
+                plt.close('all')
+                show_plot=True
+                break
+ 
+            
+        if show_plot:
+            #loop and plots
+            for i, (k,d) in enumerate(cbox_d.items()):
+                log.info(f'plotting \'{k}\'')
+                if d['cbox'].isChecked():
+                    
+                    #load the function
+                    if k=='ci':
+                        from .plots import plot_c00_costitems as func
+                    elif k=='drf':
+                        from .plots import plot_c00_DRF as func
+                    else:
+                        raise KeyError()
+                    
+                    #call
+                    func(d['df'], log=log, figure=plt.figure(10+i))
+                    
+            log.info(f'launching matplotlib plot dialog')
+            if self.show_plots: plt.show()
+                
+        
+                    
+        progress.setValue(95)
         
         #=======================================================================
         # post ui actions-------
@@ -356,7 +407,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         progress.setValue(100)
         
-        return ci_df, drf_df2, ofp
+        log.info(f'Step 1 complete w/ {ci_df.shape}')
+        
+        return ci_df, drf_df, ofp
         
         
         
@@ -387,11 +440,23 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         progress.setValue(10)
         depth_rcv_df =  func(proj_db_fp, log=log)
         
+        progress.setValue(70)
+        #=======================================================================
+        # plot
+        #=======================================================================
+        if self.checkBox_tab4actions_step2_plot.isChecked():
+            plt.close('all')
+            log.info(f'plotting depth_rcv_df')
+            from .plots import plot_c01_depth_rcv 
+            plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log)
+            log.info(f'launching matplotlib plot dialog')
+            if self.show_plots: plt.show()
+        
         #=======================================================================
         # wrap
         #=======================================================================
         progress.setValue(100)
-        
+        log.info(f'Step 2 complete w/ {depth_rcv_df.shape}')
         return depth_rcv_df
         
     
@@ -424,14 +489,27 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         from .core import c02_group_story as func
         progress.setValue(10)
-        ddf3 =  func(proj_db_fp, log=log)
+        ddf =  func(proj_db_fp, log=log)
+        
+        progress.setValue(70)
+        #=======================================================================
+        # plot
+        #=======================================================================
+        if self.checkBox_tab4actions_step3_plot.isChecked():
+            plt.close('all')
+            log.info(f'plotting ddf')
+            from .plots import plot_c02_ddf 
+            plot_c02_ddf(ddf, figure=plt.figure(3), log=log)
+            log.info(f'launching matplotlib plot dialog')
+            if self.show_plots: plt.show() 
         
         #=======================================================================
         # wrap
         #=======================================================================
         progress.setValue(100)
+        log.info(f'Step 3 complete w/ {ddf.shape}')
         
-        return ddf3
+        return ddf
     
     
     
@@ -471,6 +549,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # wrap
         #=======================================================================
         progress.setValue(100)
+        log.info(f'Step 3 complete w/ {res_df.shape}')
+        
         return res_df, ofp
         
         

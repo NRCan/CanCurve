@@ -10,6 +10,8 @@ import pytest, time, sys, inspect
 
 from unittest.mock import patch
 
+import matplotlib.pyplot as plt
+
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt, QApplication, QPoint
 from PyQt5.QtWidgets import QAction, QFileDialog, QListWidget, QTableWidgetItem
@@ -48,13 +50,17 @@ use fixtures to parameterize in blocks
 """
     
 @pytest.fixture(scope='function') 
-def dialog(qgis_iface):
+def dialog(qgis_iface, request):
+    
+    #indirect parameters
+    show_plots = request.param if hasattr(request, 'param') else False
     
     dialog =  BldgsDialog(parent=None, iface=qgis_iface,
                           debug_logger=logger, #connect python logger for rtests
+                          show_plots=show_plots,
                           )
  
-    dialog.show() #launch the window?
+    #dialog.show() #launch the window?
     
     
     return dialog
@@ -299,28 +305,45 @@ def test_pushButton_tab4actions_browse(dialog):
 
 
     
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     #'case1',
     'case2',
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
+@pytest.mark.parametrize('ciPlot',[True], indirect=False)
+@pytest.mark.parametrize('drfPlot',[True], indirect=False)
 def test_action_tab4actions_step1(dialog,
-                                  set_all_tabs,
+                                  set_all_tabs, ciPlot, drfPlot
                                   ):
     
     
     
     
-     
     #===========================================================================
-    # execute test
+    # settup diablog
     #===========================================================================
+
     dialog._change_tab('tab4actions')
     
     w = dialog.pushButton_tab4actions_step1
     
     enable_widget_and_parents(w) #need to enable the button for it to work
+    
+    if ciPlot:
+        cbox = dialog.checkBox_tab4actions_step1_ciPlot
+        enable_widget_and_parents(cbox)
+        cbox.setChecked(True)
+        
+    if drfPlot:
+        cbox = dialog.checkBox_tab4actions_step1_drfPlot
+        enable_widget_and_parents(cbox)
+        cbox.setChecked(True)
+        
+    
+    #===========================================================================
+    # execute test
+    #===========================================================================
      
     QTest.mouseClick(w, Qt.LeftButton)  
     
@@ -339,6 +362,7 @@ def test_action_tab4actions_step1(dialog,
  
  
 
+#@patch('matplotlib.pyplot.show')  #breaks enable_widget for some reason...
 @pytest.mark.parametrize('testCase', ['case1'])
 @pytest.mark.parametrize('button, testPhase, expected_tables', [
     ##('pushButton_tab4actions_step1', expected_tables_base), #this test is sufficnetly different... see above
@@ -346,34 +370,64 @@ def test_action_tab4actions_step1(dialog,
     ('pushButton_tab4actions_step3', 'c02', expected_tables_base+['c01_depth_rcv', 'c02_ddf']),
     ('pushButton_tab4actions_step4', 'c03', expected_tables_base+['c01_depth_rcv', 'c02_ddf']), #export step doesnt write
 ])
+@pytest.mark.parametrize('run_plot', [True])
+@pytest.mark.parametrize('show_plots', [False], indirect=True) #whether to call plt.show
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
-def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_tables):
+def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_tables, 
+                            run_plot, testPhase, show_plots):
     """run test on actions 2, 3, and 4 (see above for action 1)"""
-    
+    print('starting test')
+    #===========================================================================
+    # setup dialog
+    #===========================================================================
     dialog._change_tab('tab4actions')
     # Get the button to test
-    w = getattr(dialog, button) 
-
+    w = getattr(dialog, button)
     # Enable the button
     enable_widget_and_parents(w) #doesn't enable check boxes
+    
+    if run_plot:
+        cbox_name = {
+            'c01':'checkBox_tab4actions_step2_plot',
+            'c02':'checkBox_tab4actions_step3_plot',
+            'c03':None
+            }[testPhase]
+        
+        if not cbox_name is None:
+ 
+            
+            print(f'enabling plot checkBox \'{cbox_name}\'')
+            cbox = getattr(dialog, cbox_name)
+            enable_widget_and_parents(cbox)
+            cbox.setChecked(True)
+            
 
+    #===========================================================================
+    # execute
+    #===========================================================================
     # Simulate a mouse click on the button
+    print('QTest.mouseClick')
     QTest.mouseClick(w, Qt.LeftButton)
 
     # Check the result
     assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+    
+ 
 
     print('finished')
 
     
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
 def test_action_tab4actions_runAll(dialog, set_all_tabs): 
-    """test combined"""
+    """test combined
+    
+    no need to test plots here
+    """
     dialog._change_tab('tab4actions')
     QTest.mouseClick(dialog._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
     

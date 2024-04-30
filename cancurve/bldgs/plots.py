@@ -19,6 +19,7 @@ from cancurve.parameters_matplotlib import font_size, cmap_default #set custom s
 #===============================================================================
 # imports
 #===============================================================================
+ 
 import matplotlib.colors as mcolors
 import matplotlib.patches as patches
 
@@ -60,6 +61,8 @@ def plot_c00_costitems(df_raw,
     
     params
     --------
+    pd.DataFrame
+        cost-items dataframe
     
     """
     
@@ -91,7 +94,7 @@ def plot_c00_costitems(df_raw,
     
 
     
-    cmap = plt.cm.get_cmap('tab20')
+    cmap = matplotlib.colormaps.get_cmap('tab20')
     #cmap = get_large_cmap()
     gc_l = ser1.index.unique('group_code').tolist()
     color_v = [cmap(i * (1.0 / len(gc_l))) for i,k in enumerate(gc_l)]
@@ -272,7 +275,7 @@ def plot_c00_DRF(df_raw,
         ax_d[cat] = dict(zip(cat_l, ax_ar.flat))[cat]
  
     
-    #cmap = plt.cm.get_cmap('tab20')
+    #cmap = matplotlib.colormaps.get_cmap('tab20')
     
     for i, (k0, gdf) in enumerate(df_raw.groupby(level='cat')):
         ax = ax_d[k0]
@@ -360,7 +363,9 @@ def plot_c01_depth_rcv(df_raw,
     #===========================================================================
     # setup figure
     #===========================================================================
-    cmap = plt.cm.get_cmap('tab20')
+ 
+    
+    cmap = matplotlib.colormaps.get_cmap('tab20')
     #figure default
     if figure is None:
         figure = plt.figure(**fig_kwargs)
@@ -373,7 +378,7 @@ def plot_c01_depth_rcv(df_raw,
     # loop and plot
     #===========================================================================
     for k0, gdf in df_raw.groupby(level='story'):
-        log.debug(k0)
+        log.debug(f'plotting storey {k0}')
         ax = ax_d[k0]
         
         #create stacked area plot (one polygon per cat.sum())
@@ -410,6 +415,8 @@ def plot_c01_depth_rcv(df_raw,
     figure.suptitle('Depth-RCV'+'\nby story')
     figure.supxlabel('depth (m)')
     figure.supylabel('replacement cost value')
+    
+    log.debug(f'finished')
         
         
         

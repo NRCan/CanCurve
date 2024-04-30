@@ -11,6 +11,8 @@ import pytest, os, shutil, pickle
 
 import pandas as pd
 
+from unittest.mock import patch 
+
 
 from .conftest import find_single_file_by_extension, test_data_dir_master
 
@@ -54,6 +56,12 @@ def action_result(testCase, testPhase):
     
     with open(fp, 'rb') as file:
         return pickle.load(file)
+    
+
+@patch('matplotlib.pyplot.show') 
+def test_my_plotting_function(mock_show):
+    # ... your test function that calls the plotting code...
+    assert mock_show.called  # Check that plt.show() was indeed called
     
     
     
