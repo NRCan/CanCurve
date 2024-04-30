@@ -263,7 +263,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         out_dir = self.lineEdit_wdir.text()
 
         
-        step_log = lambda x:log.info(f'Step {x}\n----------------------\n\n')
+        step_log = lambda x:log.info(f'\n\n\nStep {x}\n----------------------\n\n')
         #=======================================================================
         # run actions-------
         #=======================================================================

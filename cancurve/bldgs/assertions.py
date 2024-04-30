@@ -8,7 +8,7 @@ import os
 import sqlite3
 import pandas as pd
 
-from .parameters import colns_index, colns_dtypes
+from .parameters import colns_index, colns_dtypes, bldg_meta_rqmt_df
 
 
 expected_tables_base = ['project_meta','project_settings','c00_bldg_meta', 'c00_cost_items','c00_drf']
@@ -136,6 +136,22 @@ def assert_drf_df(df):
     for col in df.columns:
         if df[col].dtype != 'float64':  # Assuming you want specifically float64
             raise TypeError(f"Column '{col}' is not a float type")
+        
+def assert_bldg_meta_d(bldg_meta):
+    """check the bldg_meta_d meets expectations"""
+    
+    #check the minumn key requirements
+        
+    miss_s = set(bldg_meta_rqmt_df['varName_core'].dropna().values.tolist()).difference(bldg_meta.keys())
+    if not miss_s==set():
+        raise KeyError(f'bldg_meta missing keys \'{miss_s}\'')
+    
+    #check types
+    type_d = bldg_meta_rqmt_df.loc[:, ['varName_core', 'type']].dropna().set_index('varName_core').iloc[:, 0].to_dict()
+    for k,v in type_d.items():
+        if not v in type(bldg_meta[k]).__name__:
+            raise TypeError(f'unrecognized type on \'{k}\' ({type(bldg_meta[k])})')
+    
  
  
 

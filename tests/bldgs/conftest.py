@@ -5,10 +5,10 @@ Created on Apr. 28, 2024
 '''
 import pytest, os, shutil, random
 
-from cancurve.hp.basic import find_single_file_by_extension
+from cancurve.hp.basic import find_single_file_by_extension, convert_to_number
 
 from cancurve.bldgs.parameters_ui import building_details_options_d
-
+from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 
 #===============================================================================
 # data
@@ -48,17 +48,37 @@ def fixed_costs_d(testCase):
         'case2':None,        
         }[testCase]
         
-        
+
 @pytest.fixture(scope='function')
 def bldg_meta_d(testCase):
+    d = bldg_meta_rqmt_df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
     
-    #just take first from parameters
-    case1_d = {k:v[0] for k,v in building_details_options_d.items()}
     
-    #random choice
-    case2_d = {k: random.choice(v) for k, v in building_details_options_d.items()}
-    
-    return {
-        'case1':case1_d,
-        'case2':case2_d,        
-        }[testCase]
+    return {k:convert_to_number(v) for k,v in d.items()}
+  
+#===============================================================================
+# @pytest.fixture(scope='function')
+# def bldg_meta_d_ui(testCase):
+#     """full set of parameters for the UI"""    
+#     
+#     if testCase=='case1':
+#         #just take first from parameters
+#         d = {k:v[0] for k,v in building_details_options_d.items()}
+#     
+#     elif testCase=='case2':
+#     
+#         #random choice
+#         d = {k: random.choice(v) for k, v in building_details_options_d.items()}
+#     
+#     """
+#     for k,v in d.items():
+#         print(f'{k}\n    {v} ({type(v)})')
+#     """
+#     return d
+# 
+#  
+# @pytest.fixture(scope='function')
+# def bldg_meta_d_strict(testCase):
+#     """strict building meta parameters needed by core"""
+#     return {'basement_height_m':1.8, 'scale_value':232.0, 'bldg_layout':'default'}
+#===============================================================================

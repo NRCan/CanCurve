@@ -21,9 +21,12 @@ import pandas as pd
 
  
 from cancurve.bldgs.parameters import drf_db_default_fp
+from cancurve.bldgs.parameters_ui import building_details_translation_d
 from cancurve.bldgs.dialog import BldgsDialog
 from cancurve.bldgs.assertions import assert_proj_db_fp, expected_tables_base
-from cancurve.hp.qt import assert_string_in_combobox, enable_widget_and_parents
+from cancurve.hp.qt import (
+    assert_string_in_combobox, enable_widget_and_parents, set_widget_value
+    )
 from tests.test_plugin import logger
 
  
@@ -76,13 +79,13 @@ def set_all_tabs(set_tab2bldgDetils, set_tab3dataInput):
     
     
 @pytest.fixture(scope='function')    
-def set_tab2bldgDetils(dialog, bldg_meta_d):
+def set_tab2bldgDetils(dialog, bldg_meta_d_ui, bldg_meta_d_strict):
     """populate the 'Building Details' tab with test metadata"""
     
     dialog._change_tab('tab2bldgDetils')
     
     #loop through and change the combobox to match whats in the dictionary
-    for k,v_raw in bldg_meta_d.items():
+    for k,v_raw in bldg_meta_d_ui.items():
         v = str(v_raw)
         comboBox = dialog._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
         
@@ -91,6 +94,21 @@ def set_tab2bldgDetils(dialog, bldg_meta_d):
         
         #set this value
         comboBox.setCurrentText(v)
+        
+    #===========================================================================
+    # populate specials
+    #===========================================================================
+    
+    assert bldg_meta_d_ui['buildingLayout']==bldg_meta_d_strict['bldg_layout'], 'conflicting parameters'
+    
+    for k, widgetName in building_details_translation_d.items():
+        widget = getattr(dialog, widgetName)
+        set_widget_value(widget, bldg_meta_d_strict[k])
+        
+    """
+    bldg_meta_d_strict.keys()
+    dialog.show()
+    """
         
     print('tab2bldgDetils setup')
     

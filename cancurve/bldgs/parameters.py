@@ -7,6 +7,7 @@ buildings module parameters
 '''
 import os
 from datetime import datetime
+import pandas as pd
 
 from ..parameters import src_dir, home_dir, today_str
 
@@ -23,17 +24,8 @@ colns_index = ['cat', 'sel', 'bldg_layout']
 colns_dtypes = {'cat': 'object', 'sel': 'object', 'rcv': 'float64', 'desc': 'object', 'bldg_layout':'object',
                 'group_code':'object', 'group_description':'object', 'story':'int64'}
 
-"""see also core.DFunc.crve_d"""
-building_meta_dtypes = {
-     'location':str,'date':datetime, 'source':str,
-     
-    'impact_units':str,'impact_var':str, #e.g., replacement costs
-    'exposure_units':str, 'exposure_var':str, #e.g., flood depth above main floor
-    'scale_units':str,'scale_var':str, #e.g., usable floor space
-    
-    'bldg_layout':str, #building layout used to slice the DRF
-    
-    }
+
+
 
 floor_story_d = {'main':0, 'basement':-1}
 
@@ -45,6 +37,29 @@ bldg_layout_options_l = ['default',
 
 settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName'}
 
+#===============================================================================
+# params. building metadata
+#===============================================================================
+"""see also core.DFunc.crve_d
+
+using a csv table to capture all of the info
+"""
+bldg_meta_rqmt_fp = os.path.join(os.path.dirname(__file__), 'bldg_meta_rqmts.csv')
+bldg_meta_rqmt_df = pd.read_csv(bldg_meta_rqmt_fp)
+#===============================================================================
+# building_meta_rqmts_d = {
+#     'location': {'type': str},
+#     'date': {'type': datetime},
+#     'source': {'type': str},
+#     'impact_units': {'type': str},
+#     'impact_var': {'type': str},
+#     'exposure_units': {'type': str},
+#     'exposure_var': {'type': str},
+#     'scale_units': {'type': str},
+#     'scale_var': {'type': str},
+#     'bldg_layout': {'type': str},
+# }
+#===============================================================================
  
 
 

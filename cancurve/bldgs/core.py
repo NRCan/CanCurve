@@ -20,11 +20,15 @@ from ..hp.basic import convert_to_bool
 
 
 from .parameters import (
-    drf_db_default_fp, colns_index, today_str, settings_default_d, building_meta_dtypes,
+    drf_db_default_fp, colns_index, today_str, settings_default_d, bldg_meta_rqmt_df,
     bldg_layout_options_l,
     )
  
-from .assertions import assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db
+from .assertions import (
+    assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db,
+    assert_bldg_meta_d,
+    )
+
 from .. import __version__
  
  
@@ -277,23 +281,29 @@ class DFunc(object):
     exp_coln = []"""
     
     #default variables for building new curves
-    """see also parameters.building_meta_dtypes"""
-    crve_d = {
-            #function metadata
-            'tag':'?','desc':'?','source':'?','location':'?','date':'?',
-            #'file_conversion':'CanFlood',
-            
-            #function definitions
-            'impact_units':'$CAD', 'impact_var':'damage',
-            'exposure_units':'m', 'exposure_var':'flood depth above floor',
-            'scale_units':'m2', 'scale_var':'building footprint',            
-            
-            #headers for DDF
-            'exposure':'impact'}
+    """see also parameters.building_meta_dtypes
     
-    cdf_chk_d = {'tag':str, #parameters expected in crv_d (read from xls tab)
-                 'exposure':str,
-                 'impact_units':str}
+    2024-04-30: switched to import from csv
+    """
+    
+    #===========================================================================
+    # crve_d = {
+    #         #function metadata
+    #         'tag':'?','desc':'?','source':'?','location':'?','date':'?',
+    #         #'file_conversion':'CanFlood',
+    #         
+    #         #function definitions
+    #         'impact_units':'$CAD', 'impact_var':'damage',
+    #         'exposure_units':'m', 'exposure_var':'flood depth above floor',
+    #         'scale_units':'m2', 'scale_var':'building footprint',            
+    #         
+    #         #headers for DDF
+    #         'exposure':'impact'}
+    # 
+    # cdf_chk_d = {'tag':str, #parameters expected in crv_d (read from xls tab)
+    #              'exposure':str,
+    #              'impact_units':str}
+    #===========================================================================
     
     #==========================================================================
     # user pars
@@ -323,6 +333,14 @@ class DFunc(object):
         self.monot=monot
         self.curve_deviation=curve_deviation
         self.logger=logger
+        
+        #extract teh default metadata from teh parameter table
+        meta_df = bldg_meta_rqmt_df.loc[:, ['varName_canflood', 'required_canflood', 'default_canflood', 'type']
+                                            ].dropna(subset='varName_canflood', how='all'
+                                                     ).set_index('varName_canflood')
+                                                     
+        self.crve_d = meta_df['default_canflood'].to_dict()
+        self.cdf_chk_d = {k:eval(v) for k,v in meta_df[meta_df['required_canflood']]['type'].to_dict().items()}
         
         #init the baseclass
         #super().__init__(**kwargs) #initilzie Model
@@ -605,7 +623,7 @@ def c00_setup_project(
         drf_db_fp=None,
         
         bldg_meta=None,
-        bldg_layout=None,
+        #bldg_layout=None,
         
         fixed_costs_d=None,        
         
@@ -654,14 +672,18 @@ def c00_setup_project(
     """
     
     #===========================================================================
-    # defaults*---------
+    # defaults---------
     #===========================================================================
  
     
     log = get_slog('c00', log)
-        
+    
+    #===========================================================================
+    # buildg metadata
+    #===========================================================================
     if bldg_meta is None: bldg_meta=dict()
-    assert isinstance(bldg_meta, dict)
+    assert_bldg_meta_d(bldg_meta)
+
     
     if settings_d is None:
         settings_d = settings_default_d
@@ -674,10 +696,13 @@ def c00_setup_project(
     #===========================================================================
     # from containers
     #===========================================================================
-    if bldg_layout is None:
-        bldg_layout = bldg_meta['bldg_layout']
+    #building layout
+    #if bldg_layout is None:
+    bldg_layout = bldg_meta['bldg_layout']
     assert isinstance(bldg_layout, str)
     assert bldg_layout in bldg_layout_options_l
+ 
+        
     
     if curve_name is None:
         curve_name = settings_d['curve_name']
@@ -776,8 +801,7 @@ def c00_setup_project(
     #===========================================================================
     # building metadata------
     #===========================================================================
-    if not 'bldg_layout' in bldg_meta:
-        bldg_meta['bldg_layout'] = bldg_layout
+
     
     #create a table 'bldg_meta' and populate it with the entries in bldg_meta
     """using single row to preserve dtypes"""
@@ -925,7 +949,7 @@ def c02_group_story(proj_db_fp,
             log=None,
             scale_m2=None,
             
-            basement_height_m=None, mf_area_m2=None,
+            basement_height_m=None, scale_value=None,
             
             
  
@@ -943,7 +967,7 @@ def c02_group_story(proj_db_fp,
         vertical distance with which to shift the basement curve in meters
         defaults to value in c00_bldg_meta
         
-    mf_area_m2: float, optional
+    scale_value: float, optional
         area with which to scare replacement values (e.g., floor area in m2)
         defaults to value in c00_bldg_meta
         
@@ -990,12 +1014,12 @@ def c02_group_story(proj_db_fp,
             
         
         if scale_m2:
-            if mf_area_m2 is None:
-                assert 'mf_area_m2' in bldg_meta_d, f'passed scale_m2=True but no \'mf_area_m2\' provided'
-                mf_area_m2 = float(bldg_meta_d['mf_area_m2'])
-            assert isinstance(mf_area_m2, float)
+            if scale_value is None:
+                assert 'scale_value' in bldg_meta_d, f'passed scale_m2=True but no \'scale_value\' provided'
+                scale_value = float(bldg_meta_d['scale_value'])
+            assert isinstance(scale_value, float)
         
-        params_d = dict(scale_m2=scale_m2, basement_height_m=basement_height_m, mf_area_m2=mf_area_m2)
+        params_d = dict(scale_m2=scale_m2, basement_height_m=basement_height_m, scale_value=scale_value)
 
             
         log.debug(f'extracted data from proj_db w/ f\n    {params_d}')
@@ -1069,14 +1093,14 @@ def c02_group_story(proj_db_fp,
         #=======================================================================
         if scale_m2:
 
-            log.info(f'scaling by {mf_area_m2:.2f} m2')
+            log.info(f'scaling by {scale_value:.2f} m2')
             
-            ddf3 = (ddf2/mf_area_m2).round(2)
+            ddf3 = (ddf2/scale_value).round(2)
             
         else:
             ddf3=ddf2.round(2)
             
-        #get_setting(conn, table_name='bldg_meta', attn="mf_area_m2")
+        #get_setting(conn, table_name='bldg_meta', attn="scale_value")
         
         #=======================================================================
         # sum stores

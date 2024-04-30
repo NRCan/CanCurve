@@ -119,7 +119,7 @@ QTabBar::tab:selected { /* Style for selected tabs */
 </string>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tab1welcome">
       <property name="palette">
@@ -183,7 +183,7 @@ p, li { white-space: pre-wrap; }
             <x>0</x>
             <y>0</y>
             <width>729</width>
-            <height>862</height>
+            <height>949</height>
            </rect>
           </property>
           <property name="styleSheet">
@@ -315,6 +315,16 @@ QGroupBox {
                 <item row="8" column="1">
                  <widget class="QComboBox" name="garageSize_ComboBox"/>
                 </item>
+                <item row="9" column="0">
+                 <widget class="QLabel" name="buildingLayoutLabel">
+                  <property name="text">
+                   <string>Building Layout</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="9" column="1">
+                 <widget class="QComboBox" name="buildingLayout_ComboBox"/>
+                </item>
                </layout>
               </item>
              </layout>
@@ -362,7 +372,7 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox_2"/>
+                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox"/>
                 </item>
                 <item row="2" column="0">
                  <widget class="QLabel" name="basementHeightUnitsLabel">
@@ -427,7 +437,11 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QDoubleSpinBox" name="sizeOrAreaValue_DoubleSpinBox"/>
+                 <widget class="QDoubleSpinBox" name="sizeOrAreaValue_DoubleSpinBox">
+                  <property name="maximum">
+                   <double>99999.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                 <item row="2" column="1">
                  <widget class="QComboBox" name="qualityOfBuildingMaterials_ComboBox"/>
@@ -560,6 +574,26 @@ QGroupBox {
                 </item>
                 <item row="5" column="1">
                  <widget class="QDateEdit" name="pricingDate_DateEdit"/>
+                </item>
+                <item row="6" column="0">
+                 <widget class="QLabel" name="currencyLabel">
+                  <property name="text">
+                   <string>Currency</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QComboBox" name="currency_ComboBox"/>
+                </item>
+                <item row="7" column="0">
+                 <widget class="QLabel" name="costBasisLabel">
+                  <property name="text">
+                   <string>Cost-Basis</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="QComboBox" name="costBasis_ComboBox"/>
                 </item>
                </layout>
               </item>
@@ -825,6 +859,45 @@ QGroupBox {
             <property name="text">
              <string>Browse</string>
             </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>exposure units</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboBox_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>50</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>m</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>ft</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>

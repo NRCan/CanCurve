@@ -19,10 +19,13 @@ building_details_options_d = {
     'coolingType': ['Central air', 'Heat pump'],
     'garageType': ['Yes, Attached', 'Yes, Detached', 'None'],
     'garageSize': ['Single', 'Single Plus', 'Double', 'Triple'],
+    'buildingLayout':['default'], #needed by DRF, but not sure about values other than 'default'
+    
     
     #foundation/basement
     'foundationType':['basement', 'crawlspace', 'slab', 'other'],
     'basementHeightUnits':['m', 'ft'],
+    
     
     
     #size age materials
@@ -46,5 +49,14 @@ building_details_options_d = {
                             "NU",  # Nunavut
                             "YT"   # Yukon
                         ],
-    'taxesIncluded': ['PST', 'PST & GST', 'GST', 'None']
+    'taxesIncluded': ['PST', 'PST & GST', 'GST', 'None'],
+    'currency':['$CAD', '$USD'],
+    'costBasis':['replacement cost', 'depreciated costs']
 }
+
+
+building_details_translation_d = {
+    'basement_height_m':'basementHeight_DoubleSpinBox',
+    'scale_value':'sizeOrAreaValue_DoubleSpinBox',
+    'bldg_layout':'buildingLayout_ComboBox',
+    }
