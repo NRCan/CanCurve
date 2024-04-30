@@ -59,14 +59,14 @@ use fixtures to parameterize in blocks
 """
     
 @pytest.fixture(scope='function') 
-def dialog(qgis_iface, request):
+def dialog(qgis_iface):
     
     #indirect parameters
-    show_plots = request.param if hasattr(request, 'param') else False
+ 
     
     dialog =  BldgsDialog(parent=None, iface=qgis_iface,
                           debug_logger=logger, #connect python logger for rtests
-                          show_plots=show_plots,
+                          show_plots=False,
                           )
  
     #dialog.show() #launch the window?
@@ -90,7 +90,9 @@ def set_tab2bldgDetils(dialog, testCase, bldg_meta_d):
     
     dialog._change_tab('tab2bldgDetils')
     
-    df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type', 'case1']].dropna(
+ 
+    
+    df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type', 'case1', 'case2']].dropna(
         subset='varName_ui').set_index('varName_ui')
     
     #loop through and change the combobox to match whats in the dictionary
@@ -228,7 +230,7 @@ def test_init(dialog,):
 #===============================================================================
 """functions hidden from user"""
 
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',
@@ -350,16 +352,18 @@ def test_pushButton_tab4actions_browse(dialog):
 
 
     
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
-    #'case1',
+    'case1',
     'case2',
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
 @pytest.mark.parametrize('ciPlot',[True], indirect=False)
 @pytest.mark.parametrize('drfPlot',[True], indirect=False)
+ 
 def test_action_tab4actions_step1(dialog,
-                                  set_all_tabs, ciPlot, drfPlot
+                                  set_all_tabs, ciPlot, drfPlot, 
+ 
                                   ):
     
     
@@ -416,10 +420,9 @@ def test_action_tab4actions_step1(dialog,
     ('pushButton_tab4actions_step4', 'c03', expected_tables_base+['c01_depth_rcv', 'c02_ddf']), #export step doesnt write
 ])
 @pytest.mark.parametrize('run_plot', [True])
-@pytest.mark.parametrize('show_plots', [False], indirect=True) #whether to call plt.show
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
 def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_tables, 
-                            run_plot, testPhase, show_plots):
+                            run_plot, testPhase):
     """run test on actions 2, 3, and 4 (see above for action 1)"""
     print('starting test')
     #===========================================================================
