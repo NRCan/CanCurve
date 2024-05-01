@@ -630,7 +630,7 @@ def c00_setup_project(
         curve_name=None,
         settings_d=None,
         
-        log=None,ofp=None,out_dir=None,
+        log=None,ofp=None,out_dir=None,overwrite=True,
 
         
         ):
@@ -709,7 +709,7 @@ def c00_setup_project(
     assert isinstance(curve_name, str) 
     
     #===========================================================================
-    # filepaths
+    # filepaths------
     #===========================================================================
     if out_dir is None: 
         out_dir = os.getcwd()
@@ -717,7 +717,23 @@ def c00_setup_project(
     if ofp is None:
         ofp = os.path.join(out_dir, f'{curve_name}_{today_str}.cancurve')
         
-    assert not os.path.exists(ofp)
+    if os.path.exists(ofp):
+        if overwrite:
+            log.warning(f'project database file exists... overwriting')
+            try:
+                os.remove(ofp)
+            except Exception as e:
+                log.warning(f'failed to remove the exisiting filepath w/ \n    {e}')
+                
+        else:
+            raise IOError('project database file exists and overwrite=False')
+        
+    
+    """letting this pass   
+    assert not os.path.exists(ofp)"""
+    
+    if not os.path.exists(os.path.dirname(ofp)):os.makedirs(os.path.dirname(ofp))
+        
     
     if drf_db_fp is None: 
         log.info(f'using default depth-replacement-fraction dataset')

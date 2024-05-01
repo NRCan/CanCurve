@@ -77,14 +77,14 @@ class plugLogger(object):
             self.debug_logger.debug(msg)
  
     def warning(self, msg):
-        self._loghlp(msg, Qgis.Warning, push=False)
+        self._loghlp(msg, Qgis.Warning, push=False, status=True)
 
     def push(self, msg):
-        self._loghlp(msg, Qgis.Info, push=True)
+        self._loghlp(msg, Qgis.Info, push=True, status=True)
 
     def error(self, msg):
         """similar behavior to raising a QError.. but without throwing the execption"""
-        self._loghlp(msg, Qgis.Critical, push=True)
+        self._loghlp(msg, Qgis.Critical, push=True, status=True)
         
     def _loghlp(self, #helper function for generalized logging
                 msg_raw, qlevel, 

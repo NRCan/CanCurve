@@ -435,6 +435,7 @@ def plot_c02_ddf(df_raw,
                            ),
                        
                        cmap=None,
+                       ylabel='total replacement cost',
                        
                        log=None):
     """plot depth-damage per-story"""
@@ -488,7 +489,7 @@ def plot_c02_ddf(df_raw,
     
     figure.suptitle('Depth-Damage-Function')
     figure.supxlabel('depth (m)')
-    figure.supylabel('total replacement cost')
+    figure.supylabel(ylabel)
     
     
     return figure

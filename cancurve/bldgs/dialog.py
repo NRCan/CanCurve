@@ -25,7 +25,7 @@
 #===============================================================================
 # Imports----------
 #===============================================================================
-import os, sys
+import os, sys, sqlite3
 from datetime import datetime
 import pandas as pd
 import numpy as np
@@ -179,7 +179,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             from tests.bldgs.scripts_dialog import set_tab2bldgDetils, set_fixedCosts
             
             def populate_ui():
-                
+                self.clear_tab4actions()
                 #get the case
                 testCase = self.comboBox_dev.currentText()
                 
@@ -187,7 +187,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 set_tab2bldgDetils(self, testCase)                
                 set_fixedCosts(self, fixed_costs_master_d[testCase])
                 
-                #self.lineEdit_wdir.setText(str(tmp_path))
+                wdir = os.path.join(os.path.expanduser('~'), 'CanCurve', testCase, 
+                                    datetime.now().strftime('%Y%m%d%H%M%S'))
+                self.lineEdit_wdir.setText(wdir)
                 self.lineEdit_tab3dataInput_curveName.setText(testCase)
                 
                 #cost information
@@ -298,11 +300,31 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         #read button
         self.pushButton_tab4actions_read.clicked.connect(self.action_read_proj_db)
+        
+        #clear
+
+        
+        self.pushButton_tab4actions_clear.clicked.connect(self.clear_tab4actions)
         #=======================================================================
         # wrap
         #=======================================================================
         log.debug(f'slots connected')
         
+    def clear_tab4actions(self):
+        old_fp = self.lineEdit_tab4actions_projdb.text()
+        try:
+            os.remove(old_fp)
+        except Exception as e:
+            self.logger.warning(f'failed to remove the existing project database filepath w/ \n    {e}')
+            #raise IOError(e)
+        
+        self.lineEdit_tab4actions_projdb.clear()
+        
+        #clear progress bars
+        self.progressBar_tab4actions_step1.setValue(0)
+        self.progressBar_tab4actions_step2.setValue(0)
+        self.progressBar_tab4actions_step3.setValue(0)
+        self.progressBar_tab4actions_step4.setValue(0)
         
     def action_read_proj_db(self):
         """pushButton_tab4actions_read
@@ -340,7 +362,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             
             table_names_l =get_table_names(conn)
             
-        log.info(f'read {len(table_names_l)} tables')
+        log.debug(f'read {len(table_names_l)} tables')
         #=======================================================================
         # activate buttons based on table presence
         #=======================================================================
@@ -397,9 +419,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self._run_c02_group_story(logger=log)
         
         step_log(4)
-        self._run_c03_export(logger=log)
+        _, ofp = self._run_c03_export(logger=log)
         
-        log.push('complete')
+        log.push(f'workflow complete and DDF output to\n    {ofp}')
         
 
         
@@ -411,6 +433,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log.push(f'start')
         
         self._run_c00_setup_project()
+        
+        self._read_db(self._get_proj_db_fp(), log)
         
 
     def _launch_dialog_dbMismatch(self, msg): 
@@ -452,6 +476,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         settings_d =    self._get_settings(logger=log)
         
+        ofp = self._get_proj_db_fp() #load the one provided by the user
+        
         #get buidling layout
         """seems like only the 'default' entries are working
         from .core import _get_building_layout_from_meta
@@ -469,7 +495,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         ci_df, drf_df, ofp, err_msg =  func(
             ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
-            settings_d=settings_d, log=log, out_dir=out_dir
+            settings_d=settings_d, log=log, out_dir=out_dir, ofp=ofp
             )
         
         progress.setValue(70)
@@ -529,7 +555,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         progress.setValue(95)
         
-        self._read_db(ofp, log)
+        
         
         progress.setValue(100)
         
@@ -545,6 +571,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         pushButton_tab4actions_step2"""
         self._run_c01_join_drf()
+        
+        self._read_db(self._get_proj_db_fp(), self.logger)
 
     def _run_c01_join_drf(self, logger=None):
         """retrive and run project setup
@@ -581,6 +609,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # wrap
         #=======================================================================
+        progress.setValue(90)
+        #self._read_db(proj_db_fp, log)
+        
         progress.setValue(100)
         log.info(f'Step 2 complete w/ {depth_rcv_df.shape}')
         return depth_rcv_df
@@ -595,9 +626,11 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     
         pushButton_tab4actions_step3"""
         self._run_c02_group_story()
+        
+        self._read_db(self._get_proj_db_fp(), self.logger)
 
     def _run_c02_group_story(self, logger=None):
-        """retrieve and run group story
+        """retrieve and run group story (Step 3)
     
         re-factored so we can call it from multiple push buttons
         """
@@ -624,14 +657,43 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         if self.checkBox_tab4actions_step3_plot.isChecked():
             plt.close('all')
             log.info(f'plotting ddf')
-            from .plots import plot_c02_ddf 
-            plot_c02_ddf(ddf, figure=plt.figure(3), log=log)
+            
+            #retrieve meta
+            with sqlite3.connect(proj_db_fp) as conn:
+                bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn).iloc[0, :].to_dict()
+                
+            settings_d = self._get_settings()
+                
+            """
+            for k,v in bldg_meta_d.items():
+                print(k,v)
+            """
+                
+            from .plots import plot_c02_ddf
+            
+            #build y-label
+            if 'costBasis' in bldg_meta_d: #fancy
+                ylabel='%s (%s)'%(bldg_meta_d['costBasis'], bldg_meta_d['currency'])
+                
+                if settings_d['scale_m2']:
+                    ylabel +=' per ' + bldg_meta_d['sizeOrAreaUnits']
+            else:
+                ylabel = 'damage'
+                if settings_d['scale_m2']:
+                    ylabel +=' per area'
+                
+ 
+             
+            plot_c02_ddf(ddf, figure=plt.figure(3), log=log,ylabel=ylabel)
             log.info(f'launching matplotlib plot dialog')
             if self.show_plots: plt.show() 
         
         #=======================================================================
         # wrap
         #=======================================================================
+        progress.setValue(90)
+        #self._read_db(proj_db_fp, log)
+        
         progress.setValue(100)
         log.info(f'Step 3 complete w/ {ddf.shape}')
         
@@ -646,7 +708,11 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         """step4 run button
     
         pushButton_tab4actions_step4"""
-        self._run_c03_export()
+        _, ofp = self._run_c03_export()
+        
+        self._read_db(self._get_proj_db_fp(), self.logger)
+        
+        self.logger.push(f'Step 4 complete and exported DDF to {ofp}')
     
     def _run_c03_export(self, logger=None):
         """retrieve and run export
@@ -674,6 +740,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # wrap
         #=======================================================================
+        progress.setValue(90)
+        #self._read_db(proj_db_fp, log)
+        
         progress.setValue(100)
         log.info(f'Step 4 complete w/ {res_df.shape}')
         
@@ -703,8 +772,13 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     def _get_proj_db_fp(self):
         """retrieve the project filedatabse"""
         proj_db_fp = self.lineEdit_tab4actions_projdb.text()
-        if not os.path.exists(proj_db_fp):
-            raise IOError(f'must specify a valid project database filepath. got \n    {proj_db_fp}')
+        #=======================================================================
+        # if not os.path.exists(proj_db_fp):
+        #     raise IOError(f'must specify a valid project database filepath. got \n    {proj_db_fp}')
+        #=======================================================================
+        if proj_db_fp =='':
+            proj_db_fp=None
+            
         return proj_db_fp
         
     def _get_building_details(self,

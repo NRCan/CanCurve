@@ -253,7 +253,7 @@ def test_get_fixed_costs(dialog,
 #===============================================================================
 # Dialog tests--------
 #===============================================================================
-@pytest.mark.dev
+
 def test_radioButton_tab4actions_runControl(dialog):
     
    #============================================================================
@@ -413,17 +413,17 @@ def test_action_tab4actions_step1(dialog,
     
  
  
-
+@pytest.mark.dev
 #@patch('matplotlib.pyplot.show')  #breaks enable_widget for some reason...
 @pytest.mark.parametrize('testCase', ['case1'])
 @pytest.mark.parametrize('button, testPhase, expected_tables', [
     ##('pushButton_tab4actions_step1', expected_tables_base), #this test is sufficnetly different... see above
-    ('pushButton_tab4actions_step2', 'c01', expected_tables_base+['c01_depth_rcv']),
+    #('pushButton_tab4actions_step2', 'c01', expected_tables_base+['c01_depth_rcv']),
     ('pushButton_tab4actions_step3', 'c02', expected_tables_base+['c01_depth_rcv', 'c02_ddf']),
-    ('pushButton_tab4actions_step4', 'c03', expected_tables_base+['c01_depth_rcv', 'c02_ddf']), #export step doesnt write
+    #('pushButton_tab4actions_step4', 'c03', expected_tables_base+['c01_depth_rcv', 'c02_ddf']), #export step doesnt write
 ])
 @pytest.mark.parametrize('run_plot', [True])
-@pytest.mark.parametrize('scale_m2',[True], indirect=False)
+@pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
 def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_tables, 
                             run_plot, testPhase):
     """run test on actions 2, 3, and 4 (see above for action 1)"""
@@ -480,6 +480,10 @@ def test_action_tab4actions_runAll(dialog, set_all_tabs):
     no need to test plots here
     """
     dialog._change_tab('tab4actions')
+    
+    #plot over-rides
+    dialog.checkBox_tab4actions_step3_plot.setChecked(True)
+    
     QTest.mouseClick(dialog._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
     
     #check

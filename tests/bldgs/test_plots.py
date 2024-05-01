@@ -67,7 +67,7 @@ def action_result(testCase, testPhase):
 #===============================================================================
 # tests---------
 #===============================================================================
-#@pytest.mark.dev
+#
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',[
     'case1',
@@ -113,7 +113,7 @@ def test_plot_c01_depth_rcv(action_result, tmp_path):
     
     
 
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c02'], indirect=False)
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 def test_plot_c02_ddf(action_result, tmp_path):

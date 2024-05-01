@@ -219,7 +219,7 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-304</y>
+            <y>-118</y>
             <width>729</width>
             <height>949</height>
            </rect>
@@ -487,7 +487,7 @@ QGroupBox {
                 <item row="0" column="0">
                  <widget class="QLabel" name="sizeOrAreaValueLabel">
                   <property name="text">
-                   <string>Size or Area (value)</string>
+                   <string>Scaling Area (value)</string>
                   </property>
                  </widget>
                 </item>
@@ -847,7 +847,7 @@ QGroupBox {
           <item>
            <widget class="QRadioButton" name="radioButton_tab3dataInput_rcvm2">
             <property name="text">
-             <string>RCV/m^2</string>
+             <string>RCV/area</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -1078,7 +1078,7 @@ QGroupBox {
          <item alignment="Qt::AlignHCenter">
           <widget class="QPushButton" name="pushButton_tab4actions_run">
            <property name="text">
-            <string>Run</string>
+            <string>Run All</string>
            </property>
           </widget>
          </item>
@@ -1133,7 +1133,7 @@ QLabel {
                   <string/>
                  </property>
                  <property name="placeholderText">
-                  <string>Filepath to project SQLite database</string>
+                  <string>specify filepath to project SQLite database (or run Step 1)</string>
                  </property>
                 </widget>
                </item>
@@ -1160,6 +1160,19 @@ QLabel {
                  </property>
                  <property name="text">
                   <string>Read</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButton_tab4actions_clear">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Delete</string>
                  </property>
                 </widget>
                </item>
