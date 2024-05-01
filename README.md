@@ -5,6 +5,8 @@ CanCurve is an open-source tool which can develop depth-damage (stage-damage) fu
   <img src="./cancurve/img/icon.png" alt="CanCurve Icon"> 
 </p>
  
+## Updates
+- 2024-05-01: initial working release (un tested) [v0.0.1](https://github.com/NRCan/CanCurve/releases/tag/v0.0.1)
 
 ## Installation
 - Install [QGIS 3.34.5](https://download.qgis.org/downloads/) (with Qt 5.15.13)

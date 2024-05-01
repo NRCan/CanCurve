@@ -2,6 +2,7 @@
 
 ## Installation
 Typically, development should employ a virtual environment with pyqgis bindings. 
+We usually develop to target the most recent QGIS LTR. 
 Some additional packages for testing are specified in `./requirements.txt`
 
 ### PYTHONPATH
@@ -13,6 +14,8 @@ pytests are in `./tests`
 ## Compiling
 the only compiling typically requied is when the qt `resources.qrc` file is changed. This needs to be ported to a python module (typically using  `pyrcc5 -o resources.py resources.qrc` as in `./dev_tools/plug_compile.bat`)
 
+
+
 ## Deploying Plugin
 
 ### Active Development
@@ -23,7 +26,38 @@ Pre-release testing (and full deployment) employ a zip of the plugin directory (
 1) remove all `__pychace__`
 2) zip/archive the plugin directory
 
-This zip file can then be distributed using a git-hub release (upload the zip file to the release)
+This zip file can then be distributed using a git-hub release (upload the zip file to the github release... NOT the git repo tracking)
+
 
 ### Full QGIS Repository release
-1) create the plugin zip as above
+- [ ] create the plugin zip as above
+
+- [ ] in git-hub, create a new release tag (e.g., v1.2.0), summarize new features for developers. upload the zip file. 
+
+- [ ] login to [plugins.qgis.org](https://plugins.qgis.org/accounts/login/?next=/plugins/my) using the CanFlood credentials (ask Nicky). Navigate to **Upload a plugin** and select the zip file.
+
+- [ ] In QGIS, refresh the repository and ensure that the new version is available (may take ~10mins for the version to be available). Upgrade and check that it works.
+
+- [ ] notify project team
+
+## Developing an Update
+
+the dev branch is where new features and fixes are collected and tested before release. The following should be executed on the dev branch in preparation for pushing to the main branch:
+
+- [ ] add/update documentation where applicable
+
+- [ ] backwards merge master into dev to capture any upstream changes (these should be minor and limited to documentation tweaks as all development is done on the dev branch)
+
+- [ ] ensure the version tag is updated on `.\cancurve\__init__.py`
+
+- [ ] update the README.md to summarize any new features for users
+
+- [ ] similarly update cancurve\metadata.txt
+
+- [ ] execute all tests. investigate warnings. fix errors. 
+
+- [ ] perform a 'person test' by having a non-developer follow relevant tutorials. investigate warnings and fix errors.
+
+- [ ] Once these tests are complete **and passing**, a pull request should be completed and the dev branch merged into the main.
+
+- [ ] Follow the above **Deploying Plugin/Full QGIS Repository Release** on the main branch 
