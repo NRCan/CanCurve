@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>784</width>
+    <width>800</width>
     <height>800</height>
    </rect>
   </property>
@@ -219,8 +219,8 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-118</y>
-            <width>729</width>
+            <y>0</y>
+            <width>745</width>
             <height>949</height>
            </rect>
           </property>
@@ -1592,7 +1592,7 @@ QLabel {
         <item>
          <widget class="QScrollArea" name="scrollArea_2">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -1617,12 +1617,12 @@ QLabel {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>578</width>
-             <height>55</height>
+             <width>577</width>
+             <height>68</height>
             </rect>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -1636,21 +1636,21 @@ QLabel {
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>55</height>
+             <height>100</height>
             </size>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_18">
             <item>
              <widget class="QLabel" name="progressText">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>500</width>
                 <height>50</height>
                </size>
               </property>
@@ -1726,7 +1726,7 @@ QLabel {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_costbasis"/>
   <buttongroup name="buttonGroup_runControl"/>
+  <buttongroup name="buttonGroup_costbasis"/>
  </buttongroups>
 </ui>
