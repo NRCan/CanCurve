@@ -409,9 +409,19 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # run actions-------
         #=======================================================================
         
+        #=======================================================================
+        # step 1
+        #=======================================================================`
         step_log(1)
-        self._run_c00_setup_project(logger=log, out_dir=out_dir)
+        _, _, _, err_msg = self._run_c00_setup_project(logger=log, out_dir=out_dir)
         
+        if not err_msg is None:
+            log.warning(err_msg)
+            return
+        
+        #=======================================================================
+        # step 2
+        #=======================================================================
         step_log(2)
         self._run_c01_join_drf(logger=log)
         
@@ -422,6 +432,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         _, ofp = self._run_c03_export(logger=log)
         
         log.push(f'workflow complete and DDF output to\n    {ofp}')
+        
+        return
         
 
         
@@ -561,7 +573,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         log.info(f'Step 1 complete w/ {ci_df.shape}')
         
-        return ci_df, drf_df, ofp
+        return ci_df, drf_df, ofp, err_msg
         
         
         
