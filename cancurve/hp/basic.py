@@ -37,7 +37,7 @@ def find_single_file_by_extension(directory, extension):
         FileNotFoundError: If no matching file is found.
         ValueError: If multiple matching files are found.
     """
-    assert os.path.exists(directory)
+    assert os.path.exists(directory), directory
     matching_files = [f for f in os.listdir(directory) if f.endswith(extension)]
 
     if len(matching_files) == 0:

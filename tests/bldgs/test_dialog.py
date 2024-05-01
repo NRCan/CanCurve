@@ -35,7 +35,7 @@ from cancurve.hp.qt import (
     )
 from tests.test_plugin import logger
 
-from .scripts_dialog import test_cases_l, set_tab2bldgDetils, set_fixedCosts
+from cancurve.bldgs.dialog_test_scripts import test_cases_l, set_tab2bldgDetils, set_fixedCosts
 
  
 

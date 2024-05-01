@@ -167,7 +167,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         if dev_mode:
             
             #add the cases 
-            from tests.bldgs.scripts_dialog import (
+            from .dialog_test_scripts import (
                 test_cases_l, fixed_costs_master_d, test_data_dir_master
                 )
             
@@ -176,7 +176,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             self.comboBox_dev.addItems(test_cases_l)
             
             #add the action
-            from tests.bldgs.scripts_dialog import set_tab2bldgDetils, set_fixedCosts
+            from cancurve.bldgs.dialog_test_scripts import set_tab2bldgDetils, set_fixedCosts
             
             def populate_ui():
                 self.clear_tab4actions()

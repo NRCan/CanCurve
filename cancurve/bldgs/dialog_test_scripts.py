@@ -15,22 +15,22 @@ from PyQt5.QtWidgets import (
     QComboBox,
     )
 
-from cancurve.hp.qt import (
+from ..hp.qt import (
     assert_string_in_combobox, set_widget_value
     )
 
-from cancurve.parameters import src_dir
+from ..parameters import src_dir, plugin_dir
 
-from cancurve.bldgs.parameters_ui import building_details_options_d
-from cancurve.bldgs.parameters import bldg_meta_rqmt_df
+from .parameters_ui import building_details_options_d
+from .parameters import bldg_meta_rqmt_df
 
 
 #===============================================================================
 # params-----
 #===============================================================================
-parent_tdata_dir = os.path.join(src_dir, 'tests', 'data')
+test_data_dir_master = os.path.join(plugin_dir, 'dev_test_data') #needs to live in plugin directory for dev ui to work
 
-test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
+#test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
 test_cases_l = ['case1', 'case2']
 
