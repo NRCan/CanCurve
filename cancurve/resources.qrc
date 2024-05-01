@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/plugins/cancurve">
+    <file>img/icon.png</file>
+    <file>img/dbMismatch_icon.png</file>
+  </qresource>
+</RCC>
