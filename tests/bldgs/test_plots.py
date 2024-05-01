@@ -58,10 +58,7 @@ def action_result(testCase, testPhase):
         return pickle.load(file)
     
 
-@patch('matplotlib.pyplot.show') 
-def test_my_plotting_function(mock_show):
-    # ... your test function that calls the plotting code...
-    assert mock_show.called  # Check that plt.show() was indeed called
+ 
     
     
     
@@ -77,7 +74,7 @@ def test_my_plotting_function(mock_show):
     'case2'
     ], indirect=False)
 def test_plot_c00_costitems(action_result, tmp_path):
-    ci_df, _, _ = action_result #c00 returns both of these
+    ci_df, _, _ , _= action_result #c00 returns both of these
     
     from cancurve.bldgs.plots import plot_c00_costitems as func
     
@@ -92,7 +89,7 @@ def test_plot_c00_costitems(action_result, tmp_path):
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 def test_plot_c00_DRF(action_result, tmp_path):
-    _, drf_df, _ = action_result #c00 returns both of these
+    _, drf_df, _, _ = action_result #c00 returns both of these
     
     from cancurve.bldgs.plots import plot_c00_DRF as func
     

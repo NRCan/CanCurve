@@ -177,7 +177,9 @@ class CanCurve:
             icon_path,
             text=self.tr(u'CanCurve'),
             callback=self.launch_dialog, #action to be trigered
-            parent=self.iface.mainWindow())
+            parent=self.iface.mainWindow(),
+            add_to_menu=False,
+            )
 
         # will be set False in run()
         self.first_start = True

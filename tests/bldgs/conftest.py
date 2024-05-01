@@ -10,18 +10,13 @@ from cancurve.hp.basic import find_single_file_by_extension, convert_to_number
 from cancurve.bldgs.parameters_ui import building_details_options_d
 from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 
+from .scripts_dialog import (
+    test_data_dir_master, fixed_costs_master_d)
 #===============================================================================
 # data
 #===============================================================================
-from tests.conftest import test_data_dir_master as parent_tdata_dir
-test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
+#from tests.conftest import test_data_dir_master as parent_tdata_dir
 
-test_cases_l = ['case1', 'case2']
-
-fixed_costs_master_d = {
-        'case1':{0:10000, -1:8000},
-        'case2':None,        
-        }
 #===============================================================================
 # fixtrues--------
 #===============================================================================

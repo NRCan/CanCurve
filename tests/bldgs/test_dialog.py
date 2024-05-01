@@ -26,7 +26,7 @@ import pandas as pd
 import numpy as np
 
  
-from cancurve.bldgs.parameters import drf_db_default_fp, bldg_meta_rqmt_df
+from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 from cancurve.bldgs.parameters_ui import building_details_options_d
 from cancurve.bldgs.dialog import BldgsDialog
 from cancurve.bldgs.assertions import assert_proj_db_fp, expected_tables_base
@@ -35,7 +35,7 @@ from cancurve.hp.qt import (
     )
 from tests.test_plugin import logger
 
-from .conftest import test_cases_l
+from .scripts_dialog import test_cases_l, set_tab2bldgDetils, set_fixedCosts
 
  
 
@@ -87,25 +87,7 @@ def set_all_tabs(tab2bldgDetils, tab3dataInput):
     
     
 
-def set_tab2bldgDetils(dialog, testCase):
-    
-    df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type'] + test_cases_l].dropna(subset='varName_ui').set_index('varName_ui')
-    #loop through and change the combobox to match whats in the dictionary
-    for k, row in df.iterrows():
-        if not pd.isnull(row[testCase]):
-            v = row[testCase]
-        elif k in building_details_options_d:
-            v = building_details_options_d[k][0] #just take first
-        else:
-            #print('continue')
-            continue #skip this one
-        #v = str(v_raw)
-        #comboBox = dialog._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
-        widget = getattr(dialog, row['widgetName'])
-        #check if the requested value is one of the comboBox's options
-        if isinstance(widget, QComboBox):
-            assert_string_in_combobox(widget, v)
-        set_widget_value(widget, v)
+
 
 @pytest.fixture(scope='function')    
 def tab2bldgDetils(dialog, testCase, bldg_meta_d):
@@ -159,13 +141,7 @@ def tab3dataInput(dialog, tableWidget_tab3dataInput_fixedCosts,
     return True
     
 
-def set_fixedCosts(dialog, fixed_costs_d):
-    tblW = dialog.tableWidget_tab3dataInput_fixedCosts #get the table widget
-    ser = pd.Series(fixed_costs_d)
-    tblW.setRowCount(len(ser)) #add this many rows
-    for i, (eName, pval) in enumerate(ser.items()):
-        tblW.setItem(i, 0, QTableWidgetItem(str(eName)))
-        tblW.setItem(i, 1, QTableWidgetItem(str(pval)))
+
 
 @pytest.fixture(scope='function')    
 def tableWidget_tab3dataInput_fixedCosts(dialog, fixed_costs_d):
@@ -365,10 +341,12 @@ def test_pushButton_tab4actions_read(dialog, set_projdb):
     QTest.mouseClick(w, Qt.LeftButton)
     
     
-    """manual inspection only"""
-    dialog.show()
-    QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    
-    sys.exit(QApp.exec_()) #wrap
+    #===========================================================================
+    # """manual inspection only"""
+    # dialog.show()
+    # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    
+    # sys.exit(QApp.exec_()) #wrap
+    #===========================================================================
  
 #===============================================================================
 # Dialog Action tests--------
