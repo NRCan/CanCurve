@@ -42,6 +42,7 @@ from PyQt5.QtWidgets import (
 
  
 
+from ..config import dev_mode
 
 from ..hp.basic import convert_to_number
 from ..hp.plug import plugLogger
@@ -159,6 +160,48 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self.close_pushButton.clicked.connect(close_dialog) 
         self.cancel_pushButton.clicked.connect(self.action_cancel_process)
+        
+        #=======================================================================
+        # development-----
+        #=======================================================================
+        if dev_mode:
+            
+            #add the cases 
+            from tests.bldgs.conftest import (
+                test_cases_l, fixed_costs_master_d, test_data_dir_master, find_single_file_by_extension
+                )
+            
+            self.comboBox_dev.addItems(test_cases_l)
+            
+            #add the action
+            from tests.bldgs.test_dialog import set_tab2bldgDetils, set_fixedCosts
+            
+            def populate_ui():
+                
+                #get the case
+                testCase = self.comboBox_dev.currentText()
+                
+                #populate with the test data
+                set_tab2bldgDetils(self, testCase)                
+                set_fixedCosts(self, fixed_costs_master_d[testCase])
+                
+                #self.lineEdit_wdir.setText(str(tmp_path))
+                self.lineEdit_tab3dataInput_curveName.setText(testCase)
+                
+                #cost information
+                tdata_dir = os.path.join(test_data_dir_master, testCase)
+                ci_fp = find_single_file_by_extension(tdata_dir, '.csv')
+                self.lineEdit_tab3dataInput_cifp.setText(ci_fp)
+                
+                self.logger.push(f'ui populated for testCase \'{testCase}\'')
+                
+            self.pushButton_dev.clicked.connect(populate_ui)
+                
+                
+             
+            
+            
+            
         #=======================================================================
         # Tab: 02 Building Details-------
         #=======================================================================
@@ -218,7 +261,15 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             """Enables or disables actions based on radioButton_tab4actions_runControl_all state"""
             enabled = checked  # 'checked' will be True if the radio button is checked 
             
-            enable_widget_and_children(self.groupBox_tab4actions_individ, enabled)
+            #toggle first step
+            enable_widget_and_children(self.groupBox_step01, enabled)
+            enable_widget_and_children(self.groupBox_01wd_2, enabled)
+            
+            if not enabled: #turnother setps off
+                enable_widget_and_children(self.groupBox_step02, enabled)
+                enable_widget_and_children(self.groupBox_step03, enabled)
+                enable_widget_and_children(self.groupBox_step04, enabled)
+                
             self.pushButton_tab4actions_run.setEnabled(not enabled)
             print('toggle_actions_enabled finished')
         
@@ -242,11 +293,76 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             print('\'proj_db_browse\' finished')
                 
         self.pushButton_tab4actions_browse.clicked.connect(proj_db_browse_QFileDialog)
+        
+        #read button
+        self.pushButton_tab4actions_read.clicked.connect(self.action_read_proj_db)
         #=======================================================================
         # wrap
         #=======================================================================
         log.debug(f'slots connected')
         
+        
+    def action_read_proj_db(self):
+        """pushButton_tab4actions_read
+        
+        load the project database and set some ui conditions
+        """
+ 
+        log = self.logger.getChild('_run')
+        
+        
+        proj_db_fp = self._get_proj_db_fp() 
+        
+        log.push(f'reading project database from {os.path.basename(proj_db_fp)}')
+        
+        self._read_db(proj_db_fp, log)
+        
+    
+    def _read_db(self, proj_db_fp, log):
+        #=======================================================================
+        # imports
+        #=======================================================================
+        
+        from .assertions import assert_proj_db
+        from ..hp.sql import get_table_names
+        import sqlite3
+        
+        
+ 
+        #=======================================================================
+        # get table names
+        #=======================================================================        
+        
+        with sqlite3.connect(proj_db_fp) as conn:
+            assert_proj_db(conn)
+            
+            table_names_l =get_table_names(conn)
+            
+        log.info(f'read {len(table_names_l)} tables')
+        #=======================================================================
+        # activate buttons based on table presence
+        #=======================================================================
+        
+        for tableName, d in {
+            'c00_cost_items':{'groupBox':'groupBox_step02','progressBar':'progressBar_tab4actions_step1'},
+            'c01_depth_rcv':{'groupBox':'groupBox_step03','progressBar':'progressBar_tab4actions_step2'},
+            'c02_ddf':{'groupBox':'groupBox_step04','progressBar':'progressBar_tab4actions_step3'}            
+            }.items():
+            
+            enable = tableName in table_names_l
+            #turn teh group on
+            enable_widget_and_children(getattr(self, d['groupBox']), enable)
+            
+            #set the progress on teh previous
+            pb = getattr(self, d['progressBar'])
+            if enable:
+                pb.setValue(100)
+            else:
+                pb.setValue(0)
+                
+            
+            
+ 
         
         
         
@@ -395,7 +511,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 
         
                     
-        progress.setValue(95)
+        progress.setValue(80)
         
         #=======================================================================
         # post ui actions-------
@@ -408,6 +524,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                     
         
         self.lineEdit_tab4actions_projdb.setText(ofp)
+        
+        progress.setValue(95)
+        
+        self._read_db(ofp, log)
         
         progress.setValue(100)
         

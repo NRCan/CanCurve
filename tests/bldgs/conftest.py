@@ -16,6 +16,12 @@ from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 from tests.conftest import test_data_dir_master as parent_tdata_dir
 test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
+test_cases_l = ['case1', 'case2']
+
+fixed_costs_master_d = {
+        'case1':{0:10000, -1:8000},
+        'case2':None,        
+        }
 #===============================================================================
 # fixtrues--------
 #===============================================================================
@@ -25,7 +31,7 @@ def proj_db_fp(testCase, testPhase, tmp_path):
     
     #get the target directory
     tdata_dir = os.path.join(test_data_dir_master, testCase, testPhase)
-    assert os.path.exists(tdata_dir)
+    assert os.path.exists(tdata_dir), tdata_dir
     
     #get the project db file
     fp = find_single_file_by_extension(tdata_dir, '.cancurve')
@@ -43,10 +49,7 @@ def ci_fp(testCase):
 
 @pytest.fixture(scope='function')
 def fixed_costs_d(testCase):
-    return {
-        'case1':{0:10000, -1:8000},
-        'case2':None,        
-        }[testCase]
+    return fixed_costs_master_d[testCase]
         
 
 @pytest.fixture(scope='function')

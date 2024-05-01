@@ -10,3 +10,4 @@ basic configuration
 import logging
 log_level = logging.DEBUG
 
+dev_mode=True
