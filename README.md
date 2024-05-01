@@ -1,8 +1,13 @@
 # CanCurve
 CanCurve is an open-source tool which can develop depth-damage (stage-damage) functions for use in flood loss estimation and flood risk assessments.
 
+<p align="center">
+  <img src="./cancurve/img/icon.png" alt="CanCurve Icon"> 
+</p>
+ 
+
 ## Installation
-- Install QGIS 3.34.5 (with Qt 5.15.13) from OSGeo4W
+- Install [QGIS 3.34.5](https://download.qgis.org/downloads/) (with Qt 5.15.13)
 - download the `cancurve.zip` file from the latest release to your local machine
 - in QGIS, `Manage and Install Plugins...` > `Install from ZIP` > select the downloaded file
 - it is recommended to also install the **First Aid** plugin for more detailed error messages. 
