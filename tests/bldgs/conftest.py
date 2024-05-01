@@ -11,12 +11,12 @@ from cancurve.bldgs.parameters_ui import building_details_options_d
 from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 
 from cancurve.bldgs.dialog_test_scripts import (
-    test_data_dir_master, fixed_costs_master_d)
+    fixed_costs_master_d)
 #===============================================================================
 # data
 #===============================================================================
-#from tests.conftest import test_data_dir_master as parent_tdata_dir
-
+from tests.conftest import test_data_dir_master as parent_tdata_dir
+test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 #===============================================================================
 # fixtrues--------
 #===============================================================================

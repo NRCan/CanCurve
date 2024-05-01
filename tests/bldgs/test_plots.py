@@ -50,7 +50,7 @@ def action_result(testCase, testPhase):
     """intelligently retrieve result for this case and phase from test_core"""
     
     tdata_dir = os.path.join(test_data_dir_master, testCase, testPhase)
-    assert os.path.exists(tdata_dir)
+    assert os.path.exists(tdata_dir), tdata_dir
     
     fp = find_single_file_by_extension(tdata_dir, '.pkl')
     
@@ -67,7 +67,7 @@ def action_result(testCase, testPhase):
 #===============================================================================
 # tests---------
 #===============================================================================
-#
+@pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',[
     'case1',
