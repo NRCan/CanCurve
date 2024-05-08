@@ -311,7 +311,11 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="4" column="1">
-                 <widget class="QDoubleSpinBox" name="BathroomCount_DoubleSpinBox"/>
+                 <widget class="QDoubleSpinBox" name="BathroomCount_DoubleSpinBox">
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                 </widget>
                 </item>
                 <item row="5" column="0">
                  <widget class="QLabel" name="heatingTypeLabel">
@@ -410,7 +414,11 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox"/>
+                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox">
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                 </widget>
                 </item>
                 <item row="2" column="0">
                  <widget class="QLabel" name="basementHeightUnitsLabel">
@@ -431,6 +439,9 @@ QGroupBox {
                 </item>
                 <item row="3" column="1">
                  <widget class="QDoubleSpinBox" name="basementFinish_DoubleSpinBox">
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
                   <property name="maximum">
                    <double>100.000000000000000</double>
                   </property>
