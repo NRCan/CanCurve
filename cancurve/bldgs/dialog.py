@@ -242,6 +242,21 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)
         self.lineEdit_wdir.setText(home_dir)
         
+        #working directory browse
+        raise IOError('need a browse QFileDialog')
+        def pushButton_wd_QFileDialog():
+            filename, _ = QFileDialog.getOpenFileName(
+                self,  # Parent widget (your dialog)
+                "Open Cost-Item file",  # Dialog title
+                home_dir,  # Initial directory (optional, use current working dir by default)
+                "tabular data files;;Comma Separated Values (*.csv)"  # Example file filters
+                )
+            if filename:
+                self.lineEdit_tab3dataInput_cifp.setText(filename)
+                
+        self.pushButton_wd.clicked.connect(pushButton_wd_QFileDialog)
+        
+        #cost item browse
         def pushButton_tab3dataInput_cifp_QFileDialog():
             filename, _ = QFileDialog.getOpenFileName(
                 self,  # Parent widget (your dialog)
