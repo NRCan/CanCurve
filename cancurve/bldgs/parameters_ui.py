@@ -13,9 +13,9 @@ building_details_options_d = {
     #general
     'occupancyClassification': ['Residential', 'Commercial', 'Industrial', 'Other'],
     'subClassification': ['Single Family', 'Construction', 'Duplex', 'Entertainment and Recreation'],
-    'storeys': ['1', '2', '3', 'Split'],
+    'storeys': ['1', '2', 'Split', 'Multi-story'],
     
-    'heatingType': ['Baseboard-electric', 'Baseboard-hot Water', 'Forced Air - Electric', 'Forced Air - Gas'],
+    'heatingType': ['Baseboard-electric', 'Baseboard-hot Water', 'Forced Air - Electric', 'Forced Air - Gas', 'Other'],
     'coolingType': ['Central air', 'Heat pump'],
     'garageType': ['Yes, Attached', 'Yes, Detached', 'None'],
     'garageSize': ['Single', 'Single Plus', 'Double', 'Triple'],
