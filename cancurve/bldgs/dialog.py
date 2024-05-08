@@ -242,6 +242,20 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)
         self.lineEdit_wdir.setText(home_dir)
         
+        def pushButton_tab3dataInput_cifp_QFileDialog():
+            filename, _ = QFileDialog.getOpenFileName(
+                self,  # Parent widget (your dialog)
+                "Open Cost-Item file",  # Dialog title
+                home_dir,  # Initial directory (optional, use current working dir by default)
+                "tabular data files;;Comma Separated Values (*.csv)"  # Example file filters
+                )
+            if filename:
+                self.lineEdit_tab3dataInput_cifp.setText(filename)
+ 
+        
+        self.pushButton_tab3dataInput_cifp.clicked.connect(pushButton_tab3dataInput_cifp_QFileDialog)
+        
+        raise IOError('add tests for all the browse buttons')
         
         #=======================================================================
         # Tab: 04 Create Curve---------
@@ -293,8 +307,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 )
             if filename:
                 self.lineEdit_tab4actions_projdb.setText(filename)
-                
-            print('\'proj_db_browse\' finished')
+ 
                 
         self.pushButton_tab4actions_browse.clicked.connect(proj_db_browse_QFileDialog)
         
