@@ -219,7 +219,7 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-304</y>
             <width>745</width>
             <height>949</height>
            </rect>
@@ -622,7 +622,11 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="5" column="1">
-                 <widget class="QDateEdit" name="pricingDate_DateEdit"/>
+                 <widget class="QDateEdit" name="pricingDate_DateEdit">
+                  <property name="toolTip">
+                   <string>yyyy-MM-dd</string>
+                  </property>
+                 </widget>
                 </item>
                 <item row="6" column="0">
                  <widget class="QLabel" name="currencyLabel">
