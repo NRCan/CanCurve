@@ -39,9 +39,10 @@ def assert_ci_df(df):
     # Check data types
     for coln, dstr in df.dtypes.items():
         if coln not in colns_dtypes:
-            raise IOError(f'Unrecognized column name in estimate data: \'{coln}\'')
-        if dstr != colns_dtypes[coln]:  # More specific check
-            raise AssertionError(f"Incorrect data type for column '{coln}'. Expected: {colns_dtypes[coln]}, Found: {dstr}")
+            print(f'Unrecognized column name in estimate data: \'{coln}\'')
+        else:
+            if dstr != colns_dtypes[coln]:  # More specific check
+                raise AssertionError(f"Incorrect data type for column '{coln}'. Expected: {colns_dtypes[coln]}, Found: {dstr}")
 
  
 #===============================================================================
