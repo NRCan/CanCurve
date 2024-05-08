@@ -50,7 +50,7 @@ building_details_options_d = {
                             "YT"   # Yukon
                         ],
     'taxesIncluded': ['PST', 'PST & GST', 'GST', 'None'],
-    'currency':['$CAD', '$USD'],
+    'currency':['$CAD', '$USD', 'Other'],
     'costBasis':['Replacement Cost', 'Depreciated Costs']
 }
 
