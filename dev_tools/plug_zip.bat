@@ -9,10 +9,7 @@ SET PATH=C:\ProgramData\chocolatey\bin;%PATH%
 
 :: change to plugin directory
 cd %SRC_DIR%
-
-
-
-
+ 
 REM ** 1) Remove __pycache__ directories **
 for /d /r %PLUGIN_DIR% %%d in (__pycache__) do rd /s /q "%%d"
 
