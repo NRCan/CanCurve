@@ -44,7 +44,7 @@ from PyQt5.QtWidgets import (
 
 from ..config import dev_mode
 
-from ..hp.basic import convert_to_number
+from ..hp.basic import convert_to_number, force_open_dir
 from ..hp.plug import plugLogger
 from ..hp.qt import (
         DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
@@ -56,19 +56,13 @@ from .parameters import (
     )
 
 from .parameters_ui import building_details_options_d
+ 
 
 
 #===============================================================================
 # helpers-------
 #===============================================================================
-  
-        
-        
-        
-        
-
-
-
+ 
 
 #===============================================================================
 # Main Dialog----------
@@ -161,6 +155,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.close_pushButton.clicked.connect(close_dialog) 
         self.cancel_pushButton.clicked.connect(self.action_cancel_process)
         
+        from cancurve import __version__
+        self.label_version.setText(f'v{__version__}')
+        
         #=======================================================================
         # development-----
         #=======================================================================
@@ -242,6 +239,62 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)
         self.lineEdit_wdir.setText(home_dir)
         
+        self.pushButton_wd_open.clicked.connect(
+            lambda: force_open_dir(self.lineEdit_wdir.text())
+            )
+        
+        #working directory browse 
+        def pushButton_wd_QFileDialog(): 
+            filename = QFileDialog.getExistingDirectory(
+                self,  # Parent widget (your dialog)
+                "Select working directory",  # Dialog title
+                home_dir,  # Initial directory (optional, use current working dir by default)
+                #"tabular data files;;Comma Separated Values (*.csv)"  # Example file filters
+                )
+            
+            if filename =='':
+                self.logger.debug('user cancelled QFileDialog')
+                return
+            
+            #needed so we can have a single test for both types of file dialogs
+            if isinstance(filename, tuple):
+                filename=filename[0]
+ 
+            if filename:
+                self.lineEdit_wdir.setText(filename)
+                
+        self.pushButton_wd.clicked.connect(pushButton_wd_QFileDialog)
+        
+        #cost item browse
+        def pushButton_tab3dataInput_cifp_QFileDialog():
+            filename, _ = QFileDialog.getOpenFileName(
+                self,  # Parent widget (your dialog)
+                "Open Cost-Item file",  # Dialog title
+                home_dir,  # Initial directory (optional, use current working dir by default)
+                "comma separated values (*.csv)"  # Example file filters
+                )
+            if filename:
+                self.lineEdit_tab3dataInput_cifp.setText(filename)
+ 
+        
+        self.pushButton_tab3dataInput_cifp.clicked.connect(pushButton_tab3dataInput_cifp_QFileDialog)
+        
+        
+        #DRF browse
+        def pushButton_tab3dataInput_drfFp_QFileDialog():
+            filename, _ = QFileDialog.getOpenFileName(
+                self,  # Parent widget (your dialog)
+                "Open DRF file",  # Dialog title
+                home_dir,  # Initial directory (optional, use current working dir by default)
+                "sqlite database files (*.db)"  # Example file filters
+                )
+            if filename:
+                self.lineEdit_tab3dataInput_drfFp.setText(filename)
+ 
+        
+        self.pushButton_tab3dataInput_drfFp.clicked.connect(pushButton_tab3dataInput_drfFp_QFileDialog)
+        
+ 
         
         #=======================================================================
         # Tab: 04 Create Curve---------
@@ -293,8 +346,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 )
             if filename:
                 self.lineEdit_tab4actions_projdb.setText(filename)
-                
-            print('\'proj_db_browse\' finished')
+ 
                 
         self.pushButton_tab4actions_browse.clicked.connect(proj_db_browse_QFileDialog)
         
@@ -409,9 +461,19 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # run actions-------
         #=======================================================================
         
+        #=======================================================================
+        # step 1
+        #=======================================================================`
         step_log(1)
-        self._run_c00_setup_project(logger=log, out_dir=out_dir)
+        _, _, _, err_msg = self._run_c00_setup_project(logger=log, out_dir=out_dir)
         
+        if not err_msg is None:
+            log.warning(err_msg)
+            return
+        
+        #=======================================================================
+        # step 2
+        #=======================================================================
         step_log(2)
         self._run_c01_join_drf(logger=log)
         
@@ -422,6 +484,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         _, ofp = self._run_c03_export(logger=log)
         
         log.push(f'workflow complete and DDF output to\n    {ofp}')
+        
+        return
         
 
         
@@ -561,7 +625,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         log.info(f'Step 1 complete w/ {ci_df.shape}')
         
-        return ci_df, drf_df, ofp
+        return ci_df, drf_df, ofp, err_msg
         
         
         

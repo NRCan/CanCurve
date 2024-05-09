@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>784</width>
+    <width>800</width>
     <height>800</height>
    </rect>
   </property>
@@ -140,21 +140,22 @@ QTabBar::tab:selected { /* Style for selected tabs */
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:14px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to CanCurve! This tool is designed to create depth (stage) damage functions from user input.&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/plugins/cancurve/img/icon.png&quot; /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;In order for this tool to successfully run, the inputs you will need:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;General Data&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: On the building details tab, there are a series of dropdown menus to fill in, which will populate metadata fields about the depth damage curve. Some of the fields may be used in the calculation process.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;- &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Cost Information: &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;CSV file of Items &amp;amp; Costs.Click HERE for an example file&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;CanCurve accepts the following additional files for more customization:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;- Depth-Replacement-Factor dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: By default, the CanCurve DRF dataset is used .&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Click the tabs at the top of the screen to navigate through the screens and create your CanCurve			&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;			&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;			&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to CanCurve's &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Buildings&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tool! This tool is designed to create &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Depth Damage Functions&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; (DDF) for Canadian buildings.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/plugins/cancurve/img/icon.png&quot; /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are required:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Building Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: On the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Building Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab, standard flood-related building properties can be specified. This information will be used to populate metadata on the resulting DDF. Some of the fields may be used in the calculation process as well.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Cost Information: &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;CSV file of restoration items and their costs. Click &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/blob/main/tests/data/bldgs/case1/R_1-L-BD-CU_ABCA.csv&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; for an example.&lt;/span&gt;&lt;span style=&quot; font-size:14px;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are optional:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Depth-Replacement-Factor (DRF) dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: By default, the DRF dataset instaled with CanCurve is used.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Navigate through the tabs at the top of the window from left-to-right to create your own DDF.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="openExternalLinks">
+          <bool>true</bool>
+         </property>
+         <property name="openLinks">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -200,7 +201,7 @@ p, li { white-space: pre-wrap; }
      </widget>
      <widget class="QWidget" name="tab2bldgDetils">
       <attribute name="title">
-       <string>Building Details</string>
+       <string>Building Metadata</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
@@ -219,8 +220,8 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-118</y>
-            <width>729</width>
+            <y>0</y>
+            <width>745</width>
             <height>949</height>
            </rect>
           </property>
@@ -311,7 +312,11 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="4" column="1">
-                 <widget class="QDoubleSpinBox" name="BathroomCount_DoubleSpinBox"/>
+                 <widget class="QDoubleSpinBox" name="BathroomCount_DoubleSpinBox">
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                 </widget>
                 </item>
                 <item row="5" column="0">
                  <widget class="QLabel" name="heatingTypeLabel">
@@ -410,7 +415,11 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox"/>
+                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox">
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                 </widget>
                 </item>
                 <item row="2" column="0">
                  <widget class="QLabel" name="basementHeightUnitsLabel">
@@ -431,6 +440,9 @@ QGroupBox {
                 </item>
                 <item row="3" column="1">
                  <widget class="QDoubleSpinBox" name="basementFinish_DoubleSpinBox">
+                  <property name="decimals">
+                   <number>0</number>
+                  </property>
                   <property name="maximum">
                    <double>100.000000000000000</double>
                   </property>
@@ -611,7 +623,11 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="5" column="1">
-                 <widget class="QDateEdit" name="pricingDate_DateEdit"/>
+                 <widget class="QDateEdit" name="pricingDate_DateEdit">
+                  <property name="toolTip">
+                   <string>yyyy-MM-dd</string>
+                  </property>
+                 </widget>
                 </item>
                 <item row="6" column="0">
                  <widget class="QLabel" name="currencyLabel">
@@ -775,7 +791,7 @@ QGroupBox {
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_wd_2">
+           <widget class="QPushButton" name="pushButton_tab3dataInput_cifp">
             <property name="text">
              <string>Browse</string>
             </property>
@@ -820,7 +836,7 @@ QGroupBox {
             </column>
             <column>
              <property name="text">
-              <string>RCV</string>
+              <string>Cost</string>
              </property>
             </column>
            </widget>
@@ -893,7 +909,7 @@ QGroupBox {
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_wd_3">
+           <widget class="QPushButton" name="pushButton_tab3dataInput_drfFp">
             <property name="text">
              <string>Browse</string>
             </property>
@@ -1592,7 +1608,7 @@ QLabel {
         <item>
          <widget class="QScrollArea" name="scrollArea_2">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -1617,12 +1633,12 @@ QLabel {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>578</width>
-             <height>55</height>
+             <width>575</width>
+             <height>68</height>
             </rect>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -1636,21 +1652,21 @@ QLabel {
            <property name="maximumSize">
             <size>
              <width>16777215</width>
-             <height>55</height>
+             <height>100</height>
             </size>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_18">
             <item>
              <widget class="QLabel" name="progressText">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
               <property name="minimumSize">
                <size>
-                <width>0</width>
+                <width>500</width>
                 <height>50</height>
                </size>
               </property>
@@ -1684,40 +1700,66 @@ QLabel {
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <layout class="QVBoxLayout" name="verticalLayout_19">
         <item>
-         <widget class="QPushButton" name="cancel_pushButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Cancel</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="close_pushButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Close</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QPushButton" name="cancel_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Cancel</string>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="close_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Close</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_13">
+     <item alignment="Qt::AlignRight">
+      <widget class="QLabel" name="label_version">
+       <property name="styleSheet">
+        <string notr="true">QWidget { /* Targets most widgets */
+    font-size: 8px; 
+} 
+
+/* For more specific elements */
+QLabel {
+    font-size: 8px; 
+}
+</string>
+       </property>
+       <property name="text">
+        <string>v?</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

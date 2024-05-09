@@ -1,39 +1,38 @@
-﻿varName_core,varName_ui,varName_canflood,type,required_core,required_canflood,default_canflood,widgetName,case1,case2
-,,tag,str,FALSE,TRUE,?,,test_case1,test_case2
-,,location,str,FALSE,FALSE,?,,,
-,,date,str,FALSE,FALSE,?,,,
-,,source,str,FALSE,FALSE,?,,,
-,currency,impact_units,str,FALSE,TRUE,$CAD,currency_ComboBox,,
-,costBasis,impact_var,str,FALSE,FALSE,damage,costBasis_ComboBox,,
-,,exposure_units,str,FALSE,FALSE,m,comboBox_tab3dataInput_expoUnits,,
-,,exposure_var,str,FALSE,FALSE,flood depth above floor,,,
-,,scale_var,str,FALSE,FALSE,building footprint,,,
-bldg_layout,buildingLayout,,str,TRUE,FALSE,,buildingLayout_ComboBox,default,default
-,basementHeight,,float,FALSE,FALSE,,basementHeight_DoubleSpinBox,1.8,2.1
-,basementHeightUnits,,str,FALSE,FALSE,,basementHeightUnits_ComboBox,m,m
-basement_height_m,,,float,TRUE,FALSE,,,1.8,2.1
-,sizeOrAreaValue,,float,FALSE,FALSE,,sizeOrAreaValue_DoubleSpinBox,232.1,232.2
-,sizeOrAreaUnits,scale_units,str,FALSE,FALSE,m2,sizeOrAreaUnits_ComboBox,m2,m2
-scale_value_m2,,,float,TRUE,FALSE,,,232.1,232.2
-,,exposure,str,FALSE,TRUE,impact,,,
-,occupancyClassification,,str,FALSE,FALSE,,occupancyClassification_ComboBox,,
-,subClassification,,str,FALSE,FALSE,,subClassification_ComboBox,,
-,storeys,,str,FALSE,FALSE,,storeys_ComboBox,,
-,heatingType,,str,FALSE,FALSE,,heatingType_ComboBox,,
-,coolingType,,str,FALSE,FALSE,,coolingType_ComboBox,,
-,garageType,,str,FALSE,FALSE,,garageType_ComboBox,,
-,garageSize,,str,FALSE,FALSE,,garageSize_ComboBox,,
-,buildingLayout,,str,FALSE,FALSE,,buildingLayout_ComboBox,,
-,foundationType,,str,FALSE,FALSE,,foundationType_ComboBox,,
-,qualityOfBuildingMaterials,,str,FALSE,FALSE,,qualityOfBuildingMaterials_ComboBox,,
-,provinceTerritory,,str,FALSE,FALSE,,provinceTerritory_ComboBox,,
-,taxesIncluded,,str,FALSE,FALSE,,taxesIncluded_ComboBox,,
-,priceListSource,,str,,,,,,
-,country,,str,,,,,,
-,BathroomCount,,int,,,,,,
-,pricingDate,,str,,,,,,
-,BedroomCount,,int,,,,,,
-,basementFinish,,str,,,,,,
-,createdBy,,str,,,,,,
-,locationCityTownRegion,,str,,,,,,
-,yearOfBuildingConstruction,,int,,,,,,
+﻿varName_core,varName_ui,varName_canflood,type,required_core,required_canflood,default_canflood,widgetName,case1,case2,case3
+,,tag,str,FALSE,TRUE,?,,test_case1,test_case2,heather_0509
+,,location,str,FALSE,FALSE,?,,,,
+,,date,str,FALSE,FALSE,?,,,,
+,,source,str,FALSE,FALSE,?,,,,
+,currency,impact_units,str,FALSE,TRUE,$CAD,currency_ComboBox,,,
+,costBasis,impact_var,str,FALSE,FALSE,damage,costBasis_ComboBox,,,Depreciated Costs
+,,exposure_units,str,FALSE,FALSE,m,comboBox_tab3dataInput_expoUnits,,,
+,,exposure_var,str,FALSE,FALSE,flood depth above floor,,,,
+,,scale_var,str,FALSE,FALSE,building footprint,,,,
+bldg_layout,buildingLayout,,str,TRUE,FALSE,,buildingLayout_ComboBox,default,default,default
+,basementHeight,,float,FALSE,FALSE,,basementHeight_DoubleSpinBox,1.8,2.1,0
+,basementHeightUnits,,str,FALSE,FALSE,,basementHeightUnits_ComboBox,m,m,m
+basement_height_m,,,float,TRUE,FALSE,,,1.8,2.1,0
+,sizeOrAreaValue,,float,FALSE,FALSE,,sizeOrAreaValue_DoubleSpinBox,232.1,232.2,344
+,sizeOrAreaUnits,scale_units,str,FALSE,FALSE,m2,sizeOrAreaUnits_ComboBox,m2,m2,m2
+scale_value_m2,,,float,TRUE,FALSE,,,232.1,232.2,344
+,,exposure,str,FALSE,TRUE,impact,,,,
+,occupancyClassification,,str,FALSE,FALSE,,occupancyClassification_ComboBox,,,Commercial
+,subClassification,,str,FALSE,FALSE,,subClassification_ComboBox,,,Construction
+,storeys,,str,FALSE,FALSE,,storeys_ComboBox,,,1
+,BedroomCount,,int,FALSE,FALSE,,BedroomCount_QSpinBox,,,0
+,BathroomCount,,float,FALSE,FALSE,,BathroomCount_DoubleSpinBox,,,1
+,heatingType,,str,FALSE,FALSE,,heatingType_ComboBox,,,Forced Air - Gas
+,coolingType,,str,FALSE,FALSE,,coolingType_ComboBox,,,Central air
+,garageType,,str,FALSE,FALSE,,garageType_ComboBox,,,None
+,garageSize,,str,FALSE,FALSE,,garageSize_ComboBox,,,
+,foundationType,,str,FALSE,FALSE,,foundationType_ComboBox,,,other
+,qualityOfBuildingMaterials,,str,FALSE,FALSE,,qualityOfBuildingMaterials_ComboBox,,,Average
+,taxesIncluded,,str,FALSE,FALSE,,taxesIncluded_ComboBox,,,
+,priceListSource,,str,FALSE,FALSE,,priceListSource_LineEdit,,,exactimate
+,country,,str,FALSE,FALSE,Canada,country_ComboBox,,,Canada
+,provinceTerritory,,str,FALSE,FALSE,,provinceTerritory_ComboBox,,,ON
+,pricingDate,,str,FALSE,FALSE,,,,,
+,basementFinish,,float,FALSE,FALSE,,basementFinish_DoubleSpinBox,,,100
+,createdBy,,str,FALSE,FALSE,,createdBy_LineEdit,,,hmcgrath
+,locationCityTownRegion,,str,FALSE,FALSE,,,,,
+,yearOfBuildingConstruction,,int,FALSE,FALSE,,yearOfBuildingConstruction_SpinBox,,,2500

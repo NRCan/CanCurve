@@ -5,12 +5,12 @@
 [general]
 name=CanCurve
 qgisMinimumVersion=3.34
-description=Creating depth-damage functions
-version=0.0
-author=NRCan
+description=Free tools to create Canadian flood Depth-Damage Functions (DDF)
+version=0.0.1
+author=Seth Bryant
 email=heather.mcgrath@canada.ca
 
-about=This tool is designed to create depth (stage) damage functions from user input.
+about = CanCurve is an open-source tool which can develop depth-damage (stage-damage) functions for use in flood loss estimation and flood risk assessments.
 
 tracker=https://github.com/NRCan/CanCurve/issues
 repository=https://github.com/NRCan/CanCurve
@@ -20,14 +20,14 @@ repository=https://github.com/NRCan/CanCurve
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-# changelog=
+changelog= v0.0.1 [2024-05] initial working release (un tested)
 
 # Tags are comma separated with spaces allowed
-tags=flood
+tags=flood risk, flood, model, Canada
 
 homepage=https://github.com/NRCan/CanCurve
 category=Plugins
-icon=icon.png
+icon=img/icon.png
 # experimental flag
 experimental=True
 

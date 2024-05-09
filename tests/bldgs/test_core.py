@@ -61,6 +61,7 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=False):
 @pytest.mark.parametrize('testCase',[
     'case1',
     'case2',
+    pytest.param('case3', marks=pytest.mark.xfail(raises=KeyError, reason="storey data mismatch")), 
     ], indirect=False)
 #===============================================================================
 # @pytest.mark.parametrize('fixed_costs_d',[

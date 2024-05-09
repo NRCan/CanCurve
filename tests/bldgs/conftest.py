@@ -5,18 +5,18 @@ Created on Apr. 28, 2024
 '''
 import pytest, os, shutil, random
 
-from cancurve.hp.basic import find_single_file_by_extension, convert_to_number
+from cancurve.hp.basic import find_single_file_by_extension, convert_to_number, convert_to_float
 
 from cancurve.bldgs.parameters_ui import building_details_options_d
 from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 
 from cancurve.bldgs.dialog_test_scripts import (
-    test_data_dir_master, fixed_costs_master_d)
+    fixed_costs_master_d)
 #===============================================================================
 # data
 #===============================================================================
-#from tests.conftest import test_data_dir_master as parent_tdata_dir
-
+from tests.conftest import test_data_dir_master as parent_tdata_dir
+test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 #===============================================================================
 # fixtrues--------
 #===============================================================================
@@ -52,7 +52,7 @@ def bldg_meta_d(testCase):
     d = bldg_meta_rqmt_df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
     
     
-    return {k:convert_to_number(v) for k,v in d.items()}
+    return {k:convert_to_float(v) for k,v in d.items()}
   
 #===============================================================================
 # @pytest.fixture(scope='function')

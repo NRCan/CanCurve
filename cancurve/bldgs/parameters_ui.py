@@ -12,10 +12,10 @@ import os
 building_details_options_d = {
     #general
     'occupancyClassification': ['Residential', 'Commercial', 'Industrial', 'Other'],
-    'subClassification': ['Single Family', 'Construction', 'Duplex', 'entertainment and recreation'],
-    'storeys': ['1', '2', '3', 'Split'],
+    'subClassification': ['Single Family', 'Construction', 'Duplex', 'Entertainment and Recreation'],
+    'storeys': ['1', '2', 'Split', 'Multi-story'],
     
-    'heatingType': ['baseboard-electric', 'baseboard-hot water', 'Forced air - electric', 'forced air-gas'],
+    'heatingType': ['Baseboard-electric', 'Baseboard-hot Water', 'Forced Air - Electric', 'Forced Air - Gas', 'Other'],
     'coolingType': ['Central air', 'Heat pump'],
     'garageType': ['Yes, Attached', 'Yes, Detached', 'None'],
     'garageSize': ['Single', 'Single Plus', 'Double', 'Triple'],
@@ -50,8 +50,8 @@ building_details_options_d = {
                             "YT"   # Yukon
                         ],
     'taxesIncluded': ['PST', 'PST & GST', 'GST', 'None'],
-    'currency':['$CAD', '$USD'],
-    'costBasis':['replacement cost', 'depreciated costs']
+    'currency':['$CAD', '$USD', 'Other'],
+    'costBasis':['Replacement Cost', 'Depreciated Costs']
 }
 
 

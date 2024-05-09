@@ -230,10 +230,4 @@ class DialogQtBasic():
             raise IOError(f'bad tabname \'{tabObjectName}\'')
             self.logger.error(f'failed to change to {tabObjectName} tab w/ \n    %s' % e)
             
-def _connect_open_file(self, browse_pushButton, filepath_lineEdit):
-    """connect a default 'open file' dialog to the browse_button
-    display the result in the lineEdit""" 
-
-
-
-    browse_pushButton.clicked.connect(handle_browse)
+ 

@@ -4,7 +4,7 @@ Created on Apr. 15, 2024
 @author: cef
 '''
 
-import os
+import os, logging
 import pandas as pd
 
 def view_web_df(df):
@@ -67,7 +67,7 @@ def convert_to_number(text):
         text: The string to convert.
     
     Returns:
-        The converted number (int or float) if successful, None otherwise.
+        The converted number (int or float) if successful, original otherwise.
     """
     try:
         return int(text)
@@ -76,3 +76,43 @@ def convert_to_number(text):
             return float(text)
         except ValueError:
             return text
+        
+
+def convert_to_float(text): 
+    try:
+        return float(text)
+    except ValueError:
+        return text
+        
+def force_open_dir(folder_path_raw, logger=None): #force explorer to open a folder
+    
+    if logger is None: logger= logging.getLogger()
+ 
+    
+    if not os.path.exists(folder_path_raw):
+        logger.error('passed directory does not exist: \n    %s'%folder_path_raw)
+        return False
+        
+    import subprocess
+    
+    #===========================================================================
+    # convert directory to raw string literal for windows
+    #===========================================================================
+    try:
+        #convert forward to backslashes
+        folder_path=  folder_path_raw.replace('/', '\\')
+    except:
+        logger.error('failed during string conversion')
+        return False
+    
+    try:
+
+        args = r'explorer "' + str(folder_path) + '"'
+        with subprocess.Popen(args) as p: #spawn process in explorer
+            pass
+ 
+        logger.info('forced open folder: \n    %s'%folder_path)
+        return True
+    except:
+        logger.error('unable to open directory: \n %s'%dir)
+        return False
