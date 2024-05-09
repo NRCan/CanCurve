@@ -9,6 +9,7 @@ import sqlite3
 import pandas as pd
 
 from .parameters import colns_index, colns_dtypes, bldg_meta_rqmt_df
+from ..hp.basic import view_web_df as view
 
 
 expected_tables_base = ['project_meta','project_settings','c00_bldg_meta', 'c00_cost_items','c00_drf']
@@ -119,6 +120,8 @@ def assert_drf_df(df):
     Raises:
         TypeError: If the input is not a DataFrame or columns have non-float types.
         KeyError: If the DataFrame's index names are incorrect.
+        
+    view(df)
     """
 
     # Check if it's a DataFrame
@@ -129,14 +132,15 @@ def assert_drf_df(df):
     if not set(df.index.names).difference(['cat', 'sel', 'bldg_layout']) == set():
         raise KeyError("Incorrect index names in DataFrame")
 
-    # Check data types
+    # Check the columns all conform to float depths
     if not 'float' in df.columns.dtype.name:
-        raise TypeError('bad type on columns')
+        raise TypeError(f'DRF column headers expected as dtype float. instead got \'{df.columns.dtype.name}\'')
     
     # Check data types (more accurate)
-    for col in df.columns:
-        if df[col].dtype != 'float64':  # Assuming you want specifically float64
-            raise TypeError(f"Column '{col}' is not a float type")
+ 
+    for i, col in enumerate(df.columns):
+        if not 'float' in df[col].dtype:  # Assuming you want specifically float64
+            raise TypeError(f'DRF column \'{col}\' ({i}) expected as dtype float. instead got \'{df[col].dtype}\'')
         
 def assert_bldg_meta_d(bldg_meta):
     """check the bldg_meta_d meets expectations"""
