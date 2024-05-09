@@ -903,7 +903,7 @@ QGroupBox {
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_wd_3">
+           <widget class="QPushButton" name="pushButton_tab3dataInput_drfFp">
             <property name="text">
              <string>Browse</string>
             </property>
@@ -1627,7 +1627,7 @@ QLabel {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>577</width>
+             <width>575</width>
              <height>68</height>
             </rect>
            </property>
@@ -1694,40 +1694,66 @@ QLabel {
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <layout class="QVBoxLayout" name="verticalLayout_19">
         <item>
-         <widget class="QPushButton" name="cancel_pushButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Cancel</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="close_pushButton">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Close</string>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QPushButton" name="cancel_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Cancel</string>
+            </property>
+            <property name="flat">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="close_pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Close</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_13">
+     <item alignment="Qt::AlignRight">
+      <widget class="QLabel" name="label_version">
+       <property name="styleSheet">
+        <string notr="true">QWidget { /* Targets most widgets */
+    font-size: 8px; 
+} 
+
+/* For more specific elements */
+QLabel {
+    font-size: 8px; 
+}
+</string>
+       </property>
+       <property name="text">
+        <string>v?</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

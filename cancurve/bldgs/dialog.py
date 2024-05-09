@@ -44,7 +44,7 @@ from PyQt5.QtWidgets import (
 
 from ..config import dev_mode
 
-from ..hp.basic import convert_to_number
+from ..hp.basic import convert_to_number, force_open_dir
 from ..hp.plug import plugLogger
 from ..hp.qt import (
         DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
@@ -56,19 +56,13 @@ from .parameters import (
     )
 
 from .parameters_ui import building_details_options_d
+ 
 
 
 #===============================================================================
 # helpers-------
 #===============================================================================
-  
-        
-        
-        
-        
-
-
-
+ 
 
 #===============================================================================
 # Main Dialog----------
@@ -161,6 +155,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.close_pushButton.clicked.connect(close_dialog) 
         self.cancel_pushButton.clicked.connect(self.action_cancel_process)
         
+        from cancurve import __version__
+        self.label_version.setText(f'v{__version__}')
+        
         #=======================================================================
         # development-----
         #=======================================================================
@@ -242,17 +239,25 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)
         self.lineEdit_wdir.setText(home_dir)
         
-        #working directory browse
-        raise IOError('need a browse QFileDialog')
-        def pushButton_wd_QFileDialog():
-            filename, _ = QFileDialog.getOpenFileName(
+        self.pushButton_wd_open.clicked.connect(
+            lambda: force_open_dir(self.lineEdit_wdir.text())
+            )
+        
+        #working directory browse 
+        def pushButton_wd_QFileDialog(): 
+            filename = QFileDialog.getExistingDirectory(
                 self,  # Parent widget (your dialog)
-                "Open Cost-Item file",  # Dialog title
+                "Select working directory",  # Dialog title
                 home_dir,  # Initial directory (optional, use current working dir by default)
-                "tabular data files;;Comma Separated Values (*.csv)"  # Example file filters
+                #"tabular data files;;Comma Separated Values (*.csv)"  # Example file filters
                 )
+            
+            if filename =='':
+                self.logger.debug('user cancelled QFileDialog')
+                return
+ 
             if filename:
-                self.lineEdit_tab3dataInput_cifp.setText(filename)
+                self.lineEdit_wdir.setText(filename)
                 
         self.pushButton_wd.clicked.connect(pushButton_wd_QFileDialog)
         
@@ -262,7 +267,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 self,  # Parent widget (your dialog)
                 "Open Cost-Item file",  # Dialog title
                 home_dir,  # Initial directory (optional, use current working dir by default)
-                "tabular data files;;Comma Separated Values (*.csv)"  # Example file filters
+                "comma separated values (*.csv)"  # Example file filters
                 )
             if filename:
                 self.lineEdit_tab3dataInput_cifp.setText(filename)
@@ -270,7 +275,22 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self.pushButton_tab3dataInput_cifp.clicked.connect(pushButton_tab3dataInput_cifp_QFileDialog)
         
-        raise IOError('add tests for all the browse buttons')
+        
+        #DRF browse
+        def pushButton_tab3dataInput_drfFp_QFileDialog():
+            filename, _ = QFileDialog.getOpenFileName(
+                self,  # Parent widget (your dialog)
+                "Open DRF file",  # Dialog title
+                home_dir,  # Initial directory (optional, use current working dir by default)
+                "sqlite database files (*.db)"  # Example file filters
+                )
+            if filename:
+                self.lineEdit_tab3dataInput_drfFp.setText(filename)
+ 
+        
+        self.pushButton_tab3dataInput_drfFp.clicked.connect(pushButton_tab3dataInput_drfFp_QFileDialog)
+        
+ 
         
         #=======================================================================
         # Tab: 04 Create Curve---------

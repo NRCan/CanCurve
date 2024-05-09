@@ -45,7 +45,7 @@ from cancurve.bldgs.dialog_test_scripts import test_cases_l, set_tab2bldgDetils,
  
 
 #===============================================================================
-# fixtures------
+# FIXTURES------
 #===============================================================================
 
 #===============================================================================
@@ -161,7 +161,7 @@ def set_projdb(dialog, proj_db_fp):
 
 
 #===============================================================================
-# tests------
+# TESTS------
 #===============================================================================
 
 def test_parameters():
@@ -174,11 +174,9 @@ def test_init(dialog,):
     
     
     """manual inspection only"""
-    #===========================================================================
-    # dialog.show()
-    # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    
-    # sys.exit(QApp.exec_()) #wrap
-    #===========================================================================
+    dialog.show()
+    QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    
+    sys.exit(QApp.exec_()) #wrap
  
  
     
@@ -311,18 +309,20 @@ def test_radioButton_tab4actions_runControl(dialog):
                  
     
 
-def test_pushButton_tab4actions_browse(dialog):
-    enable_widget_and_parents(dialog.pushButton_tab4actions_browse)
- 
-    
-    # Mock QFileDialog.getOpenFileName to return a predetermined filename
-    with patch('PyQt5.QtWidgets.QFileDialog.getOpenFileName', return_value=('test_filename', '')):
-        # Simulate a mouse click on the browse button
-        print('clicking browse from within mock')
-        QTest.mouseClick(dialog.pushButton_tab4actions_browse, Qt.LeftButton)
-
-        # Check that the line edit's text is the expected filename
-        assert dialog.lineEdit_tab4actions_projdb.text() == 'test_filename'
+#===============================================================================
+# def test_pushButton_tab4actions_browse(dialog):
+#     enable_widget_and_parents(dialog.pushButton_tab4actions_browse)
+#  
+#     
+#     # Mock QFileDialog.getOpenFileName to return a predetermined filename
+#     with patch('PyQt5.QtWidgets.QFileDialog.getOpenFileName', return_value=('test_filename', '')):
+#         # Simulate a mouse click on the browse button
+#         print('clicking browse from within mock')
+#         QTest.mouseClick(dialog.pushButton_tab4actions_browse, Qt.LeftButton)
+# 
+#         # Check that the line edit's text is the expected filename
+#         assert dialog.lineEdit_tab4actions_projdb.text() == 'test_filename'
+#===============================================================================
    
         
  
@@ -347,6 +347,36 @@ def test_pushButton_tab4actions_read(dialog, set_projdb):
     # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    
     # sys.exit(QApp.exec_()) #wrap
     #===========================================================================
+
+@pytest.mark.dev
+@pytest.mark.parametrize('buttonName, lineName, QFileDialogTypeName',[
+     ('pushButton_wd','lineEdit_wdir','getExistingDirectory'),
+     ('pushButton_tab3dataInput_cifp','lineEdit_tab3dataInput_cifp', 'getOpenFileName'),
+     ('pushButton_tab3dataInput_drfFp','lineEdit_tab3dataInput_drfFp', 'getOpenFileName'),
+     ('pushButton_tab4actions_browse', 'lineEdit_tab4actions_projdb', 'getOpenFileName'),
+     ])  
+def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
+    
+    #retrieve button widget
+    assert hasattr(dialog, buttonName), buttonName
+    w = getattr(dialog, buttonName)    
+    enable_widget_and_parents(w)
+    
+    #lineEdit widget
+    assert hasattr(dialog, lineName)
+    lineWidget = getattr(dialog, lineName)
+    
+    #PyQt5.QtWidgets.QFileDialog.
+    
+    with patch('PyQt5.QtWidgets.QFileDialog.' + QFileDialogTypeName, return_value=('test_string', '')):
+        # Simulate a mouse click on the browse button
+        print(f'clicking {buttonName} from within mock')
+        QTest.mouseClick(w, Qt.LeftButton)
+
+        # Check that the line edit's text is the expected filename
+        assert lineWidget.text() == 'test_string', f'test string failed to set on {lineName}'
+    
+    
  
 #===============================================================================
 # Dialog Action tests--------
@@ -413,7 +443,7 @@ def test_action_tab4actions_step1(dialog,
     
  
  
-@pytest.mark.dev
+
 #@patch('matplotlib.pyplot.show')  #breaks enable_widget for some reason...
 @pytest.mark.parametrize('testCase', ['case1'])
 @pytest.mark.parametrize('button, testPhase, expected_tables', [
