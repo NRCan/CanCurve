@@ -36,7 +36,8 @@ test_cases_l = ['case1', 'case2']
 
 fixed_costs_master_d = {
         'case1':{0:10000, -1:8000},
-        'case2':None,        
+        'case2':None,
+        'case3':{-1:0, 0:25000}        
         }
 
 

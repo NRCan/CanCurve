@@ -57,10 +57,11 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=False):
 
 
 
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     'case2',
+    pytest.param('case3', marks=pytest.mark.xfail(raises=KeyError, reason="storey data mismatch")), 
     ], indirect=False)
 #===============================================================================
 # @pytest.mark.parametrize('fixed_costs_d',[
@@ -125,7 +126,7 @@ def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
     copy_sqlite(proj_db_fp, testCase, 'c03')
     
     
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c03'], indirect=False)
 def test_c03_export(proj_db_fp, testCase, testPhase, tmp_path):

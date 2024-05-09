@@ -67,7 +67,7 @@ def convert_to_number(text):
         text: The string to convert.
     
     Returns:
-        The converted number (int or float) if successful, None otherwise.
+        The converted number (int or float) if successful, original otherwise.
     """
     try:
         return int(text)
@@ -77,6 +77,12 @@ def convert_to_number(text):
         except ValueError:
             return text
         
+
+def convert_to_float(text): 
+    try:
+        return float(text)
+    except ValueError:
+        return text
         
 def force_open_dir(folder_path_raw, logger=None): #force explorer to open a folder
     
