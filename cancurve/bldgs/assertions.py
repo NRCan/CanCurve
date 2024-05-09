@@ -139,7 +139,7 @@ def assert_drf_df(df):
     # Check data types (more accurate)
  
     for i, col in enumerate(df.columns):
-        if not 'float' in df[col].dtype:  # Assuming you want specifically float64
+        if not 'float' in df[col].dtype.name:  # Assuming you want specifically float64
             raise TypeError(f'DRF column \'{col}\' ({i}) expected as dtype float. instead got \'{df[col].dtype}\'')
         
 def assert_bldg_meta_d(bldg_meta):

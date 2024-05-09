@@ -255,6 +255,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             if filename =='':
                 self.logger.debug('user cancelled QFileDialog')
                 return
+            
+            #needed so we can have a single test for both types of file dialogs
+            if isinstance(filename, tuple):
+                filename=filename[0]
  
             if filename:
                 self.lineEdit_wdir.setText(filename)
