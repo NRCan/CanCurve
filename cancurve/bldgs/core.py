@@ -832,8 +832,10 @@ def c00_setup_project(
         log.debug(f'loaded {len(fc_ser)} fixed costs')
         
         #check intersect
-        if not set(fc_ser.index).difference(ci_df['story'].unique())==set():
-            raise KeyError(f'fixed cost stories do not match CostItems')
+        miss = set(fc_ser.index.values).difference(ci_df['story'].unique())
+        if not miss==set():
+            raise KeyError(f'\'Storey\' values specified in the Fixed Costs table do not match those in the Cost Item Dataset'+\
+                           '\n    ensure fixed costs are provided for each storey')
         
     else:
         fc_ser=None
