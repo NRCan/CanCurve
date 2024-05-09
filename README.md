@@ -14,6 +14,7 @@ CanCurve is an open-source tool which can develop depth-damage (stage-damage) fu
 - in QGIS, `Manage and Install Plugins...` > `Install from ZIP` > select the downloaded file
 - it is recommended to also install the **First Aid** plugin for more detailed error messages. 
 - it is recommended to set up the QGIS Debug Log file as shown [here](https://stackoverflow.com/a/61669864/9871683)
+- CanCurve backend and project data is implemented in SQLite relational databases. For enhanced customization and debugging, it is recommended to install a SQLite viewer + editor like [DB Browser for SQLite](https://sqlitebrowser.org/) for working with these files.  
 
 
 
