@@ -1,5 +1,5 @@
 # CanCurve
-CanCurve is an open-source tool which can develop depth-damage (stage-damage) functions for use in flood loss estimation and flood risk assessments.
+CanCurve is an open-source tool for developing flood depth-damage (stage-damage) functions for use flood assessments.
 
 <p align="center">
   <img src="./cancurve/img/icon.png" alt="CanCurve Icon"> 
@@ -25,5 +25,8 @@ CanCurve is an open-source tool which can develop depth-damage (stage-damage) fu
 1) populate the **Building Details** and **Data Input** tabs to reflect your archetype and cost-item properties
 2) on the **Create Curve** tab, either click `Run All` to execute the full DDF compilation workflow, or select `Individual Steps` and click through the steps individually. The resulting DDF will be exported in CanFlood format.
 
-### DEVELOPMENT TESTING
+## Development
+see [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+### Testing
 The **Welcome** tab contains a temporary `Load Testing Values` button where you can select from the pre-populated test cases. This should make playing with the tool easier. 

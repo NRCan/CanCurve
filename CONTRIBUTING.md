@@ -3,7 +3,7 @@
 ## Installation
 Typically, development should employ a virtual environment with pyqgis bindings. 
 We usually develop to target the most recent QGIS LTR. 
-Some additional packages for testing are specified in `./requirements.txt`
+Some additional packages used for testing and deployment are specified in `./requirements.txt`
 
 ### PYTHONPATH
 only the source directory should be included (`./CanCurve` not `./CanCurve/cancurve`)
@@ -22,7 +22,7 @@ the only compiling typically requied is when the qt `resources.qrc` file is chan
 Typically a `dev` QGIS profile is maintained with a custom `QGIS_PLUGINPATH` pointed to the project source directory. This facilitates plugin updating with the `plugin reload` (ie no real deployment) 
 
 ### Pre-Release testing
-Pre-release testing (and full deployment) employ a zip of the plugin directory (see `./dev_tools/plug_zip.bat`):
+Pre-release testing (and full deployment) employs a zip of the plugin directory (see `./dev_tools/plug_zip.bat`):
 1) remove all `__pychace__`
 2) zip/archive the plugin directory
 
