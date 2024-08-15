@@ -11,26 +11,40 @@ import pandas as pd
 import numpy as np
 
 from cancurve.hp.basic import view_web_df as view
-from cancurve.parameters import colns_index, colns_dtypes, floor_story_d
+from cancurve.hp.logr import get_log_stream
+from cancurve.bldgs.parameters import colns_index, colns_dtypes, floor_story_d
 
 import sys
 #print(f'    {sys.executable}\n  {sys.version_info}')
 
 
 
-def xls_to_csv(estimate_xls_fp, info_fp, out_dir=None, out_fp=None):
-    """Converts the first sheet of an XLS file to CSV.
+def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp, 
+                      out_dir=None, out_fp=None, logger=None):
+    """Convert DDFP estimate XLS into a CanCurve cost-item csv
 
-    Args:
-        estimate_xls_fp (str): Filepath of the XLS input file.
-        out_fp (str): Filepath of the CSV output file.
+    PARAMS
+    ------------
+    estimate_xls_fp (str): 
+        Raw estimate line items file
+        single tab
+        
+    ddfp_workbook_fp, str
+        DDFP workbook with populated 
+        
+        
+    out_fp (str): Filepath of the CSV output file.
     """
-
- 
+    #===========================================================================
+    # defaults
+    #===========================================================================
+    if not os.path.exists(out_dir):os.makedirs(out_dir)
+    if logger is None: logger=get_log_stream()
+    log = logger
     #=======================================================================
-    # load raw data
+    # raw estimate line items------------
     #=======================================================================
-    print(f"Loading XLS file \n    {estimate_xls_fp}")
+    log.debug(f"Loading XLS file \n    {estimate_xls_fp}")
     df_raw = pd.read_excel(estimate_xls_fp, sheet_name=0)  # Load the first sheet
     df1 = df_raw.copy().loc[:, ['Cat', 'Sel', 'Group Code', 'RCV', 'Desc']]
     df1.columns = df1.columns.str.strip().str.lower().str.replace(' ', '_') 
@@ -50,14 +64,14 @@ def xls_to_csv(estimate_xls_fp, info_fp, out_dir=None, out_fp=None):
     bx = df1.loc[:, keys].duplicated(keep=False)
     if bx.any():
         """this is normal.. often have duplicate items here (e.g., 2x countertops in the kitchen)"""
-        print(f'got {bx.sum()}/{len(bx)} duplicated {keys} keys\n%s'%df1[bx].sort_values(keys))
+        log.debug(f'got {bx.sum()}/{len(bx)} duplicated {keys} keys\n%s'%df1[bx].sort_values(keys))
  
     
     
     #check description
     assert not df1['desc'].str.contains(r"[\n]").any(), 'contains some newlines'
     if df1['desc'].str.contains(r"[,]").any():
-        print('descriptions contains some commas')
+        log.warning('descriptions contains some commas')
         
     #replace double quotes with in
     df1['desc'] = df1['desc'].str.replace('"', 'in')
@@ -68,12 +82,12 @@ def xls_to_csv(estimate_xls_fp, info_fp, out_dir=None, out_fp=None):
     #change group codes to lower
     df1.loc[:, 'group_code'] = df1['group_code'].str.lower()
     
-    print(f'loaded estimate data {df1.shape} w/ the following groups:\n%s'%df1['group_code'].value_counts())
+    log.debug(f'loaded estimate data {df1.shape} w/ the following groups:\n%s'%df1['group_code'].value_counts())
     
     #=======================================================================
-    # load rooms info
+    # INFO tab------
     #=======================================================================
-    rooms_df_raw = load_info_tab(info_fp, 'Rooms')
+    rooms_df_raw = load_info_tab(ddfp_workbook_fp, 'Rooms', log)
     
     
     
@@ -104,7 +118,7 @@ def xls_to_csv(estimate_xls_fp, info_fp, out_dir=None, out_fp=None):
     
  
     if not gcodes_df['match'].all():
-        print(f'the following group codes failed to match\nsetting these to story=1:\n%s'%gcodes_df[~gcodes_df['match']])
+        log.warning(f'the following group codes failed to match\nsetting these to story=1:\n%s'%gcodes_df[~gcodes_df['match']])
         
         
         miss_df = gcodes_df[~gcodes_df['match']].loc[:, 'group_code'].reset_index(drop=True).to_frame()
@@ -126,7 +140,7 @@ def xls_to_csv(estimate_xls_fp, info_fp, out_dir=None, out_fp=None):
     """
     
     #===========================================================================
-    # join story
+    # join story-------
     #===========================================================================
     df1 = df1.join(rooms_df.loc[:, ['group_code', 'story']].set_index('group_code'), on='group_code')
     
@@ -140,7 +154,7 @@ def xls_to_csv(estimate_xls_fp, info_fp, out_dir=None, out_fp=None):
     df1 = df1.set_index(keys).sort_index().loc[:, ['rcv', 'story', 'desc']]
     
     #=======================================================================
-    # write
+    # write--------
     #=======================================================================
     if out_fp is None:
         out_fp= os.path.join(out_dir, os.path.splitext(os.path.basename(estimate_xls_fp))[0]+'.csv')
@@ -149,15 +163,15 @@ def xls_to_csv(estimate_xls_fp, info_fp, out_dir=None, out_fp=None):
     view(df1)
     df1.columns
     """
-    print(f"Saving data to CSV\n    {out_fp}")
+    log.debug(f"Saving data to CSV\n    {out_fp}")
     df1.to_csv(out_fp, index=True)  # Save without row indices
     
-    print("Conversion complete!")
+    log.info("Conversion complete!")
     
     #=======================================================================
     # metadata
     #=======================================================================
-    print("Creating metadata file...")
+    log.debug("Creating metadata file...")
     
     # Get username (replace with your logic to get username)
 
@@ -181,15 +195,15 @@ def xls_to_csv(estimate_xls_fp, info_fp, out_dir=None, out_fp=None):
         for key, value in metadata.items():
             f.write(f"{key}: {value}\n")
     
-    print(f'wrote metadata to \n    {meta_ofp}')
+    log.debug(f'wrote metadata to \n    {meta_ofp}')
     
-    print('finished')
+    #print('finished')
     
     return df1
 
  
 
-def load_info_tab(fp, sectionName):
+def load_info_tab(fp, sectionName, log):
 
     df_raw = load_xls_with_pattern(fp)
     
@@ -198,8 +212,20 @@ def load_info_tab(fp, sectionName):
     assert bx.sum()==1, f'failed to get unique section name match for \'{sectionName}\''
     start_row = df_raw[bx].index[0] + 1 
     
-    # Find end row (revised)
-    next_section_rows = df_raw[start_row:][df_raw.iloc[:, 0].notna() & df_raw.iloc[:, 0].str.contains('^[A-Z]')].index
+    # Find end row
+    """
+    view(df_raw)
+    """
+   
+    bx1 = np.logical_and(
+        df_raw.iloc[:, 0].notna(),
+        df_raw.iloc[:, 0].str.contains('^[A-Z]')
+        )
+ 
+    
+    next_section_rows = df_raw[start_row:][bx1].index
+    
+    
     end_row = next_section_rows.min() - 1 if next_section_rows.any() else df_raw.shape[0]
 
     # Extract section data (revised with dropna)
@@ -210,7 +236,7 @@ def load_info_tab(fp, sectionName):
     df_section = df_section[1:].reset_index(drop=True)  # Drop the old header row
     df_section.columns.name = sectionName
     
-    print(f'for \'Info\' section \'{sectionName}\' extracted {df_section.shape}')
+    log.debug(f'for \'Info\' section \'{sectionName}\' extracted {df_section.shape}')
     
     return df_section
     
@@ -253,7 +279,7 @@ def load_xls_with_pattern(xls_filepath, pattern="_info"):
 
 if __name__=="__main__":
     
-    xls_to_csv(
+    ddfp_inputs_to_ci(
         r'l:\09_REPOS\04_TOOLS\DDFP\example\R_1-L-BD-CU_ABCA\R_1-L-BD-CU_ABCA.xlsx',
         r'l:\09_REPOS\04_TOOLS\DDFP\example\R_1-L-BD-CU_ABCA\DDFwork_R_1-L-BD-CU_ABCA.xlsm',
         out_dir=r'l:\10_IO\CanCurve\misc\port_estimate'
