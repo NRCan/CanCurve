@@ -27,7 +27,7 @@ colns_dtypes = {'cat': 'object', 'sel': 'object', 'rcv': 'float64', 'desc': 'obj
 
 
 
-floor_story_d = {'main':0, 'basement':-1}
+floor_story_d = {'main':0, 'basement':-1, 'upper':1}
 
 #queried from mrb_20240416.db
 bldg_layout_options_l = ['default', 

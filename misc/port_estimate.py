@@ -20,6 +20,7 @@ import sys
 
 
 def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp, 
+                      write=True,
                       out_dir=None, out_fp=None, logger=None):
     """Convert DDFP estimate XLS into a CanCurve cost-item csv
 
@@ -41,6 +42,7 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     if not os.path.exists(out_dir):os.makedirs(out_dir)
     if logger is None: logger=get_log_stream()
     log = logger
+    warn_d = dict()
     #=======================================================================
     # raw estimate line items------------
     #=======================================================================
@@ -72,6 +74,7 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     assert not df1['desc'].str.contains(r"[\n]").any(), 'contains some newlines'
     if df1['desc'].str.contains(r"[,]").any():
         log.warning('descriptions contains some commas')
+        warn_d['descriptions_with_commas'] = df1['desc'].str.contains(r"[,]").sum()
         
     #replace double quotes with in
     df1['desc'] = df1['desc'].str.replace('"', 'in')
@@ -81,8 +84,10 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     
     #change group codes to lower
     df1.loc[:, 'group_code'] = df1['group_code'].str.lower()
+    assert len(df1)==len(df_raw)
     
     log.debug(f'loaded estimate data {df1.shape} w/ the following groups:\n%s'%df1['group_code'].value_counts())
+    
     
     #=======================================================================
     # INFO tab------
@@ -104,11 +109,26 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     rooms_df.columns = rooms_df.columns.str.lower()
     rooms_df.rename(columns={'name':'group_code'}, inplace=True)
     
+
+    
+    
+    
     #add story
     rooms_df['story'] = rooms_df['floor'].apply(lambda x: floor_story_d.get(x, float('nan')))
     
     
+    if rooms_df.isnull().any().any():
+        raise AssertionError('got some nulls in the processed rooms data')
     
+    #===========================================================================
+    # handle duplicated group codes
+    #===========================================================================
+    bx = rooms_df['group_code'].duplicated()
+    if bx.any():
+        log.warning(f'got {bx.sum()}/{len(bx)} duplicated group codes.. dropping')
+        rooms_df = rooms_df.drop_duplicates(subset='group_code', keep='first')
+        
+        warn_d['duplicated_group_codes'] = bx.sum()
     #===========================================================================
     # handle missing rooms
     #===========================================================================
@@ -121,13 +141,16 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
         log.warning(f'the following group codes failed to match\nsetting these to story=1:\n%s'%gcodes_df[~gcodes_df['match']])
         
         
-        miss_df = gcodes_df[~gcodes_df['match']].loc[:, 'group_code'].reset_index(drop=True).to_frame()
+        miss_df = gcodes_df[~gcodes_df['match']].loc[:, 'group_code'].reset_index(drop=True).to_frame().copy()
         miss_df['floor']='main'
         miss_df['type'] = 'missing from info'
         miss_df['story']=0
         miss_df.columns.name=rooms_df.columns.name
         
         rooms_df = pd.concat([rooms_df, miss_df]).sort_values('story').reset_index(drop=True)
+        
+        warn_d['missing_rooms'] =  len(miss_df)
+        warn_d['total_rooms'] =  len(gcodes_df)
         
     else:
         miss_df=None
@@ -138,13 +161,22 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     view(rooms_df)
     view(miss_df)
     """
+    if rooms_df.isnull().any().any():
+        raise AssertionError('got some nulls in the processed rooms data')
+    
+    assert not rooms_df['group_code'].duplicated().any()
     
     #===========================================================================
     # join story-------
     #===========================================================================
-    df1 = df1.join(rooms_df.loc[:, ['group_code', 'story']].set_index('group_code'), on='group_code')
+    df1 = df1.join(rooms_df.loc[:, ['group_code', 'story']].set_index('group_code'), on='group_code', how='left')
     
-    assert df1.notna().all().all()
+    if not df1.notna().all().all():
+        df1.isna().sum().sum()
+        """
+        view(df1)
+        """
+        raise AssertionError(f'got some nulls')
     
     #===========================================================================
     # post
@@ -156,50 +188,51 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     #=======================================================================
     # write--------
     #=======================================================================
-    if out_fp is None:
-        out_fp= os.path.join(out_dir, os.path.splitext(os.path.basename(estimate_xls_fp))[0]+'.csv')
+    if write:
+        if out_fp is None:
+            out_fp= os.path.join(out_dir, os.path.splitext(os.path.basename(estimate_xls_fp))[0]+'.csv')
+        
+        """
+        view(df1)
+        df1.columns
+        """
+        log.debug(f"Saving data to CSV\n    {out_fp}")
+        df1.to_csv(out_fp, index=True)  # Save without row indices
+        
+        log.debug("Conversion complete!")
+        
+        #=======================================================================
+        # metadata
+        #=======================================================================
+        log.debug("Creating metadata file...")
+        
+        # Get username (replace with your logic to get username)
     
-    """
-    view(df1)
-    df1.columns
-    """
-    log.debug(f"Saving data to CSV\n    {out_fp}")
-    df1.to_csv(out_fp, index=True)  # Save without row indices
-    
-    log.info("Conversion complete!")
-    
-    #=======================================================================
-    # metadata
-    #=======================================================================
-    log.debug("Creating metadata file...")
-    
-    # Get username (replace with your logic to get username)
-
-    
-    # Create metadata dictionary
-    metadata = {
-        "username": os.getenv('USERNAME'),
-        "date": datetime.now().strftime("%Y-%m-%d"),  # Get current date
-        "script_name": os.path.basename(__file__),  # Assuming script name
-        "xls_filepath": estimate_xls_fp,
-        "output_filepath": out_fp,
-        "dataset_shape": df1.shape,  # Get data frame shape (rows, columns)
-    }
-    
-    if not miss_df is None:
-        metadata['missing_group_codes'] = str(miss_df['group_code'].tolist())
-    
-    # Write metadata to text file
-    meta_ofp = os.path.join(os.path.dirname(out_fp), 'metadata.txt')
-    with open(meta_ofp, "w") as f:
-        for key, value in metadata.items():
-            f.write(f"{key}: {value}\n")
-    
-    log.debug(f'wrote metadata to \n    {meta_ofp}')
-    
+        
+        # Create metadata dictionary
+        metadata = {
+            "username": os.getenv('USERNAME'),
+            "date": datetime.now().strftime("%Y-%m-%d"),  # Get current date
+            "script_name": os.path.basename(__file__),  # Assuming script name
+            "xls_filepath": estimate_xls_fp,
+            "output_filepath": out_fp,
+            "dataset_shape": df1.shape,  # Get data frame shape (rows, columns)
+        }
+        
+        if not miss_df is None:
+            metadata['missing_group_codes'] = str(miss_df['group_code'].tolist())
+        
+        # Write metadata to text file
+        meta_ofp = os.path.join(os.path.dirname(out_fp), 'metadata.txt')
+        with open(meta_ofp, "w") as f:
+            for key, value in metadata.items():
+                f.write(f"{key}: {value}\n")
+        
+        log.debug(f'wrote metadata to \n    {meta_ofp}')
+        
     #print('finished')
     
-    return df1
+    return df1, warn_d
 
  
 

@@ -3,7 +3,7 @@ Created on Apr. 28, 2024
 
 @author: cef
 '''
-import pytest, os, shutil, random
+import pytest, os, shutil, random, logging, sys
 
 from cancurve.hp.basic import find_single_file_by_extension, convert_to_number, convert_to_float
 
@@ -20,6 +20,10 @@ test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 #===============================================================================
 # fixtrues--------
 #===============================================================================
+
+ 
+
+
 @pytest.fixture(scope='function')   
 def proj_db_fp(testCase, testPhase, tmp_path):
     """retrieve the approraite project database file for hte test case (and make a copy)"""
