@@ -14,12 +14,30 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 
+#===============================================================================
+# setup matplotlib
+#===============================================================================
+import matplotlib
+#matplotlib.use('Qt5Agg') #sets the backend (case sensitive)
+matplotlib.set_loglevel("info") #reduce logging level
+import matplotlib.pyplot as plt
+
+from cancurve.parameters_matplotlib import font_size, cmap_default #set custom styles
+
+#===============================================================================
+# imports
+#===============================================================================
+ 
+import matplotlib.colors as mcolors
+import matplotlib.patches as patches
+
 #import tqdm #not part of Q 
 
 from misc.port_estimate import ddfp_inputs_to_ci, ddfp_inputs_to_fixedCosts
 from cancurve.hp.logr import get_new_file_logger, get_log_stream
 from cancurve.hp.basic import view_web_df as view
 from cancurve.bldgs.assertions import assert_CanFlood_ddf
+from cancurve.bldgs.core import DFunc
 
 from misc.bldgs_script_example import bldgs_workflow
 #===============================================================================
@@ -385,7 +403,7 @@ def p02_build_CanCurve_batch(ci_df_lib, meta_lib, fixd_lib,
             # run workflow
             #===================================================================
             try:
-                res_lib[study_name][ddf_name] = bldgs_workflow(ci_df, 
+                res_lib[study_name][ddf_name], _ = bldgs_workflow(ci_df, 
                     curve_name=ddf_name, 
                     bldg_meta_d=bldg_meta_d, 
                     fixed_costs_d=fixd_lib[study_name][ddf_name],
@@ -436,8 +454,105 @@ def p03_compare(DDFP_lib, CanCurve_lib,
         #=======================================================================
         # loop on each curver
         #=======================================================================
-         
+        for ddf_name, DDFP_df in DDFP_d.items():
+            log.info(ddf_name)
+            CC_df = CC_d[ddf_name]
+            
+            """
+            write test data
+            
+            od = os.path.join(r'l:\09_REPOS\04_TOOLS\CanCurve\tests\data\misc', ddf_name)
+            os.makedirs(od, exist_ok='OK')
+            
+            DDFP_df.to_pickle(os.path.join(od, 'DDFP.pkl'))
+            
+            CC_df.to_pickle(os.path.join(od, 'CC.pkl'))
+            """
+            
+            
+            plot_and_eval_ddfs({'DDFP':DDFP_df, 'CC':CC_df})
+            
+            
+def plot_and_eval_ddfs(ddf_d,
+                   log=None, out_dir=None):
+    """plot and evaluate a list of similar ddfs"""
     
+    #===========================================================================
+    # defaults
+    #===========================================================================
+    if log is None: log = get_log_stream(level=logging.DEBUG)
+    
+    #===========================================================================
+    # init DFuncs
+    #===========================================================================
+    DFunc_d=dict()
+    for framework_name, df_raw in ddf_d.items():
+        log.debug(f'init on {framework_name}')
+        with DFunc(logger=log, tabn=df_raw.iloc[0,1]) as wrkr:
+            DFunc_d[framework_name] = wrkr.build(df_raw, log)
+    
+    #===========================================================================
+    # plot
+    #===========================================================================
+    plot_DFuncs(DFunc_d, log=log)
+    
+ 
+    
+def plot_DFuncs(DFunc_d, 
+                figure=None,
+                fig_kwargs=dict(
+                    #figsize=(10,10),
+                    tight_layout=True,
+                    ),
+                cmap=None,
+                log=None,
+                ):
+    
+    #===========================================================================
+    # setup figure
+    #===========================================================================
+    if cmap is None:
+        cmap = cmap_default
+ 
+    #figure default
+    if figure is None:
+        figure = plt.figure(**fig_kwargs)
+        
+    ax = figure.subplots()
+    
+    #===========================================================================
+    # dataprep
+    #===========================================================================
+    log.debug(f'prepping {len(DFunc_d)} dfuncs')
+    df_d = {k:wrkr._get_ddf() for k, wrkr in DFunc_d.items()}
+    
+    
+    
+    
+def convert_CanFlood_to_CanCurve_ddf(df_raw, log=None):
+    """CanFlood includes metatdata while CanCurve just has the stories as columns
+    
+    usually, we only go the other way"""
+    
+    #===========================================================================
+    # defaults
+    #===========================================================================
+    if log is None: log = get_log_stream(level=logging.DEBUG)
+    
+    
+    #===========================================================================
+    # compile with CanFlood DFunc
+    #===========================================================================
+    with DFunc(logger=log, tabn=df_raw.iloc[0,1]) as wrkr:
+        wrkr.build(df_raw, log)
+        
+        ddf_cf_clean = wrkr._get_ddf()
+        
+    #===========================================================================
+    # clean
+    #===========================================================================
+    return ddf_cf_clean.rename(columns={'exposure':'depths_m', 'impact':'combined'}).set_index('depths_m')
+        
     
  
     
@@ -463,7 +578,7 @@ if __name__=='__main__':
     #===========================================================================
     # build curves using CanCurve   
     #===========================================================================
-    #CanCurve_ddfs_lib = p02_build_CanCurve_batch(ci_df_lib, meta_lib, fixd_lib, out_dir=out_dir)
+    CanCurve_ddfs_lib = p02_build_CanCurve_batch(ci_df_lib, meta_lib, fixd_lib, out_dir=out_dir)
     
     CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\DDFP_CanCurve_batch.pkl')
     
