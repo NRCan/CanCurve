@@ -163,6 +163,7 @@ def _get_series_value_from_keys(s, labels):
 def p01_extract_DDFP(ddfp_lib_fp_d,
                             log_level=logging.INFO,
                             out_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare',
+                            write=True,
                             ):
     """convert DDFP to CanCurve format cost-item dataset for all curves in a directory"""
     #===========================================================================
@@ -235,7 +236,7 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
                     logger=get_new_file_logger(
                         logger=log.getChild(ddf_name), 
                         fp=os.path.join(odi, f'{ddf_name}_compare.log')),
-                    write=False,
+                    write=write,
                     )
             except Exception as e:
                 raise IOError(f'failed on {ddf_name} w/\n    {e}')
@@ -479,6 +480,12 @@ def p03_compare(DDFP_lib, CanCurve_lib,
             plot_and_eval_ddfs({'DDFP':DDFP_df, 'CC':CC_df},
                                out_dir = os.path.join(out_dir, study_name),
                                title=f'{study_name} {ddf_name}')
+            
+            raise IOError("""
+            stopped here. something is wrong with the 2-story curves.
+            not sure if this has to do with how structure-level/split category cost items are handled
+            need to investigate more (case4_R2)
+            """)
             
  
             
@@ -728,26 +735,28 @@ if __name__=='__main__':
     ddfp_lib = p01_extract_DDFP(ddfp_lib_fp_d,out_dir=god('p01'))
     
     
-    ddfp_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p01\DDFP_to_cc_lib.pkl')
-      
-    ci_df_lib = ddfp_lib.pop('ci')
-    meta_lib = ddfp_lib.pop('meta')
-    fixd_lib = ddfp_lib.pop('fixed')
-       
-       
-     
     #===========================================================================
-    # build curves using CanCurve   
+    # ddfp_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p01\DDFP_to_cc_lib.pkl')
+    #   
+    # ci_df_lib = ddfp_lib.pop('ci')
+    # meta_lib = ddfp_lib.pop('meta')
+    # fixd_lib = ddfp_lib.pop('fixed')
+    #    
+    #    
+    #  
+    # #===========================================================================
+    # # build curves using CanCurve   
+    # #===========================================================================
+    # CanCurve_ddfs_lib = p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib, out_dir=god('p02'))
+    # 
+    # CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p02\DDFP_CanCurve_batch.pkl')
+    # 
+    # 
+    # #===========================================================================
+    # # compare
+    # #===========================================================================
+    # p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib, out_dir=god('p03'))
     #===========================================================================
-    CanCurve_ddfs_lib = p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib, out_dir=god('p02'))
-    
-    CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p02\DDFP_CanCurve_batch.pkl')
-    
-    
-    #===========================================================================
-    # compare
-    #===========================================================================
-    p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib, out_dir=god('p03'))
     
     
     

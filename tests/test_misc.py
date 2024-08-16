@@ -10,6 +10,7 @@ import pytest, os, shutil, pickle
 
 import pandas as pd
 from .conftest import test_data_dir_master
+from .bldgs.conftest import ci_fp, fixed_costs_d, bldg_meta_d
 test_data_dir_master = os.path.join(test_data_dir_master, 'misc')
 #===============================================================================
 # test data
@@ -41,14 +42,19 @@ def ddf_d(study_name, ddf_name):
     return {'DDFP':DDFP_df, 'CC':CC_df}
     
 
-
+@pytest.fixture(scope='function')
+def ci_df(ci_fp):
+    
+    from cancurve.bldgs.core import load_ci_df 
+    
+    return load_ci_df(ci_fp)
 #===============================================================================
 # tests---------
 #===============================================================================
 
 
 
-
+@pytest.mark.dev
 @pytest.mark.parametrize('study_name, ddf_name',[
     ('AB.Calgary', 'R_2-L-BD-CU_ABCA'),
     ])
@@ -57,7 +63,7 @@ def test_ddfp_inputs_to_ci_from_dir(curve_data_dir, tmpdir, logger):
     
     result = func(curve_data_dir, logger=logger, out_dir=tmpdir)
 
-@pytest.mark.dev
+ 
 @pytest.mark.parametrize('study_name, ddf_name',[
     ('AB.Calgary', 'R_2-M-BU-ST_ABCA'),
     ])
@@ -65,6 +71,22 @@ def test_plot_and_eval_ddfs(ddf_d, tmpdir, logger):
     from misc.DDFP_compare import plot_and_eval_ddfs as func
     
     func(ddf_d, log=logger, out_dir=tmpdir)
+    
+    
+
+
+@pytest.mark.parametrize('testCase',[
+    'case4_R2', #'AB.Calgary', 'R_2-L-BD-CU_ABCA'
+    ])
+def test_bldgs_workflow(ci_df, bldg_meta_d,fixed_costs_d,
+                        testCase,
+                        tmpdir, logger):
+    from misc.bldgs_script_example import bldgs_workflow as func
+    
+    func(ci_df, bldg_meta_d=bldg_meta_d, fixed_costs_d=fixed_costs_d,
+         #settings_d=settings_d, #use default 
+          curve_name=f'{testCase}_c00',
+         logger=logger, out_dir=tmpdir)
     
     
     

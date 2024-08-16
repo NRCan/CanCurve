@@ -33,11 +33,13 @@ test_data_dir_master = os.path.join(plugin_dir, 'dev_test_data') #needs to live 
 #test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
 
-
+#not sure if this should be here...
 fixed_costs_master_d = {
         'case1':{0:10000, -1:8000},
         'case2':None,
-        'case3':{-1:0, 0:25000}        
+        'case3':{-1:0, 0:25000},
+        'case4_R2':{-1:19361, 0:24879, 1:22484},
+                
         }
 
 test_cases_l = list(fixed_costs_master_d.keys())

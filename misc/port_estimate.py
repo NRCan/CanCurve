@@ -140,7 +140,8 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     
  
     if not gcodes_df['match'].all():
-        log.warning(f'the following group codes failed to match\nsetting these to story=1:\n%s'%gcodes_df[~gcodes_df['match']])
+        """should consider using a split category for missing group codes (like DDFP)"""
+        log.warning(f'the following group codes failed to match\nsetting these to story=0:\n%s'%gcodes_df[~gcodes_df['match']])
         
         
         miss_df = gcodes_df[~gcodes_df['match']].loc[:, 'group_code'].reset_index(drop=True).to_frame().copy()

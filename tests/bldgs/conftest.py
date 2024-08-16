@@ -48,6 +48,8 @@ def ci_fp(testCase):
 
 @pytest.fixture(scope='function')
 def fixed_costs_d(testCase):
+    if not testCase in fixed_costs_master_d:
+        raise AssertionError(f'test case \'{testCase}\' missing from fixed_costs_master_d')
     return fixed_costs_master_d[testCase]
         
 
