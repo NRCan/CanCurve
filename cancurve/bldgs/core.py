@@ -380,11 +380,12 @@ class DFunc(object):
             assert self.check_cdf(df_raw)
         except Exception as e:
             """letting this pass for backwards compatability"""
-            log.error('curve failed check w/ \n    %s'%e)
+            log.warning('curve failed check w/ \n    %s'%e)
         
 
         #slice and clean
         """not sure why we require 0 and 1 in teh index... should loosen this"""
+        assert df_raw.columns[0]==0
         df = df_raw.set_index(0, drop=True).dropna(how='all', axis=1)            
         
         #======================================================================
@@ -831,7 +832,9 @@ def c00_setup_project(
     #===========================================================================
     # fixed costs------
     #===========================================================================
-    if not fixed_costs_d is None:
+    if fixed_costs_d is None: fixed_costs_d = dict()
+    
+    if len(fixed_costs_d)>0:
         fc_ser = pd.Series(fixed_costs_d, name='rcv', dtype=float)
         fc_ser.index.name='story'
         log.debug(f'loaded {len(fc_ser)} fixed costs')
@@ -1158,6 +1161,17 @@ def c02_group_story(proj_db_fp,
         #add result table
         ddf3.to_sql(tabnm, conn, if_exists='replace', index=True)
         
+        """
+                       main       base   combined
+        depths_m                                 
+        -1.80      10000.00    8000.00   18000.00
+        -1.77      10000.00   66471.69   76471.69
+        -1.75      10000.00   82639.88   92639.88
+        -1.70      10000.00   82639.88   92639.88
+        -1.65      10000.00   82685.34   92685.34
+        -1.50      10000.00   91629.69  101629.69
+        """
+        
         #update project meta
         _update_proj_meta(log, conn, 
                           meta_d = dict(function_name='c02_group_story', misc=str(params_d))
@@ -1259,10 +1273,10 @@ def c03_export(
         # test
         #=======================================================================
     #maniuplate frame to match CanFlood expectations
-    df1 = res_df.copy()
-    df1.columns = [0, 1]
+    res_df = res_df.copy()
+    res_df.columns = [0, 1]
         
-    assert_CanFlood_ddf(df1)
+    assert_CanFlood_ddf(res_df)
 
         
     #===========================================================================
