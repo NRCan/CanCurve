@@ -589,7 +589,7 @@ class DFunc(object):
         #=======================================================================
         miss_l = set(self.cdf_chk_d.keys()).difference(crv_d.keys())
         if not len(miss_l)==0:
-            log.error('dfunc \'%s\' missing keys: %s \n    %s'%(self.tabn, miss_l, ''))
+            log.warning('dfunc \'%s\' missing keys: %s \n    %s'%(self.tabn, miss_l, ''))
             return False
         
         #=======================================================================
@@ -597,7 +597,7 @@ class DFunc(object):
         #=======================================================================
         for k, v in self.cdf_chk_d.items():
             if not isinstance(crv_d[k], v):
-                log.error( '%s got bad type on %s'%(self.tabn, k))
+                log.warning( '%s got bad type on %s'%(self.tabn, k))
                 return False
             
         #=======================================================================
@@ -708,6 +708,8 @@ def c00_setup_project(
     
     if curve_name is None:
         curve_name = settings_d['curve_name']
+    else:
+        settings_d['curve_name'] = curve_name
     assert isinstance(curve_name, str) 
     
     #===========================================================================

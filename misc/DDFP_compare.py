@@ -7,12 +7,17 @@ compile and analyze DDFP example curves against CanCurve
 '''
 
 #===============================================================================
-# INPUTS---------
+# IMPORTS---------
 #===============================================================================
 import  os, logging, pprint, pickle
 from datetime import datetime
 import pandas as pd
 import numpy as np
+pd.set_option("display.max_rows", 10)
+
+import scipy.integrate
+from scipy.interpolate import interp1d
+ 
 
 #===============================================================================
 # setup matplotlib
@@ -30,6 +35,7 @@ from cancurve.parameters_matplotlib import font_size, cmap_default #set custom s
  
 import matplotlib.colors as mcolors
 import matplotlib.patches as patches
+import matplotlib.gridspec as gridspec
 
 #import tqdm #not part of Q 
 
@@ -154,7 +160,7 @@ def _get_series_value_from_keys(s, labels):
 #     print('finished')
 #===============================================================================
     
-def p01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d,
+def p01_extract_DDFP(ddfp_lib_fp_d,
                             log_level=logging.INFO,
                             out_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare',
                             ):
@@ -357,7 +363,7 @@ def get_filename_by_prefix(folder_path, prefix):
 
 
 
-def p02_build_CanCurve_batch(ci_df_lib, meta_lib, fixd_lib,
+def p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib,
                              
                              out_dir=None,log_level=logging.INFO,
                              ):
@@ -461,7 +467,7 @@ def p03_compare(DDFP_lib, CanCurve_lib,
             """
             write test data
             
-            od = os.path.join(r'l:\09_REPOS\04_TOOLS\CanCurve\tests\data\misc', ddf_name)
+            od = os.path.join(r'l:\09_REPOS\04_TOOLS\CanCurve\tests\data\misc', study_name, ddf_name)
             os.makedirs(od, exist_ok='OK')
             
             DDFP_df.to_pickle(os.path.join(od, 'DDFP.pkl'))
@@ -470,18 +476,47 @@ def p03_compare(DDFP_lib, CanCurve_lib,
             """
             
             
-            plot_and_eval_ddfs({'DDFP':DDFP_df, 'CC':CC_df})
+            plot_and_eval_ddfs({'DDFP':DDFP_df, 'CC':CC_df},
+                               out_dir = os.path.join(out_dir, study_name),
+                               title=f'{study_name} {ddf_name}')
+            
+ 
             
             
+
+def _calc_metric_df(serx):
+    metric_d = dict()
+    #basic impact
+    metric_d['impact_max'] = serx.groupby(level=0).max().rename(None)
+    metric_d['impact_min'] = serx.groupby(level=0).min().rename(None)
+    #basic exposure
+    expo_df = serx.index.to_frame().reset_index(drop=True)
+    metric_d['exposure_max'] = expo_df.groupby('framework_name').max().iloc[:, 0].rename(None)
+    metric_d['exposure_min'] = expo_df.groupby('framework_name').min().iloc[:, 0].rename(None)
+    """
+    
+    view(dx)
+    
+    """
+    #area
+    #for each level=0 group, compute the area under the exposure-impact curve (to x=0)
+    metric_d['auc'] = serx.groupby(level=0).apply(_area_under_curve).rename(None)
+    metric_dx = pd.concat(metric_d, names=['metric']).unstack()
+    metric_dx.loc['abc', :] = _area_between_curves(serx) #single value
+    
+    return metric_dx
+
 def plot_and_eval_ddfs(ddf_d,
-                   log=None, out_dir=None):
+                   log=None, out_dir=None,
+                   title=None,
+                   ):
     """plot and evaluate a list of similar ddfs"""
     
     #===========================================================================
     # defaults
     #===========================================================================
     if log is None: log = get_log_stream(level=logging.DEBUG)
-    
+    os.makedirs(out_dir, exist_ok=True)
     #===========================================================================
     # init DFuncs
     #===========================================================================
@@ -491,15 +526,107 @@ def plot_and_eval_ddfs(ddf_d,
         with DFunc(logger=log, tabn=df_raw.iloc[0,1]) as wrkr:
             DFunc_d[framework_name] = wrkr.build(df_raw, log)
     
+    ddf_name = wrkr.tag
     #===========================================================================
-    # plot
+    # compute metrics
     #===========================================================================
-    plot_DFuncs(DFunc_d, log=log)
+    #data prep
+    dx = pd.concat({k:w._get_ddf() for k,w in DFunc_d.items()}, names=['framework_name', 'index'])
+    serx = dx.set_index(['exposure'], append=True).droplevel(1).iloc[:,0]
+ 
+    
+    metric_df = _calc_metric_df(serx)
+ 
+    
+    #===========================================================================
+    # plot-------
+    #===========================================================================
+    # Create a figure with custom dimensions and GridSpec layout
+    fig = plt.figure(figsize=(10,10))
+    gs = gridspec.GridSpec(3, 1, figure=fig)  # Define a grid with 3 rows and 1 column
+    
+    #add lines to the top subplot
+    ax = fig.add_subplot(gs[:2, 0])  # This adds a subplot in the first two rows
+    ax = plot_DFuncs(DFunc_d, log=log, ax=ax)
+    
+    if not title is None:
+        ax.set_title(title)
+    #===========================================================================
+    # add a table
+    #===========================================================================
+    
+    
+    #add the metric_df as text or a table in the lower right of the ax
+    
+    # Assign the bottom 1/3 for the metrics table
+    ax_table = fig.add_subplot(gs[2, 0])  # This adds a subplot in the third row
+    ax_table.axis('tight')
+    ax_table.axis('off')  # Hide the axes
+
+    # Create the table in the specified subplot
+    table = ax_table.table(cellText=metric_df.values.astype(np.float32).round(2),
+                           colWidths=[0.1] * len(metric_df.columns),
+                           rowLabels=metric_df.index,
+                           colLabels=metric_df.columns,
+                           cellLoc='center', rowLoc='center',
+                           loc='center')  # Center the table within the subplot
+    table.auto_set_font_size(False)
+    table.set_fontsize(10)
+    table.scale(2, 2)  # Scale the table to better fit the subplot, adjust as necessary
+    
+    #===========================================================================
+    # write figure
+    #===========================================================================
+    ofp = os.path.join(out_dir, f'ddf_comparison_{ddf_name}.svg')
+    fig.savefig(ofp, dpi=300, transparent=True)
+    
+    log.info(f'wrote figure to \n    {ofp}')
+    
+    return ofp
+    
     
  
     
+def _area_under_curve(group):
+    # Sort the group by exposure to ensure proper order
+    group = group.sort_index(level='exposure')
+    exposure = group.index.get_level_values('exposure')
+    impact = group.values
+    # Use the trapezoidal rule to compute the area
+    return scipy.integrate.trapezoid(impact, exposure)
+
+
+def _area_between_curves(series):
+    # Identify the two groups in the level=0 index
+    groups = series.index.get_level_values(0).unique()
+    
+    if len(groups) != 2:
+        raise ValueError("The series must contain exactly two level=0 groups to compute the area between curves.")
+    
+    # Split the series into two based on the first level
+    series1 = series.xs(groups[0], level=0)
+    series2 = series.xs(groups[1], level=0)
+    
+    # Determine the union of all exposure points (the x-axis values)
+    common_exposure = np.union1d(series1.index, series2.index)
+    
+    # Interpolate both series to this common exposure grid
+    interp_func1 = interp1d(series1.index, series1.values, kind='linear', bounds_error=False, fill_value=0)
+    interp_func2 = interp1d(series2.index, series2.values, kind='linear', bounds_error=False, fill_value=0)
+    
+    interpolated_series1 = interp_func1(common_exposure)
+    interpolated_series2 = interp_func2(common_exposure)
+    
+    # Compute the absolute difference between the two interpolated series
+    difference = np.abs(interpolated_series1 - interpolated_series2)
+    
+    # Compute the area between the curves using the trapezoidal rule
+ 
+    return scipy.integrate.trapezoid(difference, common_exposure)
+ 
+    
 def plot_DFuncs(DFunc_d, 
-                figure=None,
+                figure=None, ax=None,
                 fig_kwargs=dict(
                     #figsize=(10,10),
                     tight_layout=True,
@@ -515,16 +642,46 @@ def plot_DFuncs(DFunc_d,
         cmap = cmap_default
  
     #figure default
-    if figure is None:
-        figure = plt.figure(**fig_kwargs)
-        
-    ax = figure.subplots()
+    if ax is None:
+        if figure is None:
+            figure = plt.figure(**fig_kwargs)
+            
+        ax = figure.subplots()
     
     #===========================================================================
     # dataprep
     #===========================================================================
     log.debug(f'prepping {len(DFunc_d)} dfuncs')
-    df_d = {k:wrkr._get_ddf() for k, wrkr in DFunc_d.items()}
+    #df_d = {k:wrkr._get_ddf() for k, wrkr in DFunc_d.items()}
+    
+    #===========================================================================
+    # loop and plot
+    #===========================================================================
+    for framework_name, wrkr in DFunc_d.items():
+        
+        #data prep
+        df = wrkr._get_ddf()
+        xar, yar = df['impact'].values, df['exposure'].values
+        
+        #plot
+        ax.plot(xar, yar, label=framework_name)
+        
+    #===========================================================================
+    # plost
+    #===========================================================================
+    ax.grid()
+    ax.legend()
+    
+        
+    """
+    plt.show()
+    """
+    
+    return ax
+        
+        
+ 
+        
     
     
     
@@ -559,15 +716,19 @@ def convert_CanFlood_to_CanCurve_ddf(df_raw, log=None):
 if __name__=='__main__':
     
     out_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare'
+    def god(sfx):
+        od = os.path.join(out_dir, sfx)
+        os.makedirs(od, exist_ok=True)
+        return od
     
     
     #===========================================================================
     # #build pickle of compiled DDFPs
     #===========================================================================
-    #ddfp_lib = p01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d, out_dir=out_dir)
+    ddfp_lib = p01_extract_DDFP(ddfp_lib_fp_d,out_dir=god('p01'))
     
     
-    ddfp_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\DDFP_to_cc_lib.pkl')
+    ddfp_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p01\DDFP_to_cc_lib.pkl')
       
     ci_df_lib = ddfp_lib.pop('ci')
     meta_lib = ddfp_lib.pop('meta')
@@ -578,15 +739,15 @@ if __name__=='__main__':
     #===========================================================================
     # build curves using CanCurve   
     #===========================================================================
-    CanCurve_ddfs_lib = p02_build_CanCurve_batch(ci_df_lib, meta_lib, fixd_lib, out_dir=out_dir)
+    CanCurve_ddfs_lib = p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib, out_dir=god('p02'))
     
-    CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\DDFP_CanCurve_batch.pkl')
+    CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p02\DDFP_CanCurve_batch.pkl')
     
     
     #===========================================================================
     # compare
     #===========================================================================
-    p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib)
+    p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib, out_dir=god('p03'))
     
     
     
