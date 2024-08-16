@@ -12,6 +12,8 @@ import numpy as np
 
 from cancurve.hp.basic import view_web_df as view
 from cancurve.hp.logr import get_log_stream
+
+from cancurve.bldgs.assertions import assert_ci_df
 from cancurve.bldgs.parameters import colns_index, colns_dtypes, floor_story_d
 
 import sys
@@ -31,7 +33,7 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
         single tab
         
     ddfp_workbook_fp, str
-        DDFP workbook with populated 
+        DDFP workbook with populated tabs
         
         
     out_fp (str): Filepath of the CSV output file.
@@ -183,7 +185,13 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     #===========================================================================
     assert len(df1)==len(df_raw)
     
-    df1 = df1.set_index(keys).sort_index().loc[:, ['rcv', 'story', 'desc']]
+    df1 = df1.set_index(keys).sort_index().loc[:, ['rcv', 'story', 'desc']].reset_index(level='group_code')
+    
+ 
+    
+    assert_ci_df(df1)
+
+
     
     #=======================================================================
     # write--------
@@ -303,6 +311,66 @@ def load_xls_with_pattern(xls_filepath, pattern="_info"):
     raise IOError(f"No sheet found matching the pattern '{pattern}'")
 
 
+
+def _load_response_cat_data(ddfp_workbook_fp):
+    """load, clip, and clean response cost data from workbook"""
+    df_raw = load_xls_with_pattern(ddfp_workbook_fp, pattern='Groups-Layout')
+    df_raw.columns.name = None
+    df_raw.index.name = None
+#===========================================================================
+# #clip to section of interest
+#===========================================================================
+    start_row_bx = df_raw.iloc[:, 0].str.lower().fillna('null').str.contains('response category')
+    assert start_row_bx.sum() == 1
+    end_row_bx = df_raw.iloc[:, 0].str.lower() == 'total'
+    assert end_row_bx.sum() == 1
+    start_row_index = df_raw.index[start_row_bx].item()
+    end_row_index = df_raw.index[end_row_bx].item()
+    df_clip = df_raw.iloc[start_row_index:end_row_index, 0:5]
+#set indexers
+    df1 = df_clip.set_index(df_clip.columns[0])
+    df1.columns = df1.iloc[0, :]
+    df1 = df1[1:]
+#clean them up
+    df1.index.name = None
+    df1.columns.name = None
+    df1.columns = df1.columns.str.lower()
+    df1.index = df1.index.str.lower()
+    
+    return df1
+
+def ddfp_inputs_to_fixedCosts(ddfp_workbook_fp,
+                              logger=None):
+    """extract fixed cost data from DDFP workbook"""
+    
+    #===========================================================================
+    # defaults
+    #===========================================================================
+ 
+    if logger is None: logger=get_log_stream()
+    
+    #===========================================================================
+    # load
+    #===========================================================================
+    df = _load_response_cat_data(ddfp_workbook_fp)
+    
+    #check row total
+    bx = df['total'] == df.drop('total',axis=1).sum(axis=1)
+    assert bx.all(), 'total mismatch'
+    
+    #===========================================================================
+    # convert to CanCurve fixed costs
+    #===========================================================================
+    
+    d = df.drop('total',axis=1).sum().rename(index=floor_story_d).astype(float).round(2).to_dict()
+    
+    return d
+    
+    
+    
+ 
+ 
+    
 
           
 

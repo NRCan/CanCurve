@@ -1,6 +1,3 @@
-
-
-
 '''
 Created on May 20, 2024
 
@@ -8,6 +5,10 @@ Created on May 20, 2024
 
 compile and analyze DDFP example curves against CanCurve
 '''
+
+#===============================================================================
+# INPUTS---------
+#===============================================================================
 import  os, logging, pprint, pickle
 from datetime import datetime
 import pandas as pd
@@ -15,9 +16,12 @@ import numpy as np
 
 #import tqdm #not part of Q 
 
-from misc.port_estimate import ddfp_inputs_to_ci
+from misc.port_estimate import ddfp_inputs_to_ci, ddfp_inputs_to_fixedCosts
 from cancurve.hp.logr import get_new_file_logger, get_log_stream
 from cancurve.hp.basic import view_web_df as view
+from cancurve.bldgs.assertions import assert_CanFlood_ddf
+
+from misc.bldgs_script_example import bldgs_workflow
 #===============================================================================
 # DDFP data
 #===============================================================================
@@ -29,19 +33,33 @@ ddfp_lib_fp_d = {
 ddfp_lib_fp_d = {k:os.path.join(ddfp_data_dir, v) for k,v in ddfp_lib_fp_d.items()}
 
 
-def d_to_pick(d, filename):
+def _d_to_pick(d, filename):
     with open(filename, 'wb') as file:
         pickle.dump(d, file)
         
     print(f'wrote to file\n    {filename}')
     
-def pick_to_d(filename):
+    return filename
+    
+def _pick_to_d(filename):
     
     with open(filename, 'rb') as file:
         dictionary = pickle.load(file)
         
     print(f'loaded {len(dictionary)} from \n    {filename}')
     return dictionary
+
+
+def _get_series_value_from_keys(s, labels):
+    for label in labels:
+        if label in s.index:
+            v = s[label]
+            
+            if v=='na':
+                v = np.nan
+            
+            return v
+    raise KeyError(f'no match in \n    {labels}')
 
 
 
@@ -112,19 +130,21 @@ def pick_to_d(filename):
 #     #===========================================================================
 #     log.info(f'finished w/ {cnt}')
 #     
-#     d_to_pick(res_lib, os.path.join(out_dir, f'DDFP_to_cc_lib.pkl'))
+#     _d_to_pick(res_lib, os.path.join(out_dir, f'DDFP_to_cc_lib.pkl'))
 #     
 #     
 #     print('finished')
 #===============================================================================
     
-def _01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d,
-                            log_level=logging.INFO):
+def p01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d,
+                            log_level=logging.INFO,
+                            out_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare',
+                            ):
     """convert DDFP to CanCurve format cost-item dataset for all curves in a directory"""
     #===========================================================================
     # defaults
     #===========================================================================
-    out_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare'
+    
     log = get_log_stream(level=log_level)
     
 
@@ -134,11 +154,14 @@ def _01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d,
     # loop on case study region
     #===============================================================================
     cnt = 0
-    res_lib, warn_lib = dict(), dict()
+    res_lib, warn_lib, meta_lib, fixd_lib, crve_lib = dict(), dict(), dict(), dict(), dict()
     for study_name, ddfp_lib_fp in ddfp_lib_fp_d.items():
         log.info(f'\n\n{study_name}\n\n==================')
         res_lib[study_name] = dict()
         warn_lib[study_name] = dict()
+        meta_lib[study_name] = dict()
+        fixd_lib[study_name] = dict()
+        crve_lib[study_name] = dict()
         #=======================================================================
         # defaults
         #=======================================================================
@@ -178,7 +201,9 @@ def _01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d,
             log.info(f'\non ({i}/{ddfp_cnt}) %s' % ddf_name)
             
             
-            #load
+            #===================================================================
+            # #build cost-information---------
+            #===================================================================
             try:
                 res_lib[study_name][ddf_name], warn_lib[study_name][ddf_name] = ddfp_inputs_to_ci_from_dir(
                     curve_data_dir, 
@@ -191,9 +216,53 @@ def _01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d,
             except Exception as e:
                 raise IOError(f'failed on {ddf_name} w/\n    {e}')
             
+            
+            #===================================================================
+            # fixed costs-------
+            #===================================================================
+            ddfp_workbook_fp = get_filename_by_prefix(curve_data_dir, 'DDFwork')
+            fixd_lib[study_name][ddf_name] = ddfp_inputs_to_fixedCosts(ddfp_workbook_fp)
+            
+            #===================================================================
+            # compiled curve------
+            #===================================================================
+            #need this for comparison later
+            ddf = ddfp_lib_d[ddf_name+'_m2'].reset_index()
+            
+            #add depthLoc_key
+            id_loc = ddf.index[ddf[0].str.lower().str.contains('function scale').fillna(False)].item()            
+            ddf.loc[id_loc+1, 0] = 'exposure'
+            
+            #check
+            assert_CanFlood_ddf(ddf)
+            
+            #store
+            crve_lib[study_name][ddf_name] = ddf
+            
+            
+            #===================================================================
+            # extract metadata------
+            #===================================================================
+            #{'bldg_layout': 'default', 'basement_height_m': '1.8', 'scale_value_m2': '232.1'}
+            #load resulting curve
+            curve_ser = ddfp_lib_d[ddf_name+'_m2'].iloc[:,0]
+            
+            get_v = lambda x:float(_get_series_value_from_keys(curve_ser, x))
+            
+            try:
+                meta_lib[study_name][ddf_name] = {
+                    'bldg_layout':'default', 
+                    'basement_height_m':get_v(['base to main height']),
+                    'scale_value_m2':get_v(['estimate GFA (m2)']),
+                    'curve_name':ddf_name,                
+                    }
+            except Exception as e:
+                raise KeyError(f'failed on {ddf_name} w/\n    {e}')
+            
+            
             cnt+=1
             
-            #if cnt>3:break
+ 
         
         log.info(f'done w/ {study_name}')
         
@@ -202,7 +271,7 @@ def _01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d,
     #===========================================================================
     log.info(f'finished w/ {cnt}')
     
-    d_to_pick(res_lib, os.path.join(out_dir, f'DDFP_to_cc_lib.pkl'))
+    _d_to_pick({'ci':res_lib, 'fixed':fixd_lib, 'meta':meta_lib, 'crve':crve_lib}, os.path.join(out_dir, f'DDFP_to_cc_lib.pkl'))
     
     #write warnings
     dx = pd.concat({k:pd.DataFrame.from_dict(v) for k,v in warn_lib.items()}, names=['study_name', 'warning']).T.stack(level=0).swaplevel()
@@ -212,7 +281,7 @@ def _01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d,
     
     log.info(f'wrote warnings {dx.shape} to \n    {ofp}')
     
-    return res_lib
+    return res_lib, meta_lib
     
  
     
@@ -267,24 +336,142 @@ def get_filename_by_prefix(folder_path, prefix):
         raise ValueError(f"Multiple files starting with '{prefix}' found in {folder_path}")
 
     return os.path.join(folder_path, matching_files[0])
+
+
+
+def p02_build_CanCurve_batch(ci_df_lib, meta_lib, fixd_lib,
+                             
+                             out_dir=None,log_level=logging.INFO,
+                             ):
+    """build a batch of CanCurve ddfs from extracted data"""
+    #===========================================================================
+    # defaults
+    #===========================================================================
+    log = get_log_stream(level=log_level)
     
+    #===========================================================================
+    # loop and build each
+    #===========================================================================
+    res_lib=dict()
+    cnt=0
+    
+    for study_name, d0 in ci_df_lib.items():
+        res_lib[study_name] = dict()
+        log.info(f'\n\n==========================\n{study_name}\n=====================\n\n')
+        
+        for ddf_name, ci_df in d0.items():
+            log.info(f'\n\n{ddf_name}\n--------------------------')
+            
+            #===================================================================
+            # #pre-process
+            #===================================================================
+            #building meta
+            bldg_meta_d=meta_lib[study_name][ddf_name].copy()
+            
+            if pd.isnull(bldg_meta_d['basement_height_m']):
+                bldg_meta_d['basement_height_m'] = 2.7
+                
+                
+            #cost items
+            bx = ci_df['story']>0
+            if bx.any():
+                
+                log.warning(f'dropping {bx.sum()}/{len(bx)} multi-story')
+                ci_df = ci_df.loc[~bx, :]
+ 
+            
+            
+            #===================================================================
+            # run workflow
+            #===================================================================
+            try:
+                res_lib[study_name][ddf_name] = bldgs_workflow(ci_df, 
+                    curve_name=ddf_name, 
+                    bldg_meta_d=bldg_meta_d, 
+                    fixed_costs_d=fixd_lib[study_name][ddf_name],
+                    logger=log, 
+                    out_dir = os.path.join(out_dir, study_name, ddf_name))
+                
+            except Exception as e:
+                raise IOError(f'failed on \'{ddf_name}\'\n    {e}')
+            
+            cnt+=1
+            
+    #===========================================================================
+    # wrap
+    #===========================================================================
+    log.info(f'finuished on {cnt}')
+    
+    ofp = _d_to_pick(res_lib, os.path.join(out_dir, 'DDFP_CanCurve_batch.pkl'))
+    
+    return res_lib
+
+def p03_compare(DDFP_lib, CanCurve_lib,
+                             
+                             out_dir=None,log_level=logging.INFO,
+                             ):
+    """compare the curves compiled from teh two platforms"""
+    
+    #===========================================================================
+    # defaults
+    #===========================================================================
+    log = get_log_stream(level=log_level)
+    
+    #===========================================================================
+    # precheck
+    #===========================================================================
+    assert set(DDFP_lib.keys()).symmetric_difference(CanCurve_lib.keys())==set()
+    
+    #zip together
+    ddf_zip = [(key, DDFP_lib[key], CanCurve_lib[key]) for key in DDFP_lib.keys()]
+    #===========================================================================
+    # loop on study area
+    #==========================================================================
+    for study_name, DDFP_d, CC_d in ddf_zip:
+    
+        log.info(f'on {len(DDFP_d)} curves')
+        
+        assert set(DDFP_d.keys()).symmetric_difference(CC_d.keys())==set()
+        
+        #=======================================================================
+        # loop on each curver
+        #=======================================================================
+         
+    
+    
+ 
     
 if __name__=='__main__':
     
-    #build pickle of compiled DDFPs
-    #ddfp_lib = _01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d)
+    out_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare'
     
     
-    ddfp_lib = pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\DDFP_to_cc_lib.pkl')
+    #===========================================================================
+    # #build pickle of compiled DDFPs
+    #===========================================================================
+    #ddfp_lib = p01_build_ddfp_from_dir_noindex(ddfp_lib_fp_d, out_dir=out_dir)
     
     
+    ddfp_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\DDFP_to_cc_lib.pkl')
+      
+    ci_df_lib = ddfp_lib.pop('ci')
+    meta_lib = ddfp_lib.pop('meta')
+    fixd_lib = ddfp_lib.pop('fixed')
+       
+       
+     
+    #===========================================================================
+    # build curves using CanCurve   
+    #===========================================================================
+    #CanCurve_ddfs_lib = p02_build_CanCurve_batch(ci_df_lib, meta_lib, fixd_lib, out_dir=out_dir)
     
-    for study_name, d0 in ddfp_lib.items():
-        for ddf_name, df in d0.items():
-            """
-            view(df)
-            """
-            print(ci_df)
+    CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\DDFP_CanCurve_batch.pkl')
+    
+    
+    #===========================================================================
+    # compare
+    #===========================================================================
+    p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib)
     
     
     

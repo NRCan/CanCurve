@@ -8,7 +8,7 @@ core join, group, and scaling source code
 #===============================================================================
 # IMPORTS---------
 #===============================================================================
-import os, sys, platform
+import os, sys, platform, warnings
 import pandas as pd
 import numpy as np
 import sqlite3
@@ -26,7 +26,7 @@ from .parameters import (
  
 from .assertions import (
     assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db,
-    assert_bldg_meta_d,
+    assert_bldg_meta_d, assert_CanFlood_ddf,
     )
 
 from .. import __version__
@@ -356,7 +356,7 @@ class DFunc(object):
         ---------
         df_raw: pd.DataFrame
             >=2 column frame with
-                first column (name '0') containing indexers
+                first column (name '0') containing indexers (should loosen this)
                 second column containing values
                 additional columns used for 'curve_deviations'
                 
@@ -384,6 +384,7 @@ class DFunc(object):
         
 
         #slice and clean
+        """not sure why we require 0 and 1 in teh index... should loosen this"""
         df = df_raw.set_index(0, drop=True).dropna(how='all', axis=1)            
         
         #======================================================================
@@ -394,7 +395,7 @@ class DFunc(object):
         #get the value specifying the start of the dd
  
         depthLoc_key='exposure'
-        
+        assert depthLoc_key in df.index, f'missing depthLoc_key = \'{depthLoc_key}\''
         depth_loc = df.index.get_loc(depthLoc_key)
         
         boolidx = pd.Series(df.index.isin(df.iloc[depth_loc:len(df), :].index), index=df.index,
@@ -419,8 +420,8 @@ class DFunc(object):
         assert 'tag' in pars_d, '%s missing tag'%self.tabn
         assert isinstance(pars_d['tag'], str), 'bad tag parameter type: %s'%type(pars_d['tag'])
         
-        assert pars_d['tag']==self.tabn, 'tag/tab mismatch (\'%s\', \'%s\')'%(
-            pars_d['tag'], self.tabn)
+        if not  pars_d['tag']==self.tabn:
+            warnings.warn('tag/tab mismatch (\'%s\', \'%s\')'%(pars_d['tag'], self.tabn))
         
         #handle curve deviation
         if not curve_deviation=='base':
@@ -587,7 +588,7 @@ class DFunc(object):
         #=======================================================================
         miss_l = set(self.cdf_chk_d.keys()).difference(crv_d.keys())
         if not len(miss_l)==0:
-            log.error('dfunc \'%s\' missing keys: %s \n    %s'%(self.tabn, miss_l, self.curves_fp))
+            log.error('dfunc \'%s\' missing keys: %s \n    %s'%(self.tabn, miss_l, ''))
             return False
         
         #=======================================================================
@@ -619,7 +620,7 @@ class DFunc(object):
 #===============================================================================
 
 def c00_setup_project(
-        ci_fp,
+        ci_fp=None, ci_df=None,
         drf_db_fp=None,
         
         bldg_meta=None,
@@ -655,7 +656,7 @@ def c00_setup_project(
         defaults to value in settings_d
         
     settings_d: dict, optional
-        conatiner for settings values to apply to 'c00_settings'
+        project settings values to apply to 'project_settings' table
         defaults to settings_default_d (from params)
         
     
@@ -750,8 +751,12 @@ def c00_setup_project(
     #===========================================================================
     #===========================================================================
     # load costitem table
-    #=========================================================================== 
-    ci_df = load_ci_df(ci_fp, log=log)
+    #===========================================================================
+    if ci_df is None: 
+        ci_df = load_ci_df(ci_fp, log=log)
+    else:
+        assert ci_fp is None
+        ci_df = ci_df.copy()
     
     #===========================================================================
     # load depth-replacement-factor database
@@ -798,7 +803,7 @@ def c00_setup_project(
     
         
     #add column
-    ci_df['drf_intersect'] = ~bx #note this wriites as 0=False; 1=True
+    ci_df.loc[:, 'drf_intersect'] = ~bx #note this wriites as 0=False; 1=True
     
     #===========================================================================
     # setup project meta----------
@@ -832,10 +837,12 @@ def c00_setup_project(
         log.debug(f'loaded {len(fc_ser)} fixed costs')
         
         #check intersect
-        miss = set(fc_ser.index.values).difference(ci_df['story'].unique())
+        miss = set(ci_df['story'].unique()).difference(fc_ser.index.values)
         if not miss==set():
             raise KeyError(f'\'Storey\' values specified in the Fixed Costs table do not match those in the Cost Item Dataset'+\
                            '\n    ensure fixed costs are provided for each storey')
+            
+        fc_ser = fc_ser.loc[fc_ser.index.isin(ci_df['story'].unique())]
         
     else:
         fc_ser=None
@@ -974,6 +981,8 @@ def c02_group_story(proj_db_fp,
             ):
     """group by story and assemble DDF
     
+    NOTE: depth values come from the depth-replacement-factor database
+    
     
     Params
     ---------------
@@ -1066,7 +1075,11 @@ def c02_group_story(proj_db_fp,
         #=======================================================================
         # concat on story
         #=======================================================================
-        if len(ddf1.columns)==2:
+        #single story
+        if len(ddf1.columns)==1:
+            ddf2 = ddf1.copy()
+        
+        elif len(ddf1.columns)==2:
  
             assert isinstance(basement_height_m, float), f'multi-story requires \'basement_height_m\' value'
           
@@ -1102,7 +1115,9 @@ def c02_group_story(proj_db_fp,
             """
             
         else:
-            raise NotImplementedError('only 2 story curves are implemented')
+            #DDFP seems to have some 2 story curves...
+            #but this doesnt really make sense as the DRF only goes up to 2.7
+            raise NotImplementedError(f'cost-item data sets with {len(ddf1.columns)} stories are not supported')
             
  
         log.info(f'curves harmonized to {ddf2.shape}')
@@ -1243,16 +1258,12 @@ def c03_export(
         #=======================================================================
         # test
         #=======================================================================
+    #maniuplate frame to match CanFlood expectations
+    df1 = res_df.copy()
+    df1.columns = [0, 1]
         
-        try:
-            #maniuplate frame to match CanFlood expectations
-            df1 = res_df.copy()
-            df1.columns = [0, 1]
-            
-            #build        
-            wrkr.build(df1, log)
-        except Exception as e:
-            raise ValueError(f'DDF failed to build as a CanFlood.Dfunc w/ \n    {e}')
+    assert_CanFlood_ddf(df1)
+
         
     #===========================================================================
     # output

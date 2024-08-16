@@ -116,3 +116,23 @@ def force_open_dir(folder_path_raw, logger=None): #force explorer to open a fold
     except:
         logger.error('unable to open directory: \n %s'%dir)
         return False
+    
+    
+def get_out_dir(
+        home_dir = os.path.expanduser("~"),
+        sfx=None,
+        ):
+    
+    
+    base_dir = os.path.join(home_dir, 'CanCurve')
+    
+    if sfx is None:
+        out_dir = base_dir
+    else:
+        out_dir = os.path.join(base_dir, sfx)
+    
+    os.makedirs(out_dir, exist_ok=True)
+    
+ 
+    
+    return out_dir

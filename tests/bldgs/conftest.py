@@ -53,8 +53,7 @@ def fixed_costs_d(testCase):
 
 @pytest.fixture(scope='function')
 def bldg_meta_d(testCase):
-    d = bldg_meta_rqmt_df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
-    
+    d = bldg_meta_rqmt_df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()    
     
     return {k:convert_to_float(v) for k,v in d.items()}
   

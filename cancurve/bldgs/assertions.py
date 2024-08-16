@@ -156,8 +156,19 @@ def assert_bldg_meta_d(bldg_meta):
     for k,v in type_d.items():
         if not v in type(bldg_meta[k]).__name__:
             raise TypeError(f'unrecognized type on \'{k}\' ({type(bldg_meta[k])})')
+        
+
+def assert_CanFlood_ddf(df):
+    from cancurve.bldgs.core import DFunc
+    from cancurve.hp.logr import get_log_stream
     
- 
+    
+    log = get_log_stream()
+    with DFunc(tabn=df.iloc[0, 1], logger=log) as wrkr: 
+        try:            #build        
+            wrkr.build(df, log)
+        except Exception as e:
+            raise AssertionError(f'DDF failed to build as a CanFlood.Dfunc w/ \n    {e}')
  
 
  
