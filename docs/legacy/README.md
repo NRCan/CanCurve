@@ -44,7 +44,12 @@ The evaluation was carried out using the `./misc/DDFP_compare.py` script and emp
 - **p04_summary_plot**: create scatter plot of metrics for each study area.
 
 ## Discussion and Results
-results are provided in `./eval_results`, including summary plots for each study area like the below:
+results are provided in `./eval_results`, including individual comparison plots and summary plots for each study area like the below:
+
+<p align="center">
+  <img src="./eval_results/ddf_comparison_R_1-L-BD-CU_ABCA.png" alt="individual comparison example"> 
+</p>
+ 
 
 <p align="center">
   <img src="./eval_results/p04_summary_plot_AB.Calgary.png" alt="Summary Results"> 
@@ -54,6 +59,8 @@ Both the individual curve plots, and the summary plots show the two frameworks p
 Key differences include:
 - DDFP curves always start with an impact of zero and a depth of -2.7, while CanCurve uses the values from the DRF database.
 - some DDFP curves have a slightly lower maximum than CanCurve
+
+
 Overall, the differences are minor, and far less than the uncertainty in the underlying input data (and the implicit vulnerability assumptions).
 For example, where there are differences, they are generally less than 50$/m2.
 This is likely attributable to DDFP's application of room-based fixed costs vs. CanCurve's storey-based fixed costs.
