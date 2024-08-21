@@ -182,7 +182,11 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
                             write=True, 
                             ddf_name_l_subset=None,
                             ):
-    """convert DDFP to CanCurve format cost-item dataset for all curves in a directory"""
+    """convert DDFP to CanCurve format cost-item dataset for all curves in a directory
+    
+    extract data into CanCurve format (CostItem csv, fixed costs, metadata)
+    
+    """
     #===========================================================================
     # defaults
     #===========================================================================
