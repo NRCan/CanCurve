@@ -25,6 +25,7 @@ def bldgs_workflow(
         curve_name=None,
         settings_d=None,
         logger=None, out_dir=None,
+        plot=True,
         
         ):
     """run CanCurve buildings 4 step workflow (as a script)
@@ -69,12 +70,23 @@ def bldgs_workflow(
     #===========================================================================
     depth_rcv_df = c01_join_drf(proj_db_fp, log=logger)
     
+    if plot:
+        from cancurve.bldgs.plots import plot_c01_depth_rcv
+        fig = plot_c01_depth_rcv(depth_rcv_df, log=logger, fig_kwargs=dict(figsize=(10,10)))
+        fig.savefig(os.path.join(out_dir, 'plot_c01_depth_rcv.svg'))
+    
     #===========================================================================
     # group story
     #===========================================================================
     ddf3 = c02_group_story(proj_db_fp, log=logger, 
                     scale_m2=True,  #$/m2 curves
                     )
+    
+    #plot
+    if plot:
+        from cancurve.bldgs.plots import plot_c02_ddf
+        fig = plot_c02_ddf(ddf3, log=logger)
+        fig.savefig(os.path.join(out_dir, 'plot_c02_ddf.svg'))
     
     #===========================================================================
     # export

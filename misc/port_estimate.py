@@ -340,6 +340,56 @@ def _load_response_cat_data(ddfp_workbook_fp):
     
     return df1
 
+
+ 
+def _find_single_match_index(series: pd.Series, search_string: str) -> int:
+    """
+    Returns the index location of the search_string in the Series.
+    Asserts that there is exactly one match.
+    
+    :param series: Pandas Series in which to search
+    :param search_string: String to search for
+    :return: Index location (integer)
+    """
+    # Find the boolean mask of matches
+    matches = series.fillna('null').str.contains(search_string)
+    
+    # Get the indices of the matches
+    match_indices = matches[matches].index.tolist()
+    
+    # Assert that exactly one match is found
+    assert len(match_indices) == 1, f"Expected exactly one match, but found {len(match_indices)}."
+    
+    # Return the index of the match
+    return match_indices[0]
+
+
+def load_main_floor_area(ddfp_workbook_fp):
+    """load and extract the main floor area from the DDFwrk_grp2 tab"""
+    
+    df_raw = load_xls_with_pattern(ddfp_workbook_fp, pattern='DDFwrk_grp2')
+    df_raw.columns.name = None
+    df_raw.index.name = None
+    
+    #locate row
+    loc = _find_single_match_index(df_raw.iloc[:, 0], 'main floor area')
+    
+    result =  df_raw.iloc[loc, 1]
+    
+    assert isinstance(result, float)
+    assert result>0
+    assert result <1e6
+    
+    return result
+    
+    """
+    view(df_raw)
+    view(df_raw.iloc[:, 0])
+    """
+ 
+    
+    
+
 def ddfp_inputs_to_fixedCosts(ddfp_workbook_fp,
                               logger=None):
     """extract fixed cost data from DDFP workbook"""

@@ -760,6 +760,8 @@ def c00_setup_project(
     else:
         assert ci_fp is None
         ci_df = ci_df.copy()
+        
+    ci_df = ci_df.sort_values('story')
     
     #===========================================================================
     # load depth-replacement-factor database
@@ -767,6 +769,9 @@ def c00_setup_project(
     drf_df_raw = load_drf(drf_db_fp, log=log)
     
     """
+    view(ci_df)
+    ci_df.index
+    ci_df.columns
     drf_df_raw.index.unique('bldg_layout')
     """
     
@@ -977,12 +982,8 @@ def c01_join_drf(
     
 def c02_group_story(proj_db_fp,
             log=None,
-            scale_m2=None,
-            
-            basement_height_m=None, scale_value_m2=None,
-            
-            
- 
+            scale_m2=None,            
+            basement_height_m=None, scale_value_m2=None, 
             ):
     """group by story and assemble DDF
     
@@ -1130,11 +1131,8 @@ def c02_group_story(proj_db_fp,
         # scale
         #=======================================================================
         if scale_m2:
-
-            log.info(f'scaling by {scale_value_m2:.2f} m2')
-            
-            ddf3 = (ddf2/scale_value_m2).round(2)
-            
+            log.info(f'scaling by {scale_value_m2:.2f} m2')            
+            ddf3 = (ddf2/scale_value_m2).round(2)            
         else:
             ddf3=ddf2.round(2)
             
@@ -1274,10 +1272,11 @@ def c03_export(
         #=======================================================================
         # test
         #=======================================================================
+        
+        
     #maniuplate frame to match CanFlood expectations
     res_df = res_df.copy()
-    res_df.columns = [0, 1]
-        
+    res_df.columns = [0, 1]        
     assert_CanFlood_ddf(res_df)
 
         

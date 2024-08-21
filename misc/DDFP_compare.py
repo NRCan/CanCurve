@@ -33,19 +33,32 @@ from cancurve.parameters_matplotlib import font_size, cmap_default #set custom s
 # imports
 #===============================================================================
  
-import matplotlib.colors as mcolors
-import matplotlib.patches as patches
+ 
 import matplotlib.gridspec as gridspec
 
 #import tqdm #not part of Q 
 
-from misc.port_estimate import ddfp_inputs_to_ci, ddfp_inputs_to_fixedCosts
+from misc.port_estimate import ddfp_inputs_to_ci, ddfp_inputs_to_fixedCosts, load_main_floor_area
 from cancurve.hp.logr import get_new_file_logger, get_log_stream
 from cancurve.hp.basic import view_web_df as view
 from cancurve.bldgs.assertions import assert_CanFlood_ddf
 from cancurve.bldgs.core import DFunc
 
 from misc.bldgs_script_example import bldgs_workflow
+
+
+#===============================================================================
+# parameters-----
+#===============================================================================
+metric_label_d = {
+    'abc':'area between curves (m*CAD)',
+    'auc':'area under curves (m*CAD)',
+ 
+    }
+
+framework_label_d = {
+    'CC':'CanCurve', 'DDFP':'DDFP'
+    }
 #===============================================================================
 # DDFP data
 #===============================================================================
@@ -57,6 +70,9 @@ ddfp_lib_fp_d = {
 ddfp_lib_fp_d = {k:os.path.join(ddfp_data_dir, v) for k,v in ddfp_lib_fp_d.items()}
 
 
+#===============================================================================
+# helpers------
+#===============================================================================
 def _d_to_pick(d, filename):
     with open(filename, 'wb') as file:
         pickle.dump(d, file)
@@ -163,7 +179,8 @@ def _get_series_value_from_keys(s, labels):
 def p01_extract_DDFP(ddfp_lib_fp_d,
                             log_level=logging.INFO,
                             out_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare',
-                            write=True,
+                            write=True, 
+                            ddf_name_l_subset=None,
                             ):
     """convert DDFP to CanCurve format cost-item dataset for all curves in a directory"""
     #===========================================================================
@@ -206,10 +223,15 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
         #=======================================================================
         # collect names
         #=======================================================================
+        #if not ddf_name_l is None:
         #without the index, we need to build the unique list from teh tab names
         l = [e for e in ddfp_lib_d.keys() if not 'index' in e] #extract keys
         l = ['_'.join(e.split('_')[:-1]) for e in l] #drop suffix
         ddf_name_l = list(set(l)) #get unique set
+        
+        if not ddf_name_l_subset is None:
+            ddf_name_l = [e for e in ddf_name_l if e in ddf_name_l_subset]
+            
         
         #===========================================================================
         # loop on index
@@ -218,6 +240,7 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
         log.info(f'computing for {ddfp_cnt}')
         #for i, (tab_name, tab_df_raw) in enumerate(ddfp_lib_d.items()):
         for i, ddf_name in enumerate(ddf_name_l):
+            
  
                 
             #get data dir
@@ -278,11 +301,18 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
                 meta_lib[study_name][ddf_name] = {
                     'bldg_layout':'default', 
                     'basement_height_m':get_v(['base to main height']),
-                    'scale_value_m2':get_v(['estimate GFA (m2)']),
-                    'curve_name':ddf_name,                
+                    #'scale_value_m2':get_v(['estimate GFA (m2)']),
+                    #scale values on ddf tabs are wrong. need to pull thsi from DDFwrk_grp2
+                    'curve_name':ddf_name,
+                    'storeys':curve_ser['storeys']                
                     }
             except Exception as e:
                 raise KeyError(f'failed on {ddf_name} w/\n    {e}')
+            
+        
+            #scale area
+            scale_value_m2  = load_main_floor_area(ddfp_workbook_fp)
+            meta_lib[study_name][ddf_name]['scale_value_m2'] = scale_value_m2
             
             
             cnt+=1
@@ -296,7 +326,9 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
     #===========================================================================
     log.info(f'finished w/ {cnt}')
     
-    _d_to_pick({'ci':res_lib, 'fixed':fixd_lib, 'meta':meta_lib, 'crve':crve_lib}, os.path.join(out_dir, f'DDFP_to_cc_lib.pkl'))
+    collected_res_lib = {'ci':res_lib, 'fixed':fixd_lib, 'meta':meta_lib, 'crve':crve_lib}
+    
+    _d_to_pick(collected_res_lib, os.path.join(out_dir, f'DDFP_to_cc_lib.pkl'))
     
     #write warnings
     dx = pd.concat({k:pd.DataFrame.from_dict(v) for k,v in warn_lib.items()}, names=['study_name', 'warning']).T.stack(level=0).swaplevel()
@@ -306,7 +338,7 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
     
     log.info(f'wrote warnings {dx.shape} to \n    {ofp}')
     
-    return res_lib, meta_lib
+    return collected_res_lib
     
  
     
@@ -365,8 +397,8 @@ def get_filename_by_prefix(folder_path, prefix):
 
 
 def p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib,
-                             
-                             out_dir=None,log_level=logging.INFO,
+                          out_dir=None,log_level=logging.INFO,
+                          plot=True,
                              ):
     """build a batch of CanCurve ddfs from extracted data"""
     #===========================================================================
@@ -414,7 +446,7 @@ def p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib,
                     curve_name=ddf_name, 
                     bldg_meta_d=bldg_meta_d, 
                     fixed_costs_d=fixd_lib[study_name][ddf_name],
-                    logger=log, 
+                    logger=log, plot=plot,
                     out_dir = os.path.join(out_dir, study_name, ddf_name))
                 
             except Exception as e:
@@ -431,9 +463,9 @@ def p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib,
     
     return res_lib
 
-def p03_compare(DDFP_lib, CanCurve_lib,
-                             
-                             out_dir=None,log_level=logging.INFO,
+def p03_compare(DDFP_lib, CanCurve_lib, meta_lib,
+                out_dir=None,log_level=logging.INFO,
+                ddf_name_l=None,
                              ):
     """compare the curves compiled from teh two platforms"""
     
@@ -448,22 +480,38 @@ def p03_compare(DDFP_lib, CanCurve_lib,
     assert set(DDFP_lib.keys()).symmetric_difference(CanCurve_lib.keys())==set()
     
     #zip together
-    ddf_zip = [(key, DDFP_lib[key], CanCurve_lib[key]) for key in DDFP_lib.keys()]
+    ddf_zip = [(key, DDFP_lib[key], CanCurve_lib[key], meta_lib[key]) for key in DDFP_lib.keys()]
+    
+    
     #===========================================================================
     # loop on study area
     #==========================================================================
-    for study_name, DDFP_d, CC_d in ddf_zip:
+    res_d = dict()
+    #metric_lib = {k:dict() for k in DDFP_lib.keys().keys()}
+    for study_name, DDFP_d, CC_d, meta_d0 in ddf_zip:
     
         log.info(f'on {len(DDFP_d)} curves')
         
+        #pprint.pprint(list(DDFP_d.keys()))
+        
         assert set(DDFP_d.keys()).symmetric_difference(CC_d.keys())==set()
         
+ 
+        metric_lib = dict()
+        
         #=======================================================================
-        # loop on each curver
+        # plot and calc each curve
         #=======================================================================
         for ddf_name, DDFP_df in DDFP_d.items():
+            
+            #selection
+            if not ddf_name_l is None:
+                if not ddf_name in ddf_name_l:continue
+            
+            
             log.info(ddf_name)
             CC_df = CC_d[ddf_name]
+            meta_d = meta_d0[ddf_name]
             
             """
             write test data
@@ -477,15 +525,26 @@ def p03_compare(DDFP_lib, CanCurve_lib,
             """
             
             
-            plot_and_eval_ddfs({'DDFP':DDFP_df, 'CC':CC_df},
+            metric_lib[ddf_name] = plot_and_eval_ddfs({'DDFP':DDFP_df, 'CC':CC_df},
                                out_dir = os.path.join(out_dir, study_name),
-                               title=f'{study_name} {ddf_name}')
+                               title=f'{study_name} {ddf_name}',
+                               meta_d=meta_d,
+                               )
             
-            raise IOError("""
-            stopped here. something is wrong with the 2-story curves.
-            not sure if this has to do with how structure-level/split category cost items are handled
-            need to investigate more (case4_R2)
-            """)
+            
+        #=======================================================================
+        # summary
+        #=======================================================================
+        res_d[study_name] = pd.concat(metric_lib, names=['ddf_name'])
+        
+    #===========================================================================
+    # write
+    #===========================================================================
+    _d_to_pick(res_d, os.path.join(out_dir, 'metric_dx.pkl'))
+    
+    return res_d
+            
+ 
             
  
             
@@ -516,6 +575,7 @@ def _calc_metric_df(serx):
 def plot_and_eval_ddfs(ddf_d,
                    log=None, out_dir=None,
                    title=None,
+                   meta_d=dict(),
                    ):
     """plot and evaluate a list of similar ddfs"""
     
@@ -558,6 +618,23 @@ def plot_and_eval_ddfs(ddf_d,
     
     if not title is None:
         ax.set_title(title)
+        
+    #===========================================================================
+    # add meta text
+    #===========================================================================
+    # Convert dictionary to string with one entry per row
+    info_str = '\n'.join([f'{key}: {value}' for key, value in meta_d.items()])
+    
+    # Add the string to the bottom right of the axis
+    # Use transform=ax.transAxes to position text relative to the axis (0, 0 is bottom-left, 1, 1 is top-right)
+    ax.text(
+        0.9, 0.1, info_str,
+        verticalalignment='bottom', horizontalalignment='right',
+        transform=ax.transAxes,
+        #fontsize=10,
+        bbox=dict(facecolor='white', alpha=0.1)
+    )
+    
     #===========================================================================
     # add a table
     #===========================================================================
@@ -589,7 +666,7 @@ def plot_and_eval_ddfs(ddf_d,
     
     log.info(f'wrote figure to \n    {ofp}')
     
-    return ofp
+    return metric_df
     
     
  
@@ -614,6 +691,12 @@ def _area_between_curves(series):
     series1 = series.xs(groups[0], level=0)
     series2 = series.xs(groups[1], level=0)
     
+    """
+    plt.plot(series1)
+    plt.plot(series2)
+    
+    """
+    
     # Determine the union of all exposure points (the x-axis values)
     common_exposure = np.union1d(series1.index, series2.index)
     
@@ -624,12 +707,10 @@ def _area_between_curves(series):
     interpolated_series1 = interp_func1(common_exposure)
     interpolated_series2 = interp_func2(common_exposure)
     
-    # Compute the absolute difference between the two interpolated series
-    difference = np.abs(interpolated_series1 - interpolated_series2)
-    
+ 
     # Compute the area between the curves using the trapezoidal rule
  
-    return scipy.integrate.trapezoid(difference, common_exposure)
+    return scipy.integrate.trapezoid(interpolated_series1 - interpolated_series2, x=common_exposure)
  
     
 def plot_DFuncs(DFunc_d, 
@@ -716,7 +797,171 @@ def convert_CanFlood_to_CanCurve_ddf(df_raw, log=None):
     # clean
     #===========================================================================
     return ddf_cf_clean.rename(columns={'exposure':'depths_m', 'impact':'combined'}).set_index('depths_m')
+
+def p04_summary_plot(dx,
+                     out_dir=None,log_level=logging.INFO,
+                     title='summary_plot',
+                     
+                     ):
+    """summary plots on metrics
+    
+    
+    
+    
+    
+    >>> dx
+    framework_name                          CC         DDFP
+    ddf_name         metric                                
+    R_2-S-BU-EC_ABCA impact_max    1340.210000  1362.730805
+
+                     auc           3367.945800  4170.284578
+    ...                                    ...          ...
+    R_2-M-C-ST_ABCA  impact_min     178.860000     0.000000
+
+                     abc            529.911675   529.911675
+    
+    [174 rows x 2 columns]
+    
+    
+    
+    
+    
+    """
+ 
+    #===========================================================================
+    # defaults
+    #===========================================================================
+    log = get_log_stream(level=log_level)
+    
+    """
+    view(dx)
+    """
+    
+    #===========================================================================
+    # setup figutre
+    #===========================================================================
+    metric_l = dx.index.unique('metric')
+    
+    
+    # Create a figure with custom dimensions and GridSpec layout
+    fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(15, 10), sharey=False, sharex=False)
+    
+    
+ 
+    # Initialize a dictionary to map each metric to its corresponding axis
+    ax_d = {metric: ax for metric, ax in zip(metric_l, axes.flatten())}
+    
+    # Turn off unused axes
+    for ax in axes[len(metric_l):]:
+        ax.axis('off')
+
+    #===========================================================================
+    # populate figure
+    #===========================================================================
+    for metric, gdf in dx.groupby(level='metric'):
+        # Retrieve axis
+        ax = ax_d[metric]
         
+        xar, yar = gdf.iloc[:,0].values, gdf.iloc[:,1].values
+        
+        
+        #=======================================================================
+        # plot data-----
+        #=======================================================================
+        ax.plot(xar, yar, marker='x', color='black', linestyle='none')
+        
+        #1:1 line
+        
+        # Determine the range for both axes
+        min_val = min(min(xar), min(yar))
+        max_val = max(max(xar), max(yar))
+        
+        
+        linspace_ar = np.linspace(min_val, max_val, 2)
+        ax.plot(linspace_ar, linspace_ar, linewidth=0.5, label='1:1', color='red')
+        
+        #=======================================================================
+        # post-----
+        #=======================================================================
+        
+
+
+
+        #adjust axis
+        # Calculate the expansion factor (e.g., 1% of the range)
+        expansion = (max_val - min_val) * 0.01
+        
+        # Set identical limits for both axes, applying the expansion factor
+        ax.set_xlim(min_val - expansion, max_val + expansion)
+        ax.set_ylim(min_val - expansion, max_val + expansion)
+        
+        
+        # Set square aspect ratio
+        ax.set_aspect('equal', 'box')
+        
+        #add meta
+ 
+        meta_d = {
+            'rmse': np.sqrt(np.mean((xar - yar) ** 2)),
+            }
+        info_str = '\n'.join([f'{key}: {value:.2f}' for key, value in meta_d.items()])
+    
+        # Add the string to the bottom right of the axis
+        # Use transform=ax.transAxes to position text relative to the axis (0, 0 is bottom-left, 1, 1 is top-right)
+        ax.text(
+            0.9, 0.1, info_str,
+            verticalalignment='bottom', horizontalalignment='right',
+            transform=ax.transAxes,
+            #fontsize=10,
+            bbox=dict(facecolor='white', alpha=0.1)
+        )
+        
+        
+        
+ 
+        # Set the title for the subplot
+        if metric in metric_label_d:
+            ax_lab = metric_label_d[metric]
+        else:
+            ax_lab= metric
+        ax.set_title(ax_lab)
+        
+        
+        #set labels
+        xlab = gdf.columns[0]
+        if xlab in framework_label_d:
+            xlab = framework_label_d[xlab]
+        ax.set_xlabel(xlab)
+        
+        # For y-axis label
+        ylab = gdf.columns[1]  # Example column name for y-axis
+        if ylab in framework_label_d:
+            ylab = framework_label_d[ylab]
+        ax.set_ylabel(ylab)
+        
+    #===========================================================================
+    # post 
+    #===========================================================================
+    
+ 
+    
+    # Adjust layout to avoid overlap
+    #plt.tight_layout(rect=[0, 0, 1, 0.95])  # Adjust rect to accommodate the main title
+    fig.suptitle(title)
+    
+    #===========================================================================
+    # write
+    #===========================================================================
+    ofp =os.path.join(out_dir, f'p04_summary_plot_{title}.svg')
+    fig.savefig(ofp)
+    
+    log.info(f'wrote figure to \n    {ofp}')
+    
+    return ofp
+    
+ 
+    
+ 
     
  
     
@@ -728,35 +973,41 @@ if __name__=='__main__':
         os.makedirs(od, exist_ok=True)
         return od
     
-    
+    #ddf_name_l = ['R_2-L-BD-CU_ABCA']
+    ddf_name_l=None
     #===========================================================================
-    # #build pickle of compiled DDFPs
-    #===========================================================================
-    ddfp_lib = p01_extract_DDFP(ddfp_lib_fp_d,out_dir=god('p01'))
-    
-    
-    #===========================================================================
-    # ddfp_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p01\DDFP_to_cc_lib.pkl')
+    # #===========================================================================
+    # # #build pickle of compiled DDFPs
+    # #===========================================================================
+    #ddfp_lib = p01_extract_DDFP(ddfp_lib_fp_d,out_dir=god('p01'),ddf_name_l_subset=ddf_name_l)
+    # 
+    # 
+    ddfp_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p01\DDFP_to_cc_lib.pkl')
+        
+    ci_df_lib = ddfp_lib.pop('ci')
+    meta_lib = ddfp_lib.pop('meta')
+    fixd_lib = ddfp_lib.pop('fixed')
+    #     
+    #     
     #   
-    # ci_df_lib = ddfp_lib.pop('ci')
-    # meta_lib = ddfp_lib.pop('meta')
-    # fixd_lib = ddfp_lib.pop('fixed')
-    #    
-    #    
-    #  
     # #===========================================================================
     # # build curves using CanCurve   
     # #===========================================================================
-    # CanCurve_ddfs_lib = p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib, out_dir=god('p02'))
-    # 
-    # CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p02\DDFP_CanCurve_batch.pkl')
-    # 
-    # 
-    # #===========================================================================
-    # # compare
-    # #===========================================================================
-    # p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib, out_dir=god('p03'))
+    #CanCurve_ddfs_lib = p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib, out_dir=god('p02'))
+    #  
+    CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p02\DDFP_CanCurve_batch.pkl')
+     
+     
     #===========================================================================
+    # compare
+    #===========================================================================
+    #metric_dx_d = p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib, meta_lib, out_dir=god('p03'),ddf_name_l = ddf_name_l)
+    
+    metric_dx_d = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p03\metric_dx.pkl')
+    
+    for k,dx in metric_dx_d.items():
+        p04_summary_plot(dx, out_dir = god(f'p03'), title=k)
+        
     
     
     
