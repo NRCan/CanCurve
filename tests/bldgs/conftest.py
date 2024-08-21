@@ -3,7 +3,7 @@ Created on Apr. 28, 2024
 
 @author: cef
 '''
-import pytest, os, shutil, random
+import pytest, os, shutil, random, logging, sys
 
 from cancurve.hp.basic import find_single_file_by_extension, convert_to_number, convert_to_float
 
@@ -20,6 +20,10 @@ test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 #===============================================================================
 # fixtrues--------
 #===============================================================================
+
+ 
+
+
 @pytest.fixture(scope='function')   
 def proj_db_fp(testCase, testPhase, tmp_path):
     """retrieve the approraite project database file for hte test case (and make a copy)"""
@@ -44,13 +48,14 @@ def ci_fp(testCase):
 
 @pytest.fixture(scope='function')
 def fixed_costs_d(testCase):
+    if not testCase in fixed_costs_master_d:
+        raise AssertionError(f'test case \'{testCase}\' missing from fixed_costs_master_d')
     return fixed_costs_master_d[testCase]
         
 
 @pytest.fixture(scope='function')
 def bldg_meta_d(testCase):
-    d = bldg_meta_rqmt_df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
-    
+    d = bldg_meta_rqmt_df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()    
     
     return {k:convert_to_float(v) for k,v in d.items()}
   

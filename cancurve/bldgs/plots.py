@@ -372,7 +372,13 @@ def plot_c01_depth_rcv(df_raw,
     
     story_l = df_raw.index.unique('story').tolist()
     ax_ar  = figure.subplots(ncols=1, nrows=len(story_l), sharey=True, sharex=True)
-    ax_d = dict(zip(story_l, ax_ar.flat))
+    
+    #convert to dictionary
+    if isinstance(ax_ar, np.ndarray):
+        ax_d = dict(zip(story_l, ax_ar.flat))
+    else:
+        ax_d = {story_l[0]:ax_ar}
+ 
     
     #===========================================================================
     # loop and plot
