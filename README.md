@@ -7,6 +7,7 @@ CanCurve is an open-source tool for developing flood depth-damage (stage-damage)
  
  
 ## Updates
+- 2024-08-22: priority A and B fixes [v0.1.0](https://github.com/NRCan/CanCurve/releases/tag/v0.1.0)
 - 2024-05-09: small fixes and updates based on initial comments
 - 2024-05-01: initial working release (un tested) [v0.0.1](https://github.com/NRCan/CanCurve/releases/tag/v0.0.1)
 
