@@ -18,7 +18,7 @@ from tests.conftest import test_data_dir_master as parent_tdata_dir
 test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
 
-from cancurve.bldgs.dialog_test_scripts import fixed_costs_master_d
+from cancurve.bldgs.dialog_test_scripts import fixed_costs_master_d #eventually copy this back
 
 from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 

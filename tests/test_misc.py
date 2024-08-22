@@ -75,9 +75,9 @@ def test_plot_and_eval_ddfs(ddf_d, tmpdir, logger):
     
     
 #===============================================================================
-# file-based tests 
+# file-based tests ------
 #===============================================================================
-from .data.bldgs.misc import load_tests_cases_from_file, test_cases_l
+from .data.bldgs_data_scripts import load_tests_cases_from_file, test_cases_l
 load_tests_cases_from_file() #setup file-based test cases
 
 

@@ -32,7 +32,9 @@ test_data_dir_master = os.path.join(plugin_dir, 'dev_test_data') #needs to live 
 
 #test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
-"""this needs to live here so it is accessible by tests after deployment"""
+"""this needs to live here so it is accessible by tests after deployment
+note the underlying data needs to be duplicated in ./dev_test_data and ./tests/data/bldgs
+"""
 fixed_costs_master_d = {
         'case1':{0:10000.0, -1:8000.0},
         'case2':None,

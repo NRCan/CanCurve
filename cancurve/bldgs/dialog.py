@@ -166,7 +166,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             
             #add the cases 
             from .dialog_test_scripts import (
-                test_cases_l, test_data_dir_master
+                test_cases_l, test_data_dir_master, fixed_costs_master_d
                 )
 
             

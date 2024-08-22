@@ -17,7 +17,7 @@ from cancurve.bldgs.assertions import assert_bldg_meta_d
 #===============================================================================
 # data
 #===============================================================================
-from tests.data.bldgs.misc import fixed_costs_master_d, test_data_dir_master#, bldg_meta_rqmt_df_test
+from tests.data.bldgs_data_scripts import fixed_costs_master_d, test_data_dir_master#, bldg_meta_rqmt_df_test
 
 
 #===============================================================================
@@ -61,7 +61,7 @@ def fixed_costs_d(testCase):
 
 @pytest.fixture(scope='function')
 def bldg_meta_d(testCase):
-    from tests.data.bldgs.misc import bldg_meta_rqmt_df_test
+    from tests.data.bldgs_data_scripts import bldg_meta_rqmt_df_test
     
     d = _get_bldg_meta_d(testCase, df=bldg_meta_rqmt_df_test)
     return d
