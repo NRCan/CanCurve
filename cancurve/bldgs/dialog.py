@@ -44,7 +44,7 @@ from PyQt5.QtWidgets import (
 
 from ..config import dev_mode
 
-from ..hp.basic import convert_to_number, force_open_dir
+from ..hp.basic import convert_to_number, force_open_dir, today_str
 from ..hp.plug import plugLogger
 from ..hp.qt import (
         DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
@@ -87,20 +87,22 @@ assert os.path.exists(ui_fp)
 FORM_CLASS, _ = uic.loadUiType(ui_fp, resource_suffix='')
 
 class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
+    
+
+    
+    
     def __init__(self, 
                  parent=None, #not sure what this is supposed to be... 
                  iface=None,
                  debug_logger=None, #testing only
                  pluginObject=None, #actual parent
-                 show_plots=True,
+ 
                  ):
         """Dialog constructor
         
         Params
         ------
-        show_plots: bool, True
-            whether to call plt.show()
-            useful for tests
+ 
             
         """
         super(BldgsDialog, self).__init__(parent)
@@ -113,7 +115,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self.pluginObject=pluginObject
         self.iface=iface
-        self.show_plots=show_plots
+ 
         
         #setup logger
         self.logger = plugLogger(self.iface, parent=self, statusQlab=self.progressText,
@@ -132,11 +134,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
  
         
     def connect_slots(self):
-        """
-        using the cointaier (dict) self.launch_actions to store functions
-            that should be called once the dialog is launched
-            see self.launch()
-        """
+        """on launch of ui, populate and connect"""
+ 
         log = self.logger.getChild('connect_slots')
         log.debug('connecting slots')
  
@@ -165,8 +164,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             
             #add the cases 
             from .dialog_test_scripts import (
-                test_cases_l, fixed_costs_master_d, test_data_dir_master
+                test_cases_l, test_data_dir_master, fixed_costs_master_d
                 )
+
+            
             
             from ..hp.basic import find_single_file_by_extension
             
@@ -234,9 +235,19 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         
         #=======================================================================
+        # shortcuts
+        #=======================================================================
+        #shortcut to retrieve fixed costs per-story
+        #maybe this should go elsewhere?
+        self.fixed_costs_widget_d = {
+            -1:self.doubleSpinBox_tab3dataInput_sm1,
+            0:self.doubleSpinBox_tab3dataInput_s0
+            }
+        
+        #=======================================================================
         # populate ui
         #=======================================================================
-        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)
+        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp) #DRF default
         self.lineEdit_wdir.setText(home_dir)
         
         self.pushButton_wd_open.clicked.connect(
@@ -265,6 +276,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 
         self.pushButton_wd.clicked.connect(pushButton_wd_QFileDialog)
         
+        
+        
+        
         #cost item browse
         def pushButton_tab3dataInput_cifp_QFileDialog():
             filename, _ = QFileDialog.getOpenFileName(
@@ -274,8 +288,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 "comma separated values (*.csv)"  # Example file filters
                 )
             if filename:
-                self.lineEdit_tab3dataInput_cifp.setText(filename)
- 
+                self.lineEdit_tab3dataInput_cifp.setText(filename) 
         
         self.pushButton_tab3dataInput_cifp.clicked.connect(pushButton_tab3dataInput_cifp_QFileDialog)
         
@@ -289,8 +302,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 "sqlite database files (*.db)"  # Example file filters
                 )
             if filename:
-                self.lineEdit_tab3dataInput_drfFp.setText(filename)
- 
+                self.lineEdit_tab3dataInput_drfFp.setText(filename) 
         
         self.pushButton_tab3dataInput_drfFp.clicked.connect(pushButton_tab3dataInput_drfFp_QFileDialog)
         
@@ -332,6 +344,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         #assign the function as an action to be enabled anytime the radio button is checked
         self.radioButton_tab4actions_runControl_individ.toggled.connect(toggle_actions_enabled)
+        
+        #connect plot toggler
+        self.pushButton_tab4actions_checkPlots.clicked.connect(self.action_tab4actions_checkPlots)
         
         
         #=======================================================================
@@ -437,7 +452,20 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 pb.setValue(0)
                 
             
+    def action_tab4actions_checkPlots(self):
+        """toggle all plot checkmarks"""
+        for wName in [
+            'checkBox_tab4actions_step1_ciPlot',
+            'checkBox_tab4actions_step1_drfPlot',
+            'checkBox_tab4actions_step2_plot',
+            'checkBox_tab4actions_step3_plot',
+            ]:
             
+            # Get the widget based on the attribute name
+            checkbox = getattr(self, wName)
+            
+            # Toggle the checked state of the checkbox widget
+            checkbox.toggle()
  
         
         
@@ -504,6 +532,21 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     def _launch_dialog_dbMismatch(self, msg): 
         self.dialog_dbMismatch = dbMismatchDialog(message=msg)  
         self.dialog_dbMismatch.exec_() # Show modally
+        
+    def _write_fig(self, fig, prefix, log=None, out_dir=None):
+        if self.checkBox_tab4actions_saveFig.isChecked():
+            if out_dir is None: out_dir = self.lineEdit_wdir.text()
+            fig_ofp = os.path.join(out_dir, f'{prefix}_{today_str}.svg')
+            fig.savefig(fig_ofp)
+            log.info(f'saving plot to {fig_ofp}')
+            
+            return fig_ofp
+        
+    def _launch_plt(self, log):
+        
+        if self.checkBox_tab4actions_launchPlot.isChecked():
+            log.info(f'launching matplotlib plot dialog')
+            plt.show()
 
     def _run_c00_setup_project(self, 
                                logger=None, out_dir=None):
@@ -527,6 +570,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         
         ci_fp =         self.lineEdit_tab3dataInput_cifp.text()
+        
+        assert not ci_fp=='', f'no costItem filepath specified'
+        
         drf_db_fp =     self.lineEdit_tab3dataInput_drfFp.text()        
         
         #curve_name = self.lineEdit_di_curveName.text() in settings_d
@@ -573,33 +619,36 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             }
         
         #setup both
-        show_plot=False
-        for k,v in cbox_d.items():
-            if v['cbox'].isChecked():
-                plt.close('all')
-                show_plot=True
-                break
+        #=======================================================================
+        # show_plot=False
+        # for k,v in cbox_d.items():
+        #     if v['cbox'].isChecked():
+        #         plt.close('all')
+        #         show_plot=True
+        #         break
+        #=======================================================================
  
-            
-        if show_plot:
-            #loop and plots
-            for i, (k,d) in enumerate(cbox_d.items()):
-                log.info(f'plotting \'{k}\'')
-                if d['cbox'].isChecked():
-                    
-                    #load the function
-                    if k=='ci':
-                        from .plots import plot_c00_costitems as func
-                    elif k=='drf':
-                        from .plots import plot_c00_DRF as func
-                    else:
-                        raise KeyError()
-                    
-                    #call
-                    func(d['df'], log=log, figure=plt.figure(10+i))
-                    
-            log.info(f'launching matplotlib plot dialog')
-            if self.show_plots: plt.show()
+ 
+        for i, (k,d) in enumerate(cbox_d.items()):
+            log.info(f'plotting \'{k}\'')
+            if d['cbox'].isChecked():
+                
+                #load the function
+                if k=='ci':
+                    from .plots import plot_c00_costitems as func
+                elif k=='drf':
+                    from .plots import plot_c00_DRF as func
+                else:
+                    raise KeyError()
+                
+                #call
+                fig = func(d['df'], log=log, figure=plt.figure(10+i))
+                
+                self._write_fig(fig, f'plot_c00_{k}', log=log, out_dir=out_dir)
+        
+                
+        
+            self._launch_plt(log)
                 
         
                     
@@ -638,6 +687,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self._read_db(self._get_proj_db_fp(), self.logger)
 
+
+
+
     def _run_c01_join_drf(self, logger=None):
         """retrive and run project setup
         
@@ -652,7 +704,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         progress.setValue(5)
         #=======================================================================
-        # run
+        # run------
         #=======================================================================
         from .core import c01_join_drf as func
         progress.setValue(10)
@@ -660,15 +712,20 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         progress.setValue(70)
         #=======================================================================
-        # plot
+        # plot------
         #=======================================================================
         if self.checkBox_tab4actions_step2_plot.isChecked():
-            plt.close('all')
+            #plt.close('all')
             log.info(f'plotting depth_rcv_df')
             from .plots import plot_c01_depth_rcv 
-            plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log)
-            log.info(f'launching matplotlib plot dialog')
-            if self.show_plots: plt.show()
+            fig = plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log)
+            
+            
+            #write
+            self._write_fig(fig, 'plot_c01', log=log)
+            
+            self._launch_plt(log)
+ 
         
         #=======================================================================
         # wrap
@@ -708,7 +765,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         progress.setValue(5)
     
         #=======================================================================
-        # run
+        # run------
         #=======================================================================
         from .core import c02_group_story as func
         progress.setValue(10)
@@ -716,10 +773,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         progress.setValue(70)
         #=======================================================================
-        # plot
+        # plot--------
         #=======================================================================
         if self.checkBox_tab4actions_step3_plot.isChecked():
-            plt.close('all')
+            #plt.close('all')
             log.info(f'plotting ddf')
             
             #retrieve meta
@@ -748,9 +805,12 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 
  
              
-            plot_c02_ddf(ddf, figure=plt.figure(3), log=log,ylabel=ylabel)
-            log.info(f'launching matplotlib plot dialog')
-            if self.show_plots: plt.show() 
+            fig = plot_c02_ddf(ddf, figure=plt.figure(3), log=log,ylabel=ylabel)
+ 
+            self._write_fig(fig, 'plot_c02_ddf', log=log)            
+            
+            self._launch_plt(log)
+ 
         
         #=======================================================================
         # wrap
@@ -778,7 +838,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self.logger.push(f'Step 4 complete and exported DDF to {ofp}')
     
-    def _run_c03_export(self, logger=None):
+    def _run_c03_export(self, logger=None, out_dir=None):
         """retrieve and run export
     
         re-factored so we can call it from multiple push buttons
@@ -786,6 +846,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         if logger is None: logger = self.logger
         log = logger.getChild('_run')
         
+        if out_dir is None: out_dir = self.lineEdit_wdir.text()
         proj_db_fp = self._get_proj_db_fp() 
         
         progress = self.progressBar_tab4actions_step4 #progress bar for this function
@@ -799,7 +860,19 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         from .core import c03_export as func
         progress.setValue(10)
         
-        res_df, ofp =  func(proj_db_fp, log=log)
+        res_df, ofp =  func(proj_db_fp, log=log, out_dir=out_dir)
+        
+        #=======================================================================
+        # post
+        #=======================================================================
+        if self.checkBox_tab4actions_step4_launch.isChecked():
+            progress.setValue(80)
+            log.info(f'attempting to launch result with system default program')
+            try:
+                os.startfile(ofp)
+            except Exception as e:
+                log.error(f'failed to launch file w/ \n    {e}')
+
         
         #=======================================================================
         # wrap
@@ -906,7 +979,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             subset='varName_ui').set_index('varName_ui')
             
         miss_s = set(df.index).symmetric_difference(bldg_meta_d.keys())
-        assert miss_s==set(), f'bldg_meta mismatch from expectations'
+        if not miss_s==set():
+            raise KeyError(f'bldg_meta mismatch from expectations\n    {miss_s}')
         
         #typeset
         for k, type_str in df['type'].to_dict().items():
@@ -933,6 +1007,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             bldg_meta_d['scale_value_m2'] = bldg_meta_d['sizeOrAreaValue']
         else:
             raise NotImplementedError(bldg_meta_d['sizeOrAreaUnits'])
+        
+        #not sure why I set it up to require excplit linking between ui and core vars...
+        bldg_meta_d['scale_factor'] = bldg_meta_d['scaleFactor']
             
         #=======================================================================
         # check expectations
@@ -941,6 +1018,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         req_d = {k:eval(v) for k,v in req_d.items()}
         
         for k,type_class in req_d.items():
+            assert k in bldg_meta_d, k
             assert isinstance(bldg_meta_d[k], type_class), f'bad type on {k}'
             
         
@@ -951,10 +1029,18 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
     def _get_fixed_costs(self, logger=None):
         """retireve fixed costs from 'Data Input' tab"""
-        df_raw =  get_tabelWidget_data(self.tableWidget_tab3dataInput_fixedCosts)
-        
-        return df_raw.astype(float).set_index(df_raw.columns[0]).iloc[:, 0].to_dict()
  
+        d = {k:v.value() for k,v in self.fixed_costs_widget_d.items()}
+        
+        #check it
+        for k,v in d.items():
+            assert isinstance(k, int)
+            if not isinstance(v, float):
+                raise TypeError(f'got unexpected type on fixed Data Input > Fixed Costs (story {k})')
+            
+        return d
+ 
+            
  
         
     def _get_settings(self, logger=None):

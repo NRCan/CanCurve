@@ -1,0 +1,633 @@
+cat,sel,group_code,rcv,story,desc
+APP,CT+,kitchen,997.94,0,Cooktop - electric - High grade
+APP,DW+,kitchen,1307.38,0,Dishwasher - High grade
+APP,MWS,kitchen,624.01,0,Microwave oven - over range w/built-in hood
+APP,RF22,kitchen,1190.59,0,Refrigerator - top freezer - 22 to 24 cf
+APP,RGDI,kitchen,2028.73,0,Range - drop in
+APP,WL,kitchen,78.96,0,Appliance water line - 1/4in
+CAB,CTFL,bath,171.69,1,Countertop - flat laid plastic laminate
+CAB,CTFL,bath2,171.69,0,Countertop - flat laid plastic laminate
+CAB,CTFL,bath3,228.92,1,Countertop - flat laid plastic laminate
+CAB,CTFL++,kitchen,1769.32,0,Countertop - flat laid plastic laminate - Premium grade
+CAB,CTFSPL4,bath,34.7,1,4in backsplash for flat laid countertop
+CAB,CTFSPL4,bath2,34.7,0,4in backsplash for flat laid countertop
+CAB,CTFSPL4,bath3,46.28,1,4in backsplash for flat laid countertop
+CAB,CTPF,kitchen,573.8,0,Countertop - post formed plastic laminate
+CAB,CUW36,kitchen,4031.8,0,Custom cabinets - wall units - 36in tall
+CAB,FLOW,kitchen,6009.36,0,Cabinetry - laminate lower (base) units
+CAB,KNPL,kitchen,390.46,0,Cabinet knob or pull
+CAB,LOW,kitchen,2357.38,0,Cabinetry - lower (base) units
+CAB,UP,laundryroom,960.79,1,Cabinetry - upper (wall) units
+CAB,VAN,bath,832.68,1,Vanity
+CAB,VAN,bath2,832.68,0,Vanity
+CAB,VAN,bath3,1110.24,1,Vanity
+CNC,PIER,deck,979.76,0,Concrete pier or footing with post anchor
+DMO,DUMP<,structurelev,4896.0,0,Dumpster load - Approx. 12 yards. 1-3 tons of debris
+DOR,AV,bath,438.11,1,Interior door unit
+DOR,AV,bath2,438.11,0,Interior door unit
+DOR,AV,bath3,438.11,1,Interior door unit
+DOR,AV,bedroom,438.11,1,Interior door unit
+DOR,AV,bedroom2,438.11,1,Interior door unit
+DOR,AV,bedroom3,438.11,1,Interior door unit
+DOR,AV,bedroom4,438.11,1,Interior door unit
+DOR,AV,laundryroom,438.11,1,Interior door unit
+DOR,AV,structurelev,876.22,0,Interior door unit
+DOR,AV,structurelev,438.11,0,Interior door unit
+DOR,AV,utilityroom,438.11,1,Interior door unit
+DOR,AV,walkinclose2,438.11,0,Interior door unit
+DOR,AV,walkincloset,438.11,1,Interior door unit
+DOR,AV+,pantry,439.42,0,Interior door unit - High grade
+DOR,BF,bedroom,498.74,1,Bifold door set - Colonist - Double
+DOR,BF,bedroom2,498.74,1,Bifold door set - Colonist - Double
+DOR,BF,bedroom3,498.74,1,Bifold door set - Colonist - Double
+DOR,BF,bedroom4,498.74,1,Bifold door set - Colonist - Double
+DOR,STRMD,patio,435.21,0,Storm door assembly
+DOR,X,structurelev,1731.96,0,Exterior door - metal - insulated - flush or panel style
+DRY,1/2,structurelev,666.44,0,1/2in drywall - hung. taped. floated. ready for paint
+DRY,1/2,structurelev,333.22,0,1/2in drywall - hung. taped. floated. ready for paint
+DRY,1/2+,bath,806.4,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bath,149.42,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bath2,806.4,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bath2,149.42,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bath3,1112.84,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bath3,296.24,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bedroom,1236.49,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bedroom,370.3,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bedroom2,1607.43,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bedroom2,622.09,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bedroom3,1607.43,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bedroom3,622.09,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bedroom4,1854.72,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bedroom4,829.46,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,diningroom,2102.01,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,diningroom,1036.82,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,entryfoyer,1236.49,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,entryfoyer,370.3,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,familyroom,2102.01,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,familyroom,1036.82,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,hallway,1301.01,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,hallway,334.24,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,hallway2,1301.01,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,hallway2,334.24,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,kitchen,1612.8,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,kitchen,615.21,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,laundryroom,1112.84,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,laundryroom,296.24,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,livingroom,2102.01,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,livingroom,1036.82,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,nook,1236.49,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,nook,370.3,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,pantry,1112.84,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,pantry,296.24,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,utilityroom,1360.11,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,utilityroom,444.37,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,walkinclose2,1360.11,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,walkinclose2,444.37,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,walkincloset,1360.11,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,walkincloset,444.37,1,1/2in drywall - hung. taped. heavy texture. ready for paint
+ELE,110,kitchen,90.71,0,110 volt copper wiring run. box and outlet
+ELE,110,kitchen,90.71,0,110 volt copper wiring run. box and outlet
+ELE,220,kitchen,255.55,0,220 volt copper wiring run. box and receptacle
+ELE,220,kitchen,255.55,0,220 volt copper wiring run. box and receptacle
+ELE,BPNL200,structurelev,1786.81,0,Breaker panel - 200 amp
+ELE,GFI,bath,44.4,1,Ground fault interrupter (GFI) outlet
+ELE,GFI,bath2,44.4,0,Ground fault interrupter (GFI) outlet
+ELE,GFI,bath3,88.8,1,Ground fault interrupter (GFI) outlet
+ELE,GFI,deck,44.4,0,Ground fault interrupter (GFI) outlet
+ELE,GFI,kitchen,88.8,0,Ground fault interrupter (GFI) outlet
+ELE,GFI,laundryroom,44.4,1,Ground fault interrupter (GFI) outlet
+ELE,GFI,patio,44.4,0,Ground fault interrupter (GFI) outlet
+ELE,GROD,structurelev,125.25,0,Grounding rod - copper clad with clamp. 8'
+ELE,LV,structurelev,47.52,0,Phone / low voltage copper wiring
+ELE,LV,structurelev,47.52,0,Phone / low voltage copper wiring
+ELE,MAST,structurelev,591.36,0,Meter mast for overhead power - 2in conduit
+ELE,METR,structurelev,576.02,0,Meter base and main disconnect - 200 amp
+ELE,OL,structurelev,42.64,0,Phone. TV. or speaker outlet
+ELE,OL,structurelev,85.3,0,Phone. TV. or speaker outlet
+ELE,OL220,kitchen,39.72,0,220 volt outlet
+ELE,OL220,laundryroom,39.72,1,220 volt outlet
+ELE,OS,bath,31.84,1,Outlet
+ELE,OS,bath2,31.84,0,Outlet
+ELE,OS,bath3,31.84,1,Outlet
+ELE,OS,bedroom,95.54,1,Outlet
+ELE,OS,bedroom2,95.54,1,Outlet
+ELE,OS,bedroom3,95.54,1,Outlet
+ELE,OS,bedroom4,95.54,1,Outlet
+ELE,OS,deck,15.93,0,Outlet
+ELE,OS,diningroom,95.54,0,Outlet
+ELE,OS,entryfoyer,31.84,0,Outlet
+ELE,OS,familyroom,127.4,0,Outlet
+ELE,OS,hallway,31.84,1,Outlet
+ELE,OS,hallway2,31.84,0,Outlet
+ELE,OS,kitchen,63.7,0,Outlet
+ELE,OS,kitchen,31.84,0,Outlet
+ELE,OS,laundryroom,15.93,1,Outlet
+ELE,OS,livingroom,127.4,0,Outlet
+ELE,OS,nook,63.7,0,Outlet
+ELE,OS,pantry,31.84,0,Outlet
+ELE,OS,patio,15.93,0,Outlet
+ELE,OS,utilityroom,95.54,1,Outlet
+ELE,OS,walkinclose2,31.84,0,Outlet
+ELE,OS,walkincloset,31.84,1,Outlet
+ELE,REWIRE,structurelev,12888.0,0,Rewire\wire - avg. residence - boxes & wiring
+ELE,SMOKE,bedroom,72.48,1,Smoke detector
+ELE,SMOKE,bedroom2,72.48,1,Smoke detector
+ELE,SMOKE,bedroom3,72.48,1,Smoke detector
+ELE,SMOKE,bedroom4,72.48,1,Smoke detector
+ELE,SMOKE,hallway,72.48,1,Smoke detector
+ELE,SMOKE,hallway2,72.48,0,Smoke detector
+ELE,SMOKE,structurelev,72.48,0,Smoke detector
+ELE,TRUNK+,structurelev,635.52,0,Trunk cable - aluminum - 4 wire 4/0
+ELE,XOS,structurelev,49.8,0,Exterior outlet or switch
+FCC,AV+,bath,78.32,1,Carpet - High grade
+FCC,AV+,bath2,78.32,0,Carpet - High grade
+FCC,AV+,bath3,155.35,1,Carpet - High grade
+FCC,AV+,bedroom,194.14,1,Carpet - High grade
+FCC,AV+,bedroom2,326.23,1,Carpet - High grade
+FCC,AV+,bedroom3,326.23,1,Carpet - High grade
+FCC,AV+,bedroom4,434.97,1,Carpet - High grade
+FCC,AV+,diningroom,543.71,0,Carpet - High grade
+FCC,AV+,entryfoyer,194.14,0,Carpet - High grade
+FCC,AV+,familyroom,543.71,0,Carpet - High grade
+FCC,AV+,hallway,175.3,1,Carpet - High grade
+FCC,AV+,hallway2,175.3,0,Carpet - High grade
+FCC,AV+,kitchen,322.55,0,Carpet - High grade
+FCC,AV+,laundryroom,155.35,1,Carpet - High grade
+FCC,AV+,livingroom,543.71,0,Carpet - High grade
+FCC,AV+,nook,194.14,0,Carpet - High grade
+FCC,AV+,pantry,155.35,0,Carpet - High grade
+FCC,AV+,utilityroom,233.02,1,Carpet - High grade
+FCC,AV+,walkinclose2,233.02,0,Carpet - High grade
+FCC,AV+,walkincloset,233.02,1,Carpet - High grade
+FCC,PRE3/8,bath,9.92,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,bath2,9.92,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,bath3,19.67,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,bedroom,24.59,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,bedroom2,41.31,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,bedroom3,41.31,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,bedroom4,55.08,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,diningroom,68.86,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,entryfoyer,24.59,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,familyroom,68.86,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,hallway,22.2,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,hallway2,22.2,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,kitchen,40.84,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,laundryroom,19.67,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,livingroom,68.86,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,nook,24.59,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,pantry,19.67,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,utilityroom,29.51,1,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,walkinclose2,29.51,0,Pad - rebond. 3/8in. 7 lb.
+FCC,PRE3/8,walkincloset,29.51,1,Pad - rebond. 3/8in. 7 lb.
+FCC,STP+,structurelev,549.36,0,Step charge for intuckedin carpet installation - High grade
+FCV,AV+,bath,75.35,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,bath2,75.35,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,bath3,149.47,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,bedroom,186.79,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,bedroom2,313.88,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,bedroom3,313.88,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,bedroom4,418.51,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,diningroom,523.12,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,entryfoyer,186.79,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,familyroom,523.12,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,hallway,168.67,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,hallway2,168.67,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,kitchen,310.33,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,laundryroom,149.47,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,livingroom,523.12,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,nook,186.79,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,pantry,149.47,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,utilityroom,224.19,1,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,walkinclose2,224.19,0,Vinyl floor covering (sheet goods) - High grade
+FCV,AV+,walkincloset,224.19,1,Vinyl floor covering (sheet goods) - High grade
+FCV,PLK+,bath,63.58,1,Vinyl plank flooring - High grade
+FCV,PLK+,bath2,63.58,0,Vinyl plank flooring - High grade
+FCV,PLK+,bath3,126.1,1,Vinyl plank flooring - High grade
+FCV,PLK+,bedroom,157.64,1,Vinyl plank flooring - High grade
+FCV,PLK+,bedroom2,264.76,1,Vinyl plank flooring - High grade
+FCV,PLK+,bedroom3,264.76,1,Vinyl plank flooring - High grade
+FCV,PLK+,bedroom4,353.03,1,Vinyl plank flooring - High grade
+FCV,PLK+,diningroom,441.28,0,Vinyl plank flooring - High grade
+FCV,PLK+,entryfoyer,157.64,0,Vinyl plank flooring - High grade
+FCV,PLK+,familyroom,441.28,0,Vinyl plank flooring - High grade
+FCV,PLK+,hallway,142.28,1,Vinyl plank flooring - High grade
+FCV,PLK+,hallway2,142.28,0,Vinyl plank flooring - High grade
+FCV,PLK+,kitchen,261.83,0,Vinyl plank flooring - High grade
+FCV,PLK+,laundryroom,126.1,1,Vinyl plank flooring - High grade
+FCV,PLK+,livingroom,441.28,0,Vinyl plank flooring - High grade
+FCV,PLK+,nook,157.64,0,Vinyl plank flooring - High grade
+FCV,PLK+,pantry,126.1,0,Vinyl plank flooring - High grade
+FCV,PLK+,utilityroom,189.1,1,Vinyl plank flooring - High grade
+FCV,PLK+,walkinclose2,189.1,0,Vinyl plank flooring - High grade
+FCV,PLK+,walkincloset,189.1,1,Vinyl plank flooring - High grade
+FCW,AV+,bath,106.51,1,Oak flooring - select grade - no finish
+FCW,AV+,bath2,106.51,0,Oak flooring - select grade - no finish
+FCW,AV+,bath3,192.56,1,Oak flooring - select grade - no finish
+FCW,AV+,bedroom,236.04,1,Oak flooring - select grade - no finish
+FCW,AV+,bedroom2,383.67,1,Oak flooring - select grade - no finish
+FCW,AV+,bedroom3,383.67,1,Oak flooring - select grade - no finish
+FCW,AV+,bedroom4,505.19,1,Oak flooring - select grade - no finish
+FCW,AV+,diningroom,626.83,0,Oak flooring - select grade - no finish
+FCW,AV+,entryfoyer,236.04,0,Oak flooring - select grade - no finish
+FCW,AV+,familyroom,626.83,0,Oak flooring - select grade - no finish
+FCW,AV+,hallway,214.89,1,Oak flooring - select grade - no finish
+FCW,AV+,hallway2,214.89,0,Oak flooring - select grade - no finish
+FCW,AV+,kitchen,379.66,0,Oak flooring - select grade - no finish
+FCW,AV+,laundryroom,192.56,1,Oak flooring - select grade - no finish
+FCW,AV+,livingroom,626.83,0,Oak flooring - select grade - no finish
+FCW,AV+,nook,236.04,0,Oak flooring - select grade - no finish
+FCW,AV+,pantry,192.56,0,Oak flooring - select grade - no finish
+FCW,AV+,utilityroom,279.43,1,Oak flooring - select grade - no finish
+FCW,AV+,walkinclose2,279.43,0,Oak flooring - select grade - no finish
+FCW,AV+,walkincloset,279.43,1,Oak flooring - select grade - no finish
+FCW,FIN,bath,38.72,1,Sand & finish wood floor (natural finish)
+FCW,FIN,bath2,38.72,0,Sand & finish wood floor (natural finish)
+FCW,FIN,bath3,69.98,1,Sand & finish wood floor (natural finish)
+FCW,FIN,bedroom,85.79,1,Sand & finish wood floor (natural finish)
+FCW,FIN,bedroom2,139.45,1,Sand & finish wood floor (natural finish)
+FCW,FIN,bedroom3,139.45,1,Sand & finish wood floor (natural finish)
+FCW,FIN,bedroom4,183.61,1,Sand & finish wood floor (natural finish)
+FCW,FIN,diningroom,227.83,0,Sand & finish wood floor (natural finish)
+FCW,FIN,entryfoyer,85.79,0,Sand & finish wood floor (natural finish)
+FCW,FIN,familyroom,227.83,0,Sand & finish wood floor (natural finish)
+FCW,FIN,hallway,78.1,1,Sand & finish wood floor (natural finish)
+FCW,FIN,hallway2,78.1,0,Sand & finish wood floor (natural finish)
+FCW,FIN,kitchen,137.99,0,Sand & finish wood floor (natural finish)
+FCW,FIN,laundryroom,69.98,1,Sand & finish wood floor (natural finish)
+FCW,FIN,livingroom,227.83,0,Sand & finish wood floor (natural finish)
+FCW,FIN,nook,85.79,0,Sand & finish wood floor (natural finish)
+FCW,FIN,pantry,69.98,0,Sand & finish wood floor (natural finish)
+FCW,FIN,utilityroom,101.55,1,Sand & finish wood floor (natural finish)
+FCW,FIN,walkinclose2,101.55,0,Sand & finish wood floor (natural finish)
+FCW,FIN,walkincloset,101.55,1,Sand & finish wood floor (natural finish)
+FCW,LAM,bath,59.03,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,bath2,59.03,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,bath3,106.72,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,bedroom,130.84,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,bedroom2,212.67,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,bedroom3,212.67,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,bedroom4,280.04,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,diningroom,347.44,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,entryfoyer,130.84,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,familyroom,347.44,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,hallway,119.12,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,hallway2,119.12,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,kitchen,210.46,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,laundryroom,106.72,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,livingroom,347.44,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,nook,130.84,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,pantry,106.72,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,utilityroom,154.89,1,Snaplock Laminate - simulated wood flooring
+FCW,LAM,walkinclose2,154.89,0,Snaplock Laminate - simulated wood flooring
+FCW,LAM,walkincloset,154.89,1,Snaplock Laminate - simulated wood flooring
+FNC,1X4,pantry,1013.52,0,Trim board - 1in x 4in - installed (pine)
+FNC,B3+,bath,170.4,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,bath2,170.4,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,bath3,235.16,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,bedroom,261.25,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,bedroom2,339.63,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,bedroom3,339.63,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,bedroom4,391.92,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,diningroom,444.21,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,entryfoyer,261.25,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,familyroom,444.21,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,hallway,274.89,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,hallway2,274.89,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,kitchen,340.8,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,laundryroom,235.16,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,livingroom,444.21,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,nook,261.25,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,pantry,235.16,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,utilityroom,287.43,1,Baseboard - 3 1/4in stain grade
+FNC,B3+,walkinclose2,287.43,0,Baseboard - 3 1/4in stain grade
+FNC,B3+,walkincloset,287.43,1,Baseboard - 3 1/4in stain grade
+FNC,BAL,structurelev,2748.6,0,Balustrade
+FNC,CLROD,bedroom,28.51,1,Closet rod
+FNC,CLROD,bedroom2,28.51,1,Closet rod
+FNC,CLROD,bedroom3,28.51,1,Closet rod
+FNC,CLROD,bedroom4,28.51,1,Closet rod
+FNC,CLROD,structurelev,22.8,0,Closet rod
+FNC,CLROD,walkinclose2,119.71,0,Closet rod
+FNC,CLROD,walkincloset,119.71,1,Closet rod
+FNC,HR+,structurelev,331.56,0,Handrail - detailed profile - softwood - wall mounted
+FNC,SH16,bath,166.32,1,Shelving - 16in - in place
+FNC,SH16,bath2,166.32,0,Shelving - 16in - in place
+FNC,SH16,bath3,166.32,1,Shelving - 16in - in place
+FNC,SH16,bedroom,69.31,1,Shelving - 16in - in place
+FNC,SH16,bedroom2,69.31,1,Shelving - 16in - in place
+FNC,SH16,bedroom3,69.31,1,Shelving - 16in - in place
+FNC,SH16,bedroom4,69.31,1,Shelving - 16in - in place
+FNC,SH16,structurelev,554.4,0,Shelving - 16in - in place
+FNC,SH16,structurelev,55.44,0,Shelving - 16in - in place
+FNC,SH16,utilityroom,291.07,1,Shelving - 16in - in place
+FNC,SH16,walkinclose2,291.07,0,Shelving - 16in - in place
+FNC,SH16,walkincloset,291.07,1,Shelving - 16in - in place
+FNC,SH24,pantry,2528.47,0,Shelving - 24in - in place
+FNC,SILL+,structurelev,760.75,0,Window sill - stain grade
+FNH,DBX,structurelev,378.03,0,Door lockset & deadbolt - exterior
+FNH,DORH,bath,57.56,1,Door knob - interior
+FNH,DORH,bath2,57.56,0,Door knob - interior
+FNH,DORH,bath3,57.56,1,Door knob - interior
+FNH,DORH,bedroom,57.56,1,Door knob - interior
+FNH,DORH,bedroom2,57.56,1,Door knob - interior
+FNH,DORH,bedroom3,57.56,1,Door knob - interior
+FNH,DORH,bedroom4,57.56,1,Door knob - interior
+FNH,DORH,laundryroom,57.56,1,Door knob - interior
+FNH,DORH,structurelev,115.1,0,Door knob - interior
+FNH,DORH,structurelev,57.56,0,Door knob - interior
+FNH,DORH,utilityroom,57.56,1,Door knob - interior
+FNH,DORH,walkinclose2,57.56,0,Door knob - interior
+FNH,DORH,walkincloset,57.56,1,Door knob - interior
+FNH,DORH+,pantry,74.89,0,Door knob - interior - High grade
+FNH,SROD,bath,41.42,1,Shower curtain rod
+FNH,TBAR,bath,43.91,1,Towel bar
+FNH,TBAR,bath2,43.91,0,Towel bar
+FNH,TBAR,bath3,43.91,1,Towel bar
+FNH,TP,bath,39.82,1,Toilet paper holder
+FNH,TP,bath2,39.82,0,Toilet paper holder
+FNH,TP,bath3,39.82,1,Toilet paper holder
+FNH,TR,bath,43.96,1,Towel ring
+FNH,TR,bath2,43.96,0,Towel ring
+FNH,TR,bath3,43.96,1,Towel ring
+FRM,1X8,patio,362.07,0,1in x 8in lumber (.667 BF per LF)
+FRM,2X10,structurelev,187.4,0,2in x 10in lumber (1.67 BF per LF)
+FRM,2X4,patio,201.36,0,2in x 4in lumber (.667 BF per LF)
+FRM,2X4,structurelev,492.43,0,2in x 4in lumber (.667 BF per LF)
+FRM,2X6,patio,115.54,0,2in x 6in lumber (1 BF per LF)
+FRM,2X6,structurelev,291.03,0,2in x 6in lumber (1 BF per LF)
+FRM,2X6,structurelev,933.88,0,2in x 6in lumber (1 BF per LF)
+FRM,2X6R,structurelev,1443.87,0,2in x 6in lumber - redwood (1 BF per LF)
+FRM,2X8,deck,200.43,0,2in x 8in lumber (1.33 BF per LF)
+FRM,2X8,structurelev,603.64,0,2in x 8in lumber (1.33 BF per LF)
+FRM,4SF,structurelev,7119.22,0,Stud wall - 2in x 4in - 16in oc
+FRM,4X4,deck,230.63,0,4in x 4in square wood post (1.33 BF per LF)
+FRM,6SF,patio,230.4,0,Stud wall - 2in x 6in - 16in oc
+FRM,6SF,structurelev,768.0,0,Stud wall - 2in x 6in - 16in oc
+FRM,6SF,structurelev,18758.02,0,Stud wall - 2in x 6in - 16in oc
+FRM,6X6,patio,557.0,0,6in x 6in square wood post (3 BF per LF)
+FRM,DKRLC,deck,403.88,0,Deck guard rail - cedar
+FRM,DKRLR,patio,2312.67,0,Deck guard rail - redwood
+FRM,DKRLT,deck,1824.79,0,Deck guard rail - treated lumber
+FRM,DKTSF,deck,2015.74,0,Deck planking - treated lumber (per SF)
+FRM,FRHT,patio,87.26,0,Framing hurricane tie
+FRM,FRHT,structurelev,203.62,0,Framing hurricane tie
+FRM,J10SF,structurelev,17100.0,0,Joist - floor or ceiling - 2x10 - w/blocking - 16in oc
+FRM,J10SF,structurelev,8550.0,0,Joist - floor or ceiling - 2x10 - w/blocking - 16in oc
+FRM,J8SF,deck,874.2,0,Joist - floor or ceiling - 2x8 - w/blocking - 16in oc
+FRM,LAB,structurelev,1015.2,0,Carpenter - General Framer - per hour
+FRM,SH1/2,patio,1031.49,0,Sheathing - plywood - 1/2in CDX
+FRM,SH1/2,structurelev,7911.19,0,Sheathing - plywood - 1/2in CDX
+FRM,SHW1/2,structurelev,3726.83,0,Sheathing - OSB - 1/2in
+FRM,SHW1/2,structurelev,3.86,0,Sheathing - OSB - 1/2in
+FRM,SHW1/2,structurelev,2265.03,0,Sheathing - OSB - 1/2in
+FRM,SHW3/4T,structurelev,5801.4,0,Sheathing - OSB - 3/4in - tongue and groove
+FRM,SHW3/4T,structurelev,5801.4,0,Sheathing - OSB - 3/4in - tongue and groove
+FRM,TR4,patio,1544.14,0,Truss - 4/12 slope
+FRM,TR4+,structurelev,9039.81,0,Truss - 4/12 slope - heavy loading
+HVC,AC>,structurelev,10377.94,0,Central air conditioning system - 4 ton - up to 13 SEER
+HVC,BVENT,bath,145.18,1,Bathroom ventilation fan
+HVC,BVENT,bath2,145.18,0,Bathroom ventilation fan
+HVC,BVENT,bath3,145.18,1,Bathroom ventilation fan
+HVC,DCT,structurelev,12112.04,0,Ductwork system - hot or cold air - 1200 to 1599 SF home
+HVC,DCTFN3,bath,78.84,1,Ductwork - flexible - non-insulated - 3in round
+HVC,DCTFN3,bath2,78.84,0,Ductwork - flexible - non-insulated - 3in round
+HVC,DCTFN3,bath3,78.84,1,Ductwork - flexible - non-insulated - 3in round
+HVC,DRNL,structurelev,162.6,0,Condensate drain line
+HVC,DVENT,structurelev,90.02,0,Clothes dryer vent - installed
+HVC,FRFAH>,structurelev,9944.78,0,Furnace - forced air - high efficiency - 100.000 BTU
+HVC,TS+,structurelev,376.34,0,Thermostat - High grade
+HVC,VENT5+,structurelev,643.68,0,Furnace vent - double wall. 5in
+HVC,VENTCP5,structurelev,87.7,0,Furnace vent - rain cap and storm collar. 5in
+INS,BI20,structurelev,5814.0,0,Blown-in insulation - 20in depth - R50
+INS,BTF10,structurelev,4680.0,0,Batt insulation - 10in - R30 - paper / foil faced
+INS,BTF6,structurelev,7174.94,0,Batt insulation - 6in - R19 - paper / foil faced
+INS,HWRAP,patio,11.06,0,House wrap (air/moisture barrier)
+INS,HWRAP,structurelev,1050.45,0,House wrap (air/moisture barrier)
+LIT,AV,bedroom,76.21,1,Light fixture
+LIT,AV,bedroom2,76.21,1,Light fixture
+LIT,AV,bedroom3,76.21,1,Light fixture
+LIT,AV,bedroom4,76.21,1,Light fixture
+LIT,AV,diningroom,76.21,0,Light fixture
+LIT,AV,entryfoyer,76.21,0,Light fixture
+LIT,AV,familyroom,76.21,0,Light fixture
+LIT,AV,hallway,76.21,1,Light fixture
+LIT,AV,hallway2,76.21,0,Light fixture
+LIT,AV,livingroom,76.21,0,Light fixture
+LIT,AV+,pantry,118.58,0,Light fixture - High grade
+LIT,AV-,laundryroom,57.68,1,Light fixture - Standard grade
+LIT,AV-,nook,57.68,0,Light fixture - Standard grade
+LIT,AV-,utilityroom,57.68,1,Light fixture - Standard grade
+LIT,AV-,walkinclose2,57.68,0,Light fixture - Standard grade
+LIT,AV-,walkincloset,57.68,1,Light fixture - Standard grade
+LIT,BAR3+,bath3,186.56,1,Light bar - 3 lights - High grade
+LIT,BAR4,bath2,107.35,0,Light bar - 4 lights
+LIT,BAR5,bath,124.79,1,Light bar - 5 lights
+LIT,FL2-4+,kitchen,139.05,0,Fluorescent - two tube - 4' - fixture w/lens
+LIT,FL2-4+,structurelev,139.05,0,Fluorescent - two tube - 4' - fixture w/lens
+LIT,X,structurelev,300.07,0,Exterior light fixture
+LIT,X-,deck,78.79,0,Exterior light fixture - Standard grade
+LIT,X-,patio,78.79,0,Exterior light fixture - Standard grade
+MAS,BRK,structurelev,31330.68,0,Brick veneer
+MAS,BRK+,patio,816.64,0,Brick veneer - High grade
+MSD,AV,bath,134.86,1,Mirror - 1/4in plate glass
+MSD,AV,bath2,134.86,0,Mirror - 1/4in plate glass
+MSD,AV,bath3,134.86,1,Mirror - 1/4in plate glass
+MSD,SDOR,bath3,701.67,1,Shower door
+PLM,BP1,structurelev,751.18,0,Black pipe with fitting and hanger. 1in
+PLM,FAU,kitchen,321.52,0,Sink faucet - Kitchen
+PLM,FAUBA,bath,272.32,1,Sink faucet - Bathroom
+PLM,FAUBA,bath2,272.32,0,Sink faucet - Bathroom
+PLM,FAUBA,bath3,272.32,1,Sink faucet - Bathroom
+PLM,FAUBA,bath3,272.32,1,Sink faucet - Bathroom
+PLM,FT1/2C4,structurelev,61.28,0,Flexible gas supply line connector - 1/2in - 25in to 48in
+PLM,RFIXP,bath,518.67,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath,518.67,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath,172.9,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath,172.9,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath,518.67,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath,172.9,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath2,518.67,0,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath2,172.9,0,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath2,518.67,0,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath2,172.9,0,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath3,518.67,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath3,518.67,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath3,518.67,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath3,172.9,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath3,172.9,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath3,172.9,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath3,518.67,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,bath3,172.9,1,Rough-in plumbing - per fixture - w/PEX
+PLM,RFIXP,kitchen,691.57,0,Rough-in plumbing - per fixture - w/PEX
+PLM,RGHFIX,laundryroom,786.87,1,Rough-in plumbing - per fixture
+PLM,SNK,bath,349.54,1,Sink - single
+PLM,SNK,bath2,349.54,0,Sink - single
+PLM,SNK,bath3,349.54,1,Sink - single
+PLM,SNKD,kitchen,483.97,0,Sink - double basin
+PLM,SWRPAN,bath3,199.39,1,Shower pan
+PLM,TLT,bath,623.01,1,Toilet
+PLM,TLT,bath2,623.01,0,Toilet
+PLM,TLT,bath3,623.01,1,Toilet
+PLM,TLTS,bath,67.0,1,Toilet seat
+PLM,TLTS,bath2,67.0,0,Toilet seat
+PLM,TLTS,bath3,67.0,1,Toilet seat
+PLM,TSFAU,bath,392.66,1,Tub/shower faucet
+PLM,TSFAU,bath3,392.66,1,Tub/shower faucet
+PLM,TUB,bath,1104.34,1,Bathtub
+PLM,TUB,bath3,1104.34,1,Bathtub
+PLM,WBOX,laundryroom,254.48,1,Washing machine outlet box with valves
+PLM,WH50,structurelev,1754.44,0,Water heater - 50 gallon - Gas - 6 yr
+PLM,XFAU,structurelev,145.64,0,Exterior faucet / hose bibb
+PNT,BALS,structurelev,518.23,0,Stain & finish balustrade
+PNT,BF,bedroom,132.04,1,Paint bifold door set - slab only - 2 coats (per side)
+PNT,BF,bedroom2,132.04,1,Paint bifold door set - slab only - 2 coats (per side)
+PNT,BF,bedroom3,132.04,1,Paint bifold door set - slab only - 2 coats (per side)
+PNT,BF,bedroom4,132.04,1,Paint bifold door set - slab only - 2 coats (per side)
+PNT,BS,bath,45.31,1,Stain & finish baseboard
+PNT,BS,bath2,45.31,0,Stain & finish baseboard
+PNT,BS,bath3,62.52,1,Stain & finish baseboard
+PNT,BS,bedroom,69.46,1,Stain & finish baseboard
+PNT,BS,bedroom2,90.28,1,Stain & finish baseboard
+PNT,BS,bedroom3,90.28,1,Stain & finish baseboard
+PNT,BS,bedroom4,104.19,1,Stain & finish baseboard
+PNT,BS,diningroom,118.09,0,Stain & finish baseboard
+PNT,BS,entryfoyer,69.46,0,Stain & finish baseboard
+PNT,BS,familyroom,118.09,0,Stain & finish baseboard
+PNT,BS,hallway,73.08,1,Stain & finish baseboard
+PNT,BS,hallway2,73.08,0,Stain & finish baseboard
+PNT,BS,kitchen,90.6,0,Stain & finish baseboard
+PNT,BS,laundryroom,62.52,1,Stain & finish baseboard
+PNT,BS,livingroom,118.09,0,Stain & finish baseboard
+PNT,BS,nook,69.46,0,Stain & finish baseboard
+PNT,BS,pantry,62.52,0,Stain & finish baseboard
+PNT,BS,utilityroom,76.42,1,Stain & finish baseboard
+PNT,BS,walkinclose2,76.42,0,Stain & finish baseboard
+PNT,BS,walkincloset,76.42,1,Stain & finish baseboard
+PNT,DKRL,patio,306.13,0,Stain/finish deck handrail
+PNT,DOR,bath,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DOR,bath2,93.44,0,Paint door slab only - 2 coats (per side)
+PNT,DOR,bath3,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DOR,bedroom,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DOR,bedroom2,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DOR,bedroom3,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DOR,bedroom4,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DOR,laundryroom,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DOR,pantry,93.44,0,Paint door slab only - 2 coats (per side)
+PNT,DOR,structurelev,186.86,0,Paint door slab only - 2 coats (per side)
+PNT,DOR,structurelev,93.44,0,Paint door slab only - 2 coats (per side)
+PNT,DOR,utilityroom,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DOR,walkinclose2,93.44,0,Paint door slab only - 2 coats (per side)
+PNT,DOR,walkincloset,93.44,1,Paint door slab only - 2 coats (per side)
+PNT,DORT,bath,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,bath2,75.26,0,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,bath3,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,bedroom,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,bedroom2,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,bedroom3,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,bedroom4,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,laundryroom,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,pantry,75.26,0,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,structurelev,150.52,0,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,structurelev,75.26,0,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,utilityroom,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,walkinclose2,75.26,0,Paint door/window trim & jamb - 2 coats (per side)
+PNT,DORT,walkincloset,75.26,1,Paint door/window trim & jamb - 2 coats (per side)
+PNT,HRS,structurelev,38.16,0,Stain & finish handrail - wall mounted
+PNT,P,bath,30.69,1,Paint the surface area - one coat
+PNT,P,bath2,30.69,0,Paint the surface area - one coat
+PNT,P,bath3,60.83,1,Paint the surface area - one coat
+PNT,P,bedroom,76.05,1,Paint the surface area - one coat
+PNT,P,bedroom2,127.76,1,Paint the surface area - one coat
+PNT,P,bedroom3,127.76,1,Paint the surface area - one coat
+PNT,P,bedroom4,170.35,1,Paint the surface area - one coat
+PNT,P,diningroom,212.91,0,Paint the surface area - one coat
+PNT,P,entryfoyer,76.05,0,Paint the surface area - one coat
+PNT,P,familyroom,212.91,0,Paint the surface area - one coat
+PNT,P,hallway,68.64,1,Paint the surface area - one coat
+PNT,P,hallway2,68.64,0,Paint the surface area - one coat
+PNT,P,kitchen,126.34,0,Paint the surface area - one coat
+PNT,P,laundryroom,60.83,1,Paint the surface area - one coat
+PNT,P,livingroom,212.91,0,Paint the surface area - one coat
+PNT,P,nook,76.05,0,Paint the surface area - one coat
+PNT,P,pantry,60.83,0,Paint the surface area - one coat
+PNT,P,utilityroom,91.24,1,Paint the surface area - one coat
+PNT,P,walkinclose2,91.24,0,Paint the surface area - one coat
+PNT,P,walkincloset,91.24,1,Paint the surface area - one coat
+PNT,S,bath,28.03,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,bath2,28.03,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,bath3,55.55,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,bedroom,69.44,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,bedroom2,116.64,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,bedroom3,116.64,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,bedroom4,155.52,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,diningroom,194.4,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,entryfoyer,69.44,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,familyroom,194.4,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,hallway,62.67,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,hallway2,62.67,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,kitchen,115.35,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,laundryroom,55.55,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,livingroom,194.4,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,nook,69.44,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,pantry,55.55,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,utilityroom,83.31,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,walkinclose2,83.31,0,Seal the surface area w/latex based stain blocker - one coat
+PNT,S,walkincloset,83.31,1,Seal the surface area w/latex based stain blocker - one coat
+PNT,SHW,bath,63.94,1,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,bath2,63.94,0,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,bath3,63.94,1,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,bedroom,26.64,1,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,bedroom2,26.64,1,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,bedroom3,26.64,1,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,bedroom4,26.64,1,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,pantry,879.12,0,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,structurelev,213.12,0,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,structurelev,21.32,0,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,utilityroom,111.88,1,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,walkinclose2,111.88,0,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,walkincloset,111.88,1,Seal & paint wood shelving. 12in- 24in width
+PNT,SILL,structurelev,465.0,0,Seal & paint window sill
+PNT,SP,bath,235.2,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,bath2,235.2,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,bath3,324.58,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,bedroom,360.64,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,bedroom2,468.84,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,bedroom3,468.84,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,bedroom4,540.96,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,diningroom,613.08,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,entryfoyer,360.64,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,familyroom,613.08,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,hallway,379.46,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,hallway2,379.46,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,kitchen,470.4,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,laundryroom,324.58,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,livingroom,613.08,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,nook,360.64,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,pantry,324.58,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,structurelev,244.6,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,structurelev,122.3,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,utilityroom,396.7,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,walkinclose2,396.7,0,Seal/prime (1 coat) then paint (1 coat) the surface area
+PNT,SP,walkincloset,396.7,1,Seal/prime (1 coat) then paint (1 coat) the surface area
+RFG,400,patio,1550.5,0,Laminated - High grade - comp. shingle rfg. - w/ felt
+RFG,400,structurelev,9302.98,0,Laminated - High grade - comp. shingle rfg. - w/ felt
+RFG,DRIP,structurelev,606.82,0,Drip edge
+RFG,FELT15,patio,28.89,0,Roofing felt - 15 lb.
+RFG,FELT15,structurelev,517.4,0,Roofing felt - 15 lb.
+RFG,VENTT,structurelev,268.2,0,Roof vent - turtle type - Metal
+RFG,VMTL,structurelev,947.28,0,Valley metal
+SDG,VENTG,structurelev,1072.36,0,Attic vent - gable end - vinyl
+SFG,GUTA,structurelev,1878.97,0,Eavestrough/downspout - aluminum - up to 5in
+SFG,MTL2,structurelev,4019.76,0,Soffit & fascia - metal - 2' overhang
+SFG,SFTM,patio,2129.87,0,Soffit - metal
+STR,3,structurelev,1735.1,0,Stairway - 3' wide (8' rise plus joist)
+STR,AVT,deck,671.32,0,Stairway - treated stringers and treads (per tread)
+STU,AV,patio,714.47,0,Metal lath & stucco
+STU,AV,structurelev,29084.26,0,Metal lath & stucco
+STU,TRIM,structurelev,5495.17,0,Synthetic stucco - additional charge for raised trim
+TIL,BMUD,bath,581.47,1,Mortar bed for tile
+TIL,BMUD,bath3,835.19,1,Mortar bed for tile
+TIL,SWR,bath3,2334.51,1,Tile shower - 61 to 100 SF
+TIL,TUB,bath,1298.04,1,Tile tub surround - up to 60 SF
+WDP,6V,structurelev,2742.4,0,6-0 6-8 vinyl sliding patio door
+WDV,HS,structurelev,15337.93,0,Vinyl window. horizontal sliding. 12-23 sf

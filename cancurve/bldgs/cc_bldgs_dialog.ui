@@ -140,14 +140,14 @@ QTabBar::tab:selected { /* Style for selected tabs */
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:14px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to CanCurve's &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Buildings&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tool! This tool is designed to create &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Depth Damage Functions&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; (DDF) for Canadian buildings.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to the CanCurve &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Buildings&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tool! This tool is designed to create &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Depth Damage Functions&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; (DDF) for Canadian buildings.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/plugins/cancurve/img/icon.png&quot; /&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are required:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Building Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: On the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Building Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab, standard flood-related building properties can be specified. This information will be used to populate metadata on the resulting DDF. Some of the fields may be used in the calculation process as well.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Cost Information: &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;CSV file of restoration items and their costs. Click &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/blob/main/tests/data/bldgs/case1/R_1-L-BD-CU_ABCA.csv&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; for an example.&lt;/span&gt;&lt;span style=&quot; font-size:14px;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Building Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: These standard flood-related building properties are specified on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Building Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. This metadata will be used to populate the metadata of your DDF. Some of the fields are also used in the calculation process.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Cost Information: &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;This restoration item and cost data is specifed as a CSV file on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Data Input&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. Click &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/blob/main/tests/data/bldgs/case1/R_1-L-BD-CU_ABCA.csv&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; for an example. &lt;/span&gt;&lt;span style=&quot; font-size:14px;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are optional:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Depth-Replacement-Factor (DRF) dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: By default, the DRF dataset instaled with CanCurve is used.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Depth-Replacement-Factor (DRF) dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: This dataset relates flood depth to the percentage loss or damage of a restoration item and is specified on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Data Input&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. By default, the DRF dataset shipped with CanCurve will be used.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Navigate through the tabs at the top of the window from left-to-right to create your own DDF.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -220,9 +220,9 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-317</y>
             <width>745</width>
-            <height>949</height>
+            <height>976</height>
            </rect>
           </property>
           <property name="styleSheet">
@@ -285,14 +285,17 @@ QGroupBox {
                  <widget class="QComboBox" name="subClassification_ComboBox"/>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLabel" name="storeysLabel">
+                 <widget class="QLabel" name="storysLabel">
+                  <property name="toolTip">
+                   <string>Number of storys/levels/floors for the building. Typically this excludes the basement.</string>
+                  </property>
                   <property name="text">
-                   <string>Storeys/Levels</string>
+                   <string>Storys/Levels</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QComboBox" name="storeys_ComboBox"/>
+                 <widget class="QComboBox" name="storys_ComboBox"/>
                 </item>
                 <item row="3" column="0">
                  <widget class="QLabel" name="BedroomCount">
@@ -498,8 +501,11 @@ QGroupBox {
                 </item>
                 <item row="0" column="0">
                  <widget class="QLabel" name="sizeOrAreaValueLabel">
+                  <property name="toolTip">
+                   <string>This value is used when 'RCV/Area' is selected to scale the replacement costs (e.g., to footprint area)</string>
+                  </property>
                   <property name="text">
-                   <string>Scaling Area (value)</string>
+                   <string>Area (value)</string>
                   </property>
                  </widget>
                 </item>
@@ -649,6 +655,23 @@ QGroupBox {
                 <item row="7" column="1">
                  <widget class="QComboBox" name="costBasis_ComboBox"/>
                 </item>
+                <item row="8" column="0">
+                 <widget class="QLabel" name="scaleFactorLabel">
+                  <property name="text">
+                   <string>Scale Factor</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1">
+                 <widget class="QDoubleSpinBox" name="scaleFactor_DoubleSpinBox">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Factor to multiply final DDF impact values by. Useful for quick spatiotemporal transfers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
@@ -708,7 +731,7 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_01wd">
+        <widget class="QGroupBox" name="groupBox_t03_01wd">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -750,7 +773,7 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_12">
+        <widget class="QGroupBox" name="groupBox_t03_02">
          <property name="title">
           <string>Project Name:</string>
          </property>
@@ -772,7 +795,7 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_13">
+        <widget class="QGroupBox" name="groupBox_t03_03">
          <property name="title">
           <string>Cost-Item File:</string>
          </property>
@@ -801,51 +824,84 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_14">
+        <widget class="QGroupBox" name="groupBox_t03_04fixedCosts">
          <property name="title">
           <string>Fixed Costs:</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_14">
           <item alignment="Qt::AlignHCenter">
-           <widget class="QTableWidget" name="tableWidget_tab3dataInput_fixedCosts">
-            <attribute name="horizontalHeaderMinimumSectionSize">
-             <number>100</number>
-            </attribute>
-            <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>100</number>
-            </attribute>
-            <row>
-             <property name="text">
-              <string/>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>-1</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>0</string>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>Floor/Story</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Cost</string>
-             </property>
-            </column>
+           <widget class="QGroupBox" name="verticalGroupBox">
+            <layout class="QVBoxLayout" name="verticalLayout_20">
+             <item>
+              <layout class="QFormLayout" name="formLayout">
+               <item row="0" column="0">
+                <widget class="QLabel" name="basementRCVstory1Label">
+                 <property name="text">
+                  <string>Basement RCV (story -1):   </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="mainFloorRCVstory0Label">
+                 <property name="text">
+                  <string>Main Floor RCV (story 0):</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_tab3dataInput_sm1">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="prefix">
+                  <string>$</string>
+                 </property>
+                 <property name="decimals">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <double>9999999.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>1000.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_tab3dataInput_s0">
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="prefix">
+                  <string>$</string>
+                 </property>
+                 <property name="decimals">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <double>9999999.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>1000.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_15">
+        <widget class="QGroupBox" name="groupBox_t03_05">
          <property name="title">
           <string>Cost Basis</string>
          </property>
@@ -853,7 +909,7 @@ QGroupBox {
           <item>
            <widget class="QRadioButton" name="radioButton_6">
             <property name="text">
-             <string>RCV</string>
+             <string>Total ($/structure)</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">buttonGroup_costbasis</string>
@@ -863,7 +919,7 @@ QGroupBox {
           <item>
            <widget class="QRadioButton" name="radioButton_tab3dataInput_rcvm2">
             <property name="text">
-             <string>RCV/area</string>
+             <string>Area-based ($/area)</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -890,7 +946,7 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_16">
+        <widget class="QGroupBox" name="groupBox_t03_06">
          <property name="title">
           <string>Depth-Replacement-Fraction File</string>
          </property>
@@ -994,7 +1050,7 @@ QGroupBox {
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>The following steps will create your Depth-Damage Curve. You can select Run All and the tool will automatically run all steps in sequence or select Run Individual Steps to see the steps in sequence.</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The following steps will create your Depth-Damage Function (DDF). You can select &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;All&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; to execute all steps in sequence, or &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;Individual steps&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; to execute each individually.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -1010,7 +1066,7 @@ QGroupBox {
           <widget class="QGroupBox" name="groupBox_tab4actions_1">
            <property name="minimumSize">
             <size>
-             <width>0</width>
+             <width>400</width>
              <height>0</height>
             </size>
            </property>
@@ -1041,26 +1097,86 @@ QGroupBox {
               <item>
                <widget class="QRadioButton" name="radioButton_tab4actions_runControl_individ">
                 <property name="text">
-                 <string>Individual Steps</string>
+                 <string>Individual steps</string>
                 </property>
                 <attribute name="buttonGroup">
                  <string notr="true">buttonGroup_runControl</string>
                 </attribute>
                </widget>
               </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
-               <widget class="QLabel" name="label_7">
+               <widget class="QPushButton" name="pushButton_tab4actions_run">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
-                 <string>Ouput Format:</string>
+                 <string>Run</string>
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QComboBox" name="comboBox">
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item alignment="Qt::AlignHCenter">
+          <widget class="QgsCollapsibleGroupBox" name="groupBox_tab4actions_output">
+           <property name="minimumSize">
+            <size>
+             <width>400</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="title">
+            <string notr="true">Output Control</string>
+           </property>
+           <property name="flat">
+            <bool>true</bool>
+           </property>
+           <property name="collapsed">
+            <bool>true</bool>
+           </property>
+           <property name="saveCollapsedState">
+            <bool>false</bool>
+           </property>
+           <property name="saveCheckedState">
+            <bool>false</bool>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_21">
+            <item>
+             <layout class="QFormLayout" name="formLayout_2">
+              <item row="2" column="0">
+               <widget class="QLabel" name="saveFigureToFileLabel">
+                <property name="text">
+                 <string>Save plots to file:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QCheckBox" name="checkBox_tab4actions_saveFig">
+                <property name="toolTip">
+                 <string>For each plot created, save figures to the working directory as svg files</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_7">
+                <property name="text">
+                 <string>DDF ouput format:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QComboBox" name="comboBox_tab4actions_outFormat">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -1076,6 +1192,9 @@ QGroupBox {
                   <height>0</height>
                  </size>
                 </property>
+                <property name="toolTip">
+                 <string>Set the output format of the DDF in Step 4</string>
+                </property>
                 <property name="currentText">
                  <string notr="true">CanFlood (xls)</string>
                 </property>
@@ -1086,16 +1205,69 @@ QGroupBox {
                 </item>
                </widget>
               </item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="toggleAllPlotsLabel">
+                <property name="text">
+                 <string>Plotting:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QPushButton" name="pushButton_tab4actions_checkPlots">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="toolTip">
+                 <string>Toggle the plot control checkBox for each plot</string>
+                </property>
+                <property name="text">
+                 <string>Toggle All</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QLabel" name="launchResultingDDFLabel">
+                <property name="text">
+                 <string>Launch output DDF:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QCheckBox" name="checkBox_tab4actions_step4_launch">
+                <property name="toolTip">
+                 <string>Attempt to launch the resulting .xlsx file with the system default after Step 4</string>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="launchPlotDialogLabel">
+                <property name="text">
+                 <string>Launch plot dialogs:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QCheckBox" name="checkBox_tab4actions_launchPlot">
+                <property name="toolTip">
+                 <string>For each plot created, launch generated plots in separate Qt dialog windows</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
            </layout>
-          </widget>
-         </item>
-         <item alignment="Qt::AlignHCenter">
-          <widget class="QPushButton" name="pushButton_tab4actions_run">
-           <property name="text">
-            <string>Run All</string>
-           </property>
           </widget>
          </item>
          <item>
@@ -1596,7 +1768,7 @@ QLabel {
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>50</height>
+       <height>85</height>
       </size>
      </property>
      <property name="title">
@@ -1763,12 +1935,20 @@ QLabel {
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsCollapsibleGroupBox</class>
+   <extends>QGroupBox</extends>
+   <header>qgscollapsiblegroupbox.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../resources.qrc"/>
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_costbasis"/>
   <buttongroup name="buttonGroup_runControl"/>
+  <buttongroup name="buttonGroup_costbasis"/>
  </buttongroups>
 </ui>

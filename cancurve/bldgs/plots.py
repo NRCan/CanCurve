@@ -89,7 +89,7 @@ def plot_c00_costitems(df_raw,
     #===========================================================================
     #figure default
     if figure is None:
-        figure = plt.figure(**fig_kwargs)
+        figure = plt.figure('c00_costitems', **fig_kwargs)
         
     
 
@@ -259,7 +259,7 @@ def plot_c00_DRF(df_raw,
     #===========================================================================
     #figure default
     if figure is None:
-        figure = plt.figure(**fig_kwargs)
+        figure = plt.figure('c00_DRF', **fig_kwargs)
         
     
     cat_l = df_raw.index.unique('cat')
@@ -368,17 +368,23 @@ def plot_c01_depth_rcv(df_raw,
     cmap = matplotlib.colormaps.get_cmap('tab20')
     #figure default
     if figure is None:
-        figure = plt.figure(**fig_kwargs)
+        figure = plt.figure('c01_depth_rcv', **fig_kwargs)
     
     story_l = df_raw.index.unique('story').tolist()
     ax_ar  = figure.subplots(ncols=1, nrows=len(story_l), sharey=True, sharex=True)
-    ax_d = dict(zip(story_l, ax_ar.flat))
+    
+    #convert to dictionary
+    if isinstance(ax_ar, np.ndarray):
+        ax_d = dict(zip(story_l, ax_ar.flat))
+    else:
+        ax_d = {story_l[0]:ax_ar}
+ 
     
     #===========================================================================
     # loop and plot
     #===========================================================================
     for k0, gdf in df_raw.groupby(level='story'):
-        log.debug(f'plotting storey {k0}')
+        log.debug(f'plotting story {k0}')
         ax = ax_d[k0]
         
         #create stacked area plot (one polygon per cat.sum())
@@ -464,7 +470,7 @@ def plot_c02_ddf(df_raw,
  
     #figure default
     if figure is None:
-        figure = plt.figure(**fig_kwargs)
+        figure = plt.figure('c02_ddf', **fig_kwargs)
         
     ax = figure.subplots()
     

@@ -3,23 +3,30 @@ Created on Apr. 28, 2024
 
 @author: cef
 '''
-import pytest, os, shutil, random
+import pytest, os, shutil, random, logging, sys
 
+from cancurve.bldgs.core import _get_bldg_meta_d
 from cancurve.hp.basic import find_single_file_by_extension, convert_to_number, convert_to_float
 
 from cancurve.bldgs.parameters_ui import building_details_options_d
-from cancurve.bldgs.parameters import bldg_meta_rqmt_df
+from cancurve.bldgs.assertions import assert_bldg_meta_d
+#from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 
-from cancurve.bldgs.dialog_test_scripts import (
-    fixed_costs_master_d)
+
+ 
 #===============================================================================
 # data
 #===============================================================================
-from tests.conftest import test_data_dir_master as parent_tdata_dir
-test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
+from tests.data.bldgs_data_scripts import fixed_costs_master_d, test_data_dir_master#, bldg_meta_rqmt_df_test
+
+
 #===============================================================================
 # fixtrues--------
 #===============================================================================
+
+ 
+
+
 @pytest.fixture(scope='function')   
 def proj_db_fp(testCase, testPhase, tmp_path):
     """retrieve the approraite project database file for hte test case (and make a copy)"""
@@ -44,15 +51,20 @@ def ci_fp(testCase):
 
 @pytest.fixture(scope='function')
 def fixed_costs_d(testCase):
+    if not testCase in fixed_costs_master_d:
+        raise AssertionError(f'test case \'{testCase}\' missing from fixed_costs_master_d')
     return fixed_costs_master_d[testCase]
         
 
+
+
+
 @pytest.fixture(scope='function')
 def bldg_meta_d(testCase):
-    d = bldg_meta_rqmt_df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
+    from tests.data.bldgs_data_scripts import bldg_meta_rqmt_df_test
     
-    
-    return {k:convert_to_float(v) for k,v in d.items()}
+    d = _get_bldg_meta_d(testCase, df=bldg_meta_rqmt_df_test)
+    return d
   
 #===============================================================================
 # @pytest.fixture(scope='function')

@@ -68,10 +68,16 @@ def dialog(qgis_iface):
     
     dialog =  BldgsDialog(parent=None, iface=qgis_iface,
                           debug_logger=logger, #connect python logger for rtests
-                          show_plots=False,
+ 
                           )
  
     #dialog.show() #launch the window?
+    
+    #disable launching of result
+    dialog.checkBox_tab4actions_step4_launch.setChecked(False) #not nice for testing
+    
+    #disable launching of plots
+    dialog.checkBox_tab4actions_launchPlot.setChecked(False)
     
     
     return dialog
@@ -350,7 +356,7 @@ def test_pushButton_tab4actions_read(dialog, set_projdb):
     # sys.exit(QApp.exec_()) #wrap
     #===========================================================================
 
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('buttonName, lineName, QFileDialogTypeName',[
      ('pushButton_wd','lineEdit_wdir','getExistingDirectory'),
      ('pushButton_tab3dataInput_cifp','lineEdit_tab3dataInput_cifp', 'getOpenFileName'),
@@ -387,7 +393,7 @@ def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
 
 
     
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     'case2',
@@ -445,7 +451,7 @@ def test_action_tab4actions_step1(dialog,
     
  
  
-
+@pytest.mark.dev
 #@patch('matplotlib.pyplot.show')  #breaks enable_widget for some reason...
 @pytest.mark.parametrize('testCase', ['case1'])
 @pytest.mark.parametrize('button, testPhase, expected_tables', [
@@ -476,9 +482,7 @@ def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_t
             'c03':None
             }[testPhase]
         
-        if not cbox_name is None:
- 
-            
+        if not cbox_name is None:            
             print(f'enabling plot checkBox \'{cbox_name}\'')
             cbox = getattr(dialog, cbox_name)
             enable_widget_and_parents(cbox)
@@ -500,7 +504,7 @@ def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_t
     print('finished')
 
     
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     #'case2',

@@ -5,7 +5,7 @@ Created on Apr. 30, 2024
 
 testing functions for use in pytests and manual QGIS tests (ie no pytest dependency)
 '''
-import os
+import os, warnings, copy
 
 import pandas as pd
 import numpy as np
@@ -32,26 +32,40 @@ test_data_dir_master = os.path.join(plugin_dir, 'dev_test_data') #needs to live 
 
 #test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
-
-
+"""this needs to live here so it is accessible by tests after deployment
+note the underlying data needs to be duplicated in ./dev_test_data and ./tests/data/bldgs
+"""
 fixed_costs_master_d = {
-        'case1':{0:10000, -1:8000},
+        'case1':{0:10000.0, -1:8000.0},
         'case2':None,
-        'case3':{-1:0, 0:25000}        
+        'case3':{-1:0.0, 0:25000.0},
+        'case4_R2':{-1:19361.0, 0:24879.0, 
+                    #1:22484.0,
+                    },
+        'case5_crawl':{0:10000.0}
+                
         }
 
-test_cases_l = list(fixed_costs_master_d.keys())
+#see tests.data.bldgs.misc for file-based test cases
+test_cases_l = copy.copy(list(fixed_costs_master_d.keys()))
+
+ 
+
 #===============================================================================
 # helpers------
 #===============================================================================
 
 def set_fixedCosts(dialog, fixed_costs_d):
-    tblW = dialog.tableWidget_tab3dataInput_fixedCosts #get the table widget
-    ser = pd.Series(fixed_costs_d)
-    tblW.setRowCount(len(ser)) #add this many rows
-    for i, (eName, pval) in enumerate(ser.items()):
-        tblW.setItem(i, 0, QTableWidgetItem(str(eName)))
-        tblW.setItem(i, 1, QTableWidgetItem(str(pval)))
+ 
+    if isinstance(fixed_costs_d, dict):
+        for k,v in fixed_costs_d.items():
+            #retrieve widget for this story
+            qds_widget = dialog.fixed_costs_widget_d[k]
+            qds_widget.setValue(v)
+    else:
+        warnings.warn(f'got no fixed costs')
+ 
+    
         
         
 def set_tab2bldgDetils(dialog, testCase):
