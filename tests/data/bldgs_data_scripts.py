@@ -93,6 +93,11 @@ def load_tests_cases_from_file(
                 #===============================================================
                 #load
                 bldg_meta_d = _pick_to_d(os.path.join(srch_dir, 'bldg_meta_d.pkl'))
+                
+                #workaround because we add this later
+                if not 'scale_factor' in bldg_meta_d:
+                    bldg_meta_d['scale_factor'] = 1.0
+                
                 assert_bldg_meta_d(bldg_meta_d, msg=caseName)
                 
                 #fill in blank.. probably a better way to do this

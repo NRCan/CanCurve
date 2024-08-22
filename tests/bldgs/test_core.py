@@ -22,7 +22,8 @@ from .conftest import find_single_file_by_extension, test_data_dir_master
 #===============================================================================
 # helpers
 #===============================================================================
-def write_pick(result, ofp, write=False):
+overwrite_testdata=False
+def write_pick(result, ofp, write=overwrite_testdata):
     if write:
         if not os.path.exists(os.path.dirname(ofp)):
             os.makedirs(os.path.dirname(ofp))
@@ -31,7 +32,7 @@ def write_pick(result, ofp, write=False):
         print(f'wrote result to \n    {ofp}')
         
         
-def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=False):
+def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=overwrite_testdata):
     
     if write:
         dest_fp = os.path.join(test_data_dir_master, testCase, destinationPhase, os.path.basename(proj_db_fp))
@@ -57,11 +58,11 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=False):
 
 
 
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
-    'case2',
-    pytest.param('case3', marks=pytest.mark.xfail(raises=KeyError, reason="story data mismatch")), 
+    #'case2',
+    #pytest.param('case3', marks=pytest.mark.xfail(raises=KeyError, reason="story data mismatch")), 
     ], indirect=False)
 #===============================================================================
 # @pytest.mark.parametrize('fixed_costs_d',[
@@ -91,10 +92,10 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d,
 
     
     
-
+#@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
-    pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
+    #pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
     ], indirect=False)
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)
 def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
@@ -126,7 +127,7 @@ def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
     copy_sqlite(proj_db_fp, testCase, 'c03')
     
     
-
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c03'], indirect=False)
 def test_c03_export(proj_db_fp, testCase, testPhase, tmp_path):

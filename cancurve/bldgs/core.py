@@ -26,7 +26,7 @@ from .parameters import (
  
 from .assertions import (
     assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db,
-    assert_bldg_meta_d, assert_CanFlood_ddf, assert_fixed_costs_d
+    assert_bldg_meta_d, assert_CanFlood_ddf, assert_fixed_costs_d, assert_scale_factor
     )
 
 from .. import __version__
@@ -920,13 +920,8 @@ def c00_setup_project(
 
 
 
-def c01_join_drf(
-        
-        proj_db_fp,
-        
-        
-        log=None,
- 
+def c01_join_drf(proj_db_fp,        
+        log=None, 
         ):
     """Join DRF to CI then multiply through to create 'depth_rcv' table
     
@@ -1004,7 +999,7 @@ def c01_join_drf(
 def c02_group_story(proj_db_fp,
             log=None,
             scale_m2=None,            
-            basement_height_m=None, scale_value_m2=None, 
+            basement_height_m=None, scale_value_m2=None, scale_factor=None,
             ):
     """group by story and assemble DDF
     
@@ -1022,8 +1017,11 @@ def c02_group_story(proj_db_fp,
         defaults to value in c00_bldg_meta
         
     scale_value_m2: float, optional
-        area with which to scare replacement values (e.g., floor area in m2)
+        area with which to scale replacement values (e.g., floor area in m2)
         defaults to value in c00_bldg_meta
+        
+    scale_factor: float, optional
+        factor by which to scale replacement values (e.g., 10% increase from last year)
         
     """
     
@@ -1072,8 +1070,17 @@ def c02_group_story(proj_db_fp,
                 assert 'scale_value_m2' in bldg_meta_d, f'passed scale_m2=True but no \'scale_value_m2\' provided'
                 scale_value_m2 = float(bldg_meta_d['scale_value_m2'])
             assert isinstance(scale_value_m2, float)
+            
+        #scale_factor
+        if scale_factor is None:
+            scale_factor = float(bldg_meta_d['scale_factor'])
+        else:
+            scale_factor=1.0
+ 
+        assert_scale_factor(scale_factor)
         
-        params_d = dict(scale_m2=scale_m2, basement_height_m=basement_height_m, scale_value_m2=scale_value_m2)
+        params_d = dict(scale_m2=scale_m2, basement_height_m=basement_height_m, 
+                        scale_value_m2=scale_value_m2, scale_factor=scale_factor)
 
             
         log.debug(f'extracted data from proj_db w/ f\n    {params_d}')
@@ -1156,6 +1163,10 @@ def c02_group_story(proj_db_fp,
             ddf3 = (ddf2/scale_value_m2).round(2)            
         else:
             ddf3=ddf2.round(2)
+            
+        if not scale_factor==1.0:
+            log.info(f'scaling by scale_factor={scale_factor:.4f}')
+            ddf3 = (ddf3*scale_factor).round(2)
             
         #get_setting(conn, table_name='bldg_meta', attn="scale_value_m2")
         

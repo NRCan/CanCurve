@@ -220,9 +220,9 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-349</y>
             <width>745</width>
-            <height>949</height>
+            <height>976</height>
            </rect>
           </property>
           <property name="styleSheet">
@@ -654,6 +654,23 @@ QGroupBox {
                 </item>
                 <item row="7" column="1">
                  <widget class="QComboBox" name="costBasis_ComboBox"/>
+                </item>
+                <item row="8" column="0">
+                 <widget class="QLabel" name="scaleFactorLabel">
+                  <property name="text">
+                   <string>Scale Factor</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1">
+                 <widget class="QDoubleSpinBox" name="scaleFactor_DoubleSpinBox">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Factor to multiply final DDF impact values by. Useful for quick spatiotemporal transfers.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="value">
+                   <double>1.000000000000000</double>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -1598,6 +1615,19 @@ QLabel {
                   </size>
                  </property>
                 </spacer>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="checkBox_tab4actions_step4_launch">
+                 <property name="toolTip">
+                  <string>Attempt to launch the resulting .xlsx file with the system default</string>
+                 </property>
+                 <property name="text">
+                  <string>launch result</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
                </item>
               </layout>
              </widget>

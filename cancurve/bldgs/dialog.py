@@ -816,6 +816,18 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         res_df, ofp =  func(proj_db_fp, log=log)
         
         #=======================================================================
+        # post
+        #=======================================================================
+        if self.checkBox_tab4actions_step4_launch.isChecked():
+            progress.setValue(80)
+            log.info(f'attempting to launch result with system default program')
+            try:
+                os.startfile(ofp)
+            except Exception as e:
+                log.error(f'failed to launch file w/ \n    {e}')
+
+        
+        #=======================================================================
         # wrap
         #=======================================================================
         progress.setValue(90)
@@ -921,7 +933,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             
         miss_s = set(df.index).symmetric_difference(bldg_meta_d.keys())
         if not miss_s==set():
-            raise KeyError(f'bldg_meta mismatch from expectations')
+            raise KeyError(f'bldg_meta mismatch from expectations\n    {miss_s}')
         
         #typeset
         for k, type_str in df['type'].to_dict().items():
@@ -948,6 +960,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             bldg_meta_d['scale_value_m2'] = bldg_meta_d['sizeOrAreaValue']
         else:
             raise NotImplementedError(bldg_meta_d['sizeOrAreaUnits'])
+        
+        #not sure why I set it up to require excplit linking between ui and core vars...
+        bldg_meta_d['scale_factor'] = bldg_meta_d['scaleFactor']
             
         #=======================================================================
         # check expectations
@@ -956,6 +971,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         req_d = {k:eval(v) for k,v in req_d.items()}
         
         for k,type_class in req_d.items():
+            assert k in bldg_meta_d, k
             assert isinstance(bldg_meta_d[k], type_class), f'bad type on {k}'
             
         

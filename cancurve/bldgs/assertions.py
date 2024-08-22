@@ -152,8 +152,7 @@ def assert_drf_df(df):
 def assert_bldg_meta_d(bldg_meta, msg=''):
     """check the bldg_meta_d meets expectations"""
     
-    #check the minumn key requirements
-        
+    #check the minumn key requirements        
     miss_s = set(bldg_meta_rqmt_df['varName_core'].dropna().values.tolist()).difference(bldg_meta.keys())
     if not miss_s==set():
         raise KeyError(f'bldg_meta missing keys \'{miss_s}\'' + '\n'+msg)
@@ -163,6 +162,10 @@ def assert_bldg_meta_d(bldg_meta, msg=''):
     for k,v in type_d.items():
         if not v in type(bldg_meta[k]).__name__:
             raise TypeError(f'unrecognized type on \'{k}\' ({type(bldg_meta[k])})'+ '\n'+msg)
+        
+    #check values
+    if 'scale_factor' in bldg_meta:
+        assert_scale_factor(bldg_meta['scale_factor'], msg=msg)
         
 def assert_fixed_costs_d(d, msg=''):
     """check the fixed_costs_d meets expectations
@@ -187,7 +190,7 @@ def assert_fixed_costs_d(d, msg=''):
         
  
 
-def assert_CanFlood_ddf(df):
+def assert_CanFlood_ddf(df, msg=''):
     from cancurve.bldgs.core import DFunc
     from cancurve.hp.logr import get_log_stream
     
@@ -200,4 +203,8 @@ def assert_CanFlood_ddf(df):
             raise AssertionError(f'DDF failed to build as a CanFlood.Dfunc w/ \n    {e}')
  
 
+def assert_scale_factor(v, msg=''):
+    assert isinstance(v, float)
+    assert v>0.0
+    assert v<9e9
  
