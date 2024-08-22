@@ -384,7 +384,7 @@ def plot_c01_depth_rcv(df_raw,
     # loop and plot
     #===========================================================================
     for k0, gdf in df_raw.groupby(level='story'):
-        log.debug(f'plotting storey {k0}')
+        log.debug(f'plotting story {k0}')
         ax = ax_d[k0]
         
         #create stacked area plot (one polygon per cat.sum())

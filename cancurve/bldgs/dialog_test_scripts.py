@@ -59,7 +59,7 @@ def set_fixedCosts(dialog, fixed_costs_d):
  
     if isinstance(fixed_costs_d, dict):
         for k,v in fixed_costs_d.items():
-            #retrieve widget for this storey
+            #retrieve widget for this story
             qds_widget = dialog.fixed_costs_widget_d[k]
             qds_widget.setValue(v)
     else:

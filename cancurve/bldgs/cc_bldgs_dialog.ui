@@ -285,17 +285,17 @@ QGroupBox {
                  <widget class="QComboBox" name="subClassification_ComboBox"/>
                 </item>
                 <item row="2" column="0">
-                 <widget class="QLabel" name="storeysLabel">
+                 <widget class="QLabel" name="storysLabel">
                   <property name="toolTip">
-                   <string>Number of storeys/levels/floors for the building. Typically this excludes the basement.</string>
+                   <string>Number of storys/levels/floors for the building. Typically this excludes the basement.</string>
                   </property>
                   <property name="text">
-                   <string>Storeys/Levels</string>
+                   <string>Storys/Levels</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QComboBox" name="storeys_ComboBox"/>
+                 <widget class="QComboBox" name="storys_ComboBox"/>
                 </item>
                 <item row="3" column="0">
                  <widget class="QLabel" name="BedroomCount">
@@ -818,16 +818,16 @@ QGroupBox {
              <item>
               <layout class="QFormLayout" name="formLayout">
                <item row="0" column="0">
-                <widget class="QLabel" name="basementRCVStorey1Label">
+                <widget class="QLabel" name="basementRCVstory1Label">
                  <property name="text">
-                  <string>Basement RCV (storey -1):   </string>
+                  <string>Basement RCV (story -1):   </string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QLabel" name="mainFloorRCVStorey0Label">
+                <widget class="QLabel" name="mainFloorRCVstory0Label">
                  <property name="text">
-                  <string>Main Floor RCV (storey 0):</string>
+                  <string>Main Floor RCV (story 0):</string>
                  </property>
                 </widget>
                </item>

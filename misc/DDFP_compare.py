@@ -308,7 +308,7 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
                     #'scale_value_m2':get_v(['estimate GFA (m2)']),
                     #scale values on ddf tabs are wrong. need to pull thsi from DDFwrk_grp2
                     'curve_name':ddf_name,
-                    'storeys':curve_ser['storeys']                
+                    'storys':curve_ser['storys']                
                     }
             except Exception as e:
                 raise KeyError(f'failed on {ddf_name} w/\n    {e}')

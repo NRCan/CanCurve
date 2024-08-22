@@ -214,7 +214,7 @@ def _update_proj_meta(log, conn, meta_d=dict()):
 def _get_building_layout_from_meta(d):
     """construct the DRF 'bldg_layout' key from granular metadata
     
-    '1storeybase', '2storeybase','1storeycrawl', '2storeycrawl'
+    '1storybase', '2storybase','1storycrawl', '2storycrawl'
     
     legacy carry-over from DRF format
     would be better to have keys directly in DRF
@@ -224,8 +224,8 @@ def _get_building_layout_from_meta(d):
     #check expectations
     assert d['occupancyClassification']=='Residential'
     assert d['foundationType'] in building_details_options_d['foundationType']
-    if not isinstance(d['storeys'], int):
-        assert d['storeys']=='Split'
+    if not isinstance(d['storys'], int):
+        assert d['storys']=='Split'
  
     
     
@@ -239,16 +239,16 @@ def _get_building_layout_from_meta(d):
     bldg_layout='default'
     
     if d['foundationType']=='basement':        
-        if d['storeys']==1:            
-                bldg_layout='1storeybase'            
-        elif d['storeys']==2:
-            bldg_layout='2storeybase'
+        if d['storys']==1:            
+                bldg_layout='1storybase'            
+        elif d['storys']==2:
+            bldg_layout='2storybase'
             
     elif d['foundationType']=='crawlspace':
-        if d['storeys']==1:            
-                bldg_layout='1storeycrawl'            
-        elif d['storeys']==2:
-            bldg_layout='2storeycrawl'
+        if d['storys']==1:            
+                bldg_layout='1storycrawl'            
+        elif d['storys']==2:
+            bldg_layout='2storycrawl'
         
             
             
@@ -870,8 +870,8 @@ def c00_setup_project(
         #check intersect
         miss = set(ci_df['story'].unique()).difference(fc_ser.index.values)
         if not miss==set():
-            raise KeyError(f'\'Storey\' values specified in the Fixed Costs table do not match those in the Cost Item Dataset'+\
-                           '\n    ensure fixed costs are provided for each storey')
+            raise KeyError(f'\'story\' values specified in the Fixed Costs table do not match those in the Cost Item Dataset'+\
+                           '\n    ensure fixed costs are provided for each story')
             
         fc_ser = fc_ser.loc[fc_ser.index.isin(ci_df['story'].unique())]
         

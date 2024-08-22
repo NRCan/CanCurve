@@ -18,7 +18,7 @@ scale_value_m2,,,float,TRUE,FALSE,,,232.1,232.2,344,139,232
 ,,exposure,str,FALSE,TRUE,impact,,,,,,
 ,occupancyClassification,,str,FALSE,FALSE,,occupancyClassification_ComboBox,,,Commercial,Residential,Residential
 ,subClassification,,str,FALSE,FALSE,,subClassification_ComboBox,,,Construction,Single Family,
-,storeys,,str,FALSE,FALSE,,storeys_ComboBox,,,1,2,1
+,storys,,str,FALSE,FALSE,,storys_ComboBox,,,1,2,1
 ,BedroomCount,,int,FALSE,FALSE,,BedroomCount_QSpinBox,,,0,7,
 ,BathroomCount,,float,FALSE,FALSE,,BathroomCount_DoubleSpinBox,,,1,4,
 ,heatingType,,str,FALSE,FALSE,,heatingType_ComboBox,,,Forced Air - Gas,Forced Air - Unknown,

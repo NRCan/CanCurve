@@ -920,7 +920,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             subset='varName_ui').set_index('varName_ui')
             
         miss_s = set(df.index).symmetric_difference(bldg_meta_d.keys())
-        assert miss_s==set(), f'bldg_meta mismatch from expectations'
+        if not miss_s==set():
+            raise KeyError(f'bldg_meta mismatch from expectations')
         
         #typeset
         for k, type_str in df['type'].to_dict().items():
@@ -972,7 +973,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         for k,v in d.items():
             assert isinstance(k, int)
             if not isinstance(v, float):
-                raise TypeError(f'got unexpected type on fixed Data Input > Fixed Costs (storey {k})')
+                raise TypeError(f'got unexpected type on fixed Data Input > Fixed Costs (story {k})')
             
         return d
  

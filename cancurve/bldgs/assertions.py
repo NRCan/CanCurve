@@ -44,7 +44,7 @@ def assert_ci_df(df, msg=''):
         else:
             if dstr != colns_dtypes[coln]:  # More specific check
                 raise AssertionError(f"Incorrect data type for column '{coln}'. Expected: {colns_dtypes[coln]}, Found: {dstr}")
-    #check storeys
+    #check storys
     msg1 = f'\nCanCurve only supports basement (-1) and main floor (0) cost items\n  '+ msg
                              #f'remove cost items with these designations\n  '+\
  

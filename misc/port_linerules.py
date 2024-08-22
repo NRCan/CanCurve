@@ -53,7 +53,7 @@ df_left.columns = df_left.columns.str.lower()
 # bldg_layout
 
 """looks like these had some suffix added to Cat.Sel
-ie. wanting to use different DRF for the same cost-item (e.g., ductwork in a 1storey vs. 2 storey)
+ie. wanting to use different DRF for the same cost-item (e.g., ductwork in a 1story vs. 2 story)
 David manually added a suffix to the 'cat.sel' field for these
 """
     
