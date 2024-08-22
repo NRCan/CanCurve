@@ -5,7 +5,10 @@ Created on Apr. 15, 2024
 '''
 
 import os, logging
+from datetime import datetime
 import pandas as pd
+
+today_str = datetime.today().strftime('%Y%m%d')
 
 def view_web_df(df):
     if isinstance(df, pd.Series):

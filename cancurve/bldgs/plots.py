@@ -89,7 +89,7 @@ def plot_c00_costitems(df_raw,
     #===========================================================================
     #figure default
     if figure is None:
-        figure = plt.figure(**fig_kwargs)
+        figure = plt.figure('c00_costitems', **fig_kwargs)
         
     
 
@@ -259,7 +259,7 @@ def plot_c00_DRF(df_raw,
     #===========================================================================
     #figure default
     if figure is None:
-        figure = plt.figure(**fig_kwargs)
+        figure = plt.figure('c00_DRF', **fig_kwargs)
         
     
     cat_l = df_raw.index.unique('cat')
@@ -368,7 +368,7 @@ def plot_c01_depth_rcv(df_raw,
     cmap = matplotlib.colormaps.get_cmap('tab20')
     #figure default
     if figure is None:
-        figure = plt.figure(**fig_kwargs)
+        figure = plt.figure('c01_depth_rcv', **fig_kwargs)
     
     story_l = df_raw.index.unique('story').tolist()
     ax_ar  = figure.subplots(ncols=1, nrows=len(story_l), sharey=True, sharex=True)
@@ -470,7 +470,7 @@ def plot_c02_ddf(df_raw,
  
     #figure default
     if figure is None:
-        figure = plt.figure(**fig_kwargs)
+        figure = plt.figure('c02_ddf', **fig_kwargs)
         
     ax = figure.subplots()
     
