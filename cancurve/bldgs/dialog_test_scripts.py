@@ -5,7 +5,7 @@ Created on Apr. 30, 2024
 
 testing functions for use in pytests and manual QGIS tests (ie no pytest dependency)
 '''
-import os
+import os, warnings
 
 import pandas as pd
 import numpy as np
@@ -48,12 +48,16 @@ test_cases_l = list(fixed_costs_master_d.keys())
 #===============================================================================
 
 def set_fixedCosts(dialog, fixed_costs_d):
-    tblW = dialog.tableWidget_tab3dataInput_fixedCosts #get the table widget
-    ser = pd.Series(fixed_costs_d)
-    tblW.setRowCount(len(ser)) #add this many rows
-    for i, (eName, pval) in enumerate(ser.items()):
-        tblW.setItem(i, 0, QTableWidgetItem(str(eName)))
-        tblW.setItem(i, 1, QTableWidgetItem(str(pval)))
+ 
+    if isinstance(fixed_costs_d, dict):
+        for k,v in fixed_costs_d.items():
+            #retrieve widget for this storey
+            qds_widget = dialog.fixed_costs_widget_d[k]
+            qds_widget.setValue(v)
+    else:
+        warnings.warn(f'got no fixed costs')
+ 
+    
         
         
 def set_tab2bldgDetils(dialog, testCase):

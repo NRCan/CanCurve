@@ -87,6 +87,10 @@ assert os.path.exists(ui_fp)
 FORM_CLASS, _ = uic.loadUiType(ui_fp, resource_suffix='')
 
 class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
+    
+
+    
+    
     def __init__(self, 
                  parent=None, #not sure what this is supposed to be... 
                  iface=None,
@@ -132,11 +136,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
  
         
     def connect_slots(self):
-        """
-        using the cointaier (dict) self.launch_actions to store functions
-            that should be called once the dialog is launched
-            see self.launch()
-        """
+        """on launch of ui, populate and connect"""
+ 
         log = self.logger.getChild('connect_slots')
         log.debug('connecting slots')
  
@@ -234,9 +235,19 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         
         #=======================================================================
+        # shortcuts
+        #=======================================================================
+        #shortcut to retrieve fixed costs per-story
+        #maybe this should go elsewhere?
+        self.fixed_costs_widget_d = {
+            -1:self.doubleSpinBox_tab3dataInput_sm1,
+            0:self.doubleSpinBox_tab3dataInput_s0
+            }
+        
+        #=======================================================================
         # populate ui
         #=======================================================================
-        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)
+        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp) #DRF default
         self.lineEdit_wdir.setText(home_dir)
         
         self.pushButton_wd_open.clicked.connect(
@@ -265,6 +276,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 
         self.pushButton_wd.clicked.connect(pushButton_wd_QFileDialog)
         
+        
+        
+        
         #cost item browse
         def pushButton_tab3dataInput_cifp_QFileDialog():
             filename, _ = QFileDialog.getOpenFileName(
@@ -274,8 +288,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 "comma separated values (*.csv)"  # Example file filters
                 )
             if filename:
-                self.lineEdit_tab3dataInput_cifp.setText(filename)
- 
+                self.lineEdit_tab3dataInput_cifp.setText(filename) 
         
         self.pushButton_tab3dataInput_cifp.clicked.connect(pushButton_tab3dataInput_cifp_QFileDialog)
         
@@ -289,8 +302,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 "sqlite database files (*.db)"  # Example file filters
                 )
             if filename:
-                self.lineEdit_tab3dataInput_drfFp.setText(filename)
- 
+                self.lineEdit_tab3dataInput_drfFp.setText(filename) 
         
         self.pushButton_tab3dataInput_drfFp.clicked.connect(pushButton_tab3dataInput_drfFp_QFileDialog)
         
@@ -951,10 +963,18 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
     def _get_fixed_costs(self, logger=None):
         """retireve fixed costs from 'Data Input' tab"""
-        df_raw =  get_tabelWidget_data(self.tableWidget_tab3dataInput_fixedCosts)
-        
-        return df_raw.astype(float).set_index(df_raw.columns[0]).iloc[:, 0].to_dict()
  
+        d = {k:v.value() for k,v in self.fixed_costs_widget_d.items()}
+        
+        #check it
+        for k,v in d.items():
+            assert isinstance(k, int)
+            if not isinstance(v, float):
+                raise TypeError(f'got unexpected type on fixed Data Input > Fixed Costs (storey {k})')
+            
+        return d
+ 
+            
  
         
     def _get_settings(self, logger=None):

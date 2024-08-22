@@ -714,7 +714,7 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_01wd">
+        <widget class="QGroupBox" name="groupBox_t03_01wd">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -756,7 +756,7 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_12">
+        <widget class="QGroupBox" name="groupBox_t03_02">
          <property name="title">
           <string>Project Name:</string>
          </property>
@@ -778,7 +778,7 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_13">
+        <widget class="QGroupBox" name="groupBox_t03_03">
          <property name="title">
           <string>Cost-Item File:</string>
          </property>
@@ -807,51 +807,84 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_14">
+        <widget class="QGroupBox" name="groupBox_t03_04fixedCosts">
          <property name="title">
           <string>Fixed Costs:</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_14">
           <item alignment="Qt::AlignHCenter">
-           <widget class="QTableWidget" name="tableWidget_tab3dataInput_fixedCosts">
-            <attribute name="horizontalHeaderMinimumSectionSize">
-             <number>100</number>
-            </attribute>
-            <attribute name="horizontalHeaderDefaultSectionSize">
-             <number>100</number>
-            </attribute>
-            <row>
-             <property name="text">
-              <string/>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>-1</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>0</string>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>Floor/Story</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Cost</string>
-             </property>
-            </column>
+           <widget class="QGroupBox" name="verticalGroupBox">
+            <layout class="QVBoxLayout" name="verticalLayout_20">
+             <item>
+              <layout class="QFormLayout" name="formLayout">
+               <item row="0" column="0">
+                <widget class="QLabel" name="basementRCVStorey1Label">
+                 <property name="text">
+                  <string>Basement RCV (storey -1):   </string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="mainFloorRCVStorey0Label">
+                 <property name="text">
+                  <string>Main Floor RCV (storey 0):</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_tab3dataInput_sm1">
+                 <property name="minimumSize">
+                  <size>
+                   <width>150</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="prefix">
+                  <string>$</string>
+                 </property>
+                 <property name="decimals">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <double>9999999.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>1000.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_tab3dataInput_s0">
+                 <property name="alignment">
+                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                 </property>
+                 <property name="prefix">
+                  <string>$</string>
+                 </property>
+                 <property name="decimals">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <double>9999999.000000000000000</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>1000.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_15">
+        <widget class="QGroupBox" name="groupBox_t03_05">
          <property name="title">
           <string>Cost Basis</string>
          </property>
@@ -896,7 +929,7 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_16">
+        <widget class="QGroupBox" name="groupBox_t03_06">
          <property name="title">
           <string>Depth-Replacement-Fraction File</string>
          </property>
