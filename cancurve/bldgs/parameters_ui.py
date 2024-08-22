@@ -15,7 +15,7 @@ building_details_options_d = {
     'subClassification': ['Single Family', 'Construction', 'Duplex', 'Entertainment and Recreation', 'Food/Drugs/Chemicals', 'Heavy', 'High rise apartment', 'High technology', 'Hospital', 'Light', 'Low rise apartment', 'Medical office', 'Metals/Minerals Processing', 'Mobile home', 'Multifamily', 'Other', 'Personal and repair', 'Recreational', 'Retail trade', 'Theatre', 'Townhouse', 'Wholesale trade'],
     'storeys': ['1', '2', 'Split', 'Multi-story'],
     
-    'heatingType': ['Baseboard-electric', 'Baseboard-hot Water', 'Forced Air - Electric', 'Forced Air - Gas', 'Heatpump', 'Mixed', 'Solar', 'Oil', 'Woodstove', 'Other'],
+    'heatingType': ['Baseboard-electric', 'Baseboard-hot Water', 'Forced Air - Electric', 'Forced Air - Gas', 'Forced Air - Unknown', 'Heatpump', 'Mixed', 'Solar', 'Oil', 'Woodstove', 'Other'],
     'coolingType': ['Central air', 'Heat pump'],
     'garageType': ['Yes, Attached', 'Yes, Detached', 'None'],
     'garageSize': ['Single', 'Single Plus', 'Double', 'Triple'],
@@ -23,7 +23,7 @@ building_details_options_d = {
     
     
     #foundation/basement
-    'foundationType':['basement', 'crawlspace', 'slab', 'other'],
+    'foundationType':['Basement', 'Crawlspace', 'Slab', 'Other'],
     'basementHeightUnits':['m', 'ft'],
     
     
