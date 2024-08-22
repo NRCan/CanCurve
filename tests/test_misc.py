@@ -17,6 +17,7 @@ test_data_dir_master = os.path.join(test_data_dir_master, 'misc')
 #===============================================================================
 from misc.DDFP_compare import ddfp_lib_fp_d
 
+
 #===============================================================================
 # helpers----
 #===============================================================================
@@ -54,7 +55,7 @@ def ci_df(ci_fp):
 
 
 
-@pytest.mark.dev
+
 @pytest.mark.parametrize('study_name, ddf_name',[
     ('AB.Calgary', 'R_2-L-BD-CU_ABCA'),
     ])
@@ -73,20 +74,31 @@ def test_plot_and_eval_ddfs(ddf_d, tmpdir, logger):
     func(ddf_d, log=logger, out_dir=tmpdir)
     
     
+#===============================================================================
+# file-based tests 
+#===============================================================================
+from .data.bldgs.misc import load_tests_cases_from_file, test_cases_l
+load_tests_cases_from_file() #setup file-based test cases
 
 
-@pytest.mark.parametrize('testCase',[
-    'case4_R2', #'AB.Calgary', 'R_2-L-BD-CU_ABCA'
-    ])
-def test_bldgs_workflow(ci_df, bldg_meta_d,fixed_costs_d,
-                        testCase,
+
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',
+    #['case4_R2']
+     test_cases_l,    
+    )
+def test_bldgs_workflow(testCase, 
+                        ci_df, bldg_meta_d,fixed_costs_d,  #from conftest based on testCase                       
                         tmpdir, logger):
+    """end-to-end backend testing"""
     from misc.bldgs_script_example import bldgs_workflow as func
     
     func(ci_df, bldg_meta_d=bldg_meta_d, fixed_costs_d=fixed_costs_d,
          #settings_d=settings_d, #use default 
           curve_name=f'{testCase}_c00',
-         logger=logger, out_dir=tmpdir)
+         logger=logger, out_dir=tmpdir,
+         plot=False,
+         )
     
     
     

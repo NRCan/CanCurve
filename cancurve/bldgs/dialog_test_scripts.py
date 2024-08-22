@@ -5,7 +5,7 @@ Created on Apr. 30, 2024
 
 testing functions for use in pytests and manual QGIS tests (ie no pytest dependency)
 '''
-import os, warnings
+import os, warnings, copy
 
 import pandas as pd
 import numpy as np
@@ -32,17 +32,20 @@ test_data_dir_master = os.path.join(plugin_dir, 'dev_test_data') #needs to live 
 
 #test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
-
-#not sure if this should be here...
+"""this needs to live here so it is accessible by tests after deployment"""
 fixed_costs_master_d = {
-        'case1':{0:10000, -1:8000},
+        'case1':{0:10000.0, -1:8000.0},
         'case2':None,
-        'case3':{-1:0, 0:25000},
-        'case4_R2':{-1:19361, 0:24879, 1:22484},
+        'case3':{-1:0.0, 0:25000.0},
+        'case4_R2':{-1:19361.0, 0:24879.0, 1:22484.0},
                 
         }
 
-test_cases_l = list(fixed_costs_master_d.keys())
+#see tests.data.bldgs.misc for file-based test cases
+test_cases_l = copy.copy(list(fixed_costs_master_d.keys()))
+
+ 
+
 #===============================================================================
 # helpers------
 #===============================================================================

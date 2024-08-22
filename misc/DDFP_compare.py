@@ -9,7 +9,7 @@ compile and analyze DDFP example curves against CanCurve
 #===============================================================================
 # IMPORTS---------
 #===============================================================================
-import  os, logging, pprint, pickle
+import  os, logging, pprint, pickle, shutil
 from datetime import datetime
 import pandas as pd
 import numpy as np
@@ -41,7 +41,7 @@ import matplotlib.gridspec as gridspec
 from misc.port_estimate import ddfp_inputs_to_ci, ddfp_inputs_to_fixedCosts, load_main_floor_area
 from cancurve.hp.logr import get_new_file_logger, get_log_stream
 from cancurve.hp.basic import view_web_df as view
-from cancurve.bldgs.assertions import assert_CanFlood_ddf
+from cancurve.bldgs.assertions import assert_CanFlood_ddf, assert_bldg_meta_d
 from cancurve.bldgs.core import DFunc
 
 from misc.bldgs_script_example import bldgs_workflow
@@ -964,9 +964,85 @@ def p04_summary_plot(dx,
     return ofp
     
  
-    
+def port_to_test_data(
+        fixd_lib,meta_lib,
+        search_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare\p01',
+        out_dir = r'l:\09_REPOS\04_TOOLS\CanCurve\tests\data\bldgs'
+        
+        ): 
+    """extract the data into a format for the test cases"""
  
     
+    
+    #_d_to_pick(fixd_lib, r'l:\09_REPOS\04_TOOLS\CanCurve\tests\data\bldgs\fixed_costs.pkl')
+    
+
+    #===========================================================================
+    # loop andn copy each case
+    #===========================================================================
+    cnt=0
+    for root, dirs, _ in os.walk(search_dir):
+        # Get the relative path from the root to the current directory
+        relative_root = os.path.relpath(root, search_dir)
+
+        # Skip the root directory itself
+        if relative_root == '.':
+            continue
+
+        for dir_name in dirs:
+            target_dirname = f"{relative_root.replace('.','-')}_{dir_name}"
+            
+            dest_dir = os.path.join(out_dir, target_dirname)
+            os.makedirs(dest_dir, exist_ok=True)
+            
+            
+            #===========================================================================
+            # copy/paste cost item csv
+            #===========================================================================
+    
+    
+            _copy_directory(os.path.join(root, dir_name), dest_dir)
+            
+            print(f'copied to \n    {dest_dir}')
+            
+            #===================================================================
+            # fixed costs
+            #===================================================================
+            fixed_d = fixd_lib[relative_root][dir_name]
+            _d_to_pick(fixed_d, os.path.join(dest_dir, 'fixed_d.pkl'))
+            
+            #===================================================================
+            # metadata
+            #===================================================================
+            d = meta_lib[relative_root][dir_name]
+            
+            assert_bldg_meta_d(d)
+            
+            _d_to_pick(d, os.path.join(dest_dir, 'bldg_meta_d.pkl'))
+            
+            cnt+=1
+            
+    print(f'finihed on {cnt}')
+            
+            
+            
+def _copy_directory(src_dir, dest_dir):
+    try:
+        if os.path.exists(dest_dir):
+            shutil.rmtree(dest_dir)  # Remove the destination directory if it exists
+        shutil.copytree(src_dir, dest_dir)
+        print(f"Directory '{src_dir}' successfully copied to '{dest_dir}'.")
+    except shutil.Error as e:
+        print(f"Error occurred while copying directory: {e}")
+    except OSError as e:
+        print(f"OS error: {e}")
+            
+ 
+ 
+ 
+ 
+            
+ 
  
     
 if __name__=='__main__':
@@ -991,26 +1067,32 @@ if __name__=='__main__':
     ci_df_lib = ddfp_lib.pop('ci')
     meta_lib = ddfp_lib.pop('meta')
     fixd_lib = ddfp_lib.pop('fixed')
+    
+    
+    port_to_test_data(fixd_lib, meta_lib)
+    
     #     
     #     
     #   
-    # #===========================================================================
-    # # build curves using CanCurve   
-    # #===========================================================================
-    #CanCurve_ddfs_lib = p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib, out_dir=god('p02'))
+    #===========================================================================
+    # # #===========================================================================
+    # # # build curves using CanCurve   
+    # # #===========================================================================
+    # #CanCurve_ddfs_lib = p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib, out_dir=god('p02'))
+    # #  
+    # CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p02\DDFP_CanCurve_batch.pkl')
     #  
-    CanCurve_ddfs_lib = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p02\DDFP_CanCurve_batch.pkl')
-     
-     
+    #  
+    # #===========================================================================
+    # # compare
+    # #===========================================================================
+    # #metric_dx_d = p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib, meta_lib, out_dir=god('p03'),ddf_name_l = ddf_name_l)
+    # 
+    # metric_dx_d = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p03\metric_dx.pkl')
+    # 
+    # for k,dx in metric_dx_d.items():
+    #     p04_summary_plot(dx, out_dir = god(f'p03'), title=k)
     #===========================================================================
-    # compare
-    #===========================================================================
-    #metric_dx_d = p03_compare(ddfp_lib.pop('crve'), CanCurve_ddfs_lib, meta_lib, out_dir=god('p03'),ddf_name_l = ddf_name_l)
-    
-    metric_dx_d = _pick_to_d(r'l:\10_IO\CanCurve\misc\DDFP_compare\p03\metric_dx.pkl')
-    
-    for k,dx in metric_dx_d.items():
-        p04_summary_plot(dx, out_dir = god(f'p03'), title=k)
         
     
     

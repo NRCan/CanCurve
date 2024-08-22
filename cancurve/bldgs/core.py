@@ -16,7 +16,7 @@ from datetime import datetime
 
 from ..hp.logr import get_log_stream
 from ..hp.basic import view_web_df as view
-from ..hp.basic import convert_to_bool
+from ..hp.basic import convert_to_bool, convert_to_float
 
 
 from .parameters import (
@@ -26,7 +26,7 @@ from .parameters import (
  
 from .assertions import (
     assert_ci_df, assert_drf_db, assert_drf_df, assert_proj_db_fp, assert_proj_db,
-    assert_bldg_meta_d, assert_CanFlood_ddf,
+    assert_bldg_meta_d, assert_CanFlood_ddf, assert_fixed_costs_d
     )
 
 from .. import __version__
@@ -154,8 +154,14 @@ def load_drf(fp, log=None):
     return df1
     
     
-    
-    
+def _get_bldg_meta_d(testCase, df=None):
+    if testCase in df.columns:
+        d = df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
+    else:
+        raise KeyError(testCase)
+    d = {k:convert_to_float(v) for k, v in d.items()}
+    assert_bldg_meta_d(d, msg=testCase)
+    return d
 
 def _get_proj_meta_d(log, 
                    #curve_name=None,
@@ -761,7 +767,13 @@ def c00_setup_project(
         assert ci_fp is None
         ci_df = ci_df.copy()
         
+    #remove excess stories
     ci_df = ci_df.sort_values('story')
+    
+    bx = ci_df['story']>0
+    if bx.any():
+        log.warning(f'found {bx.sum()}/{len(bx)} costItem entries with story>0... dropping')
+        ci_df = ci_df.loc[~bx, :]
     
     #===========================================================================
     # load depth-replacement-factor database
@@ -840,6 +852,15 @@ def c00_setup_project(
     # fixed costs------
     #===========================================================================
     if fixed_costs_d is None: fixed_costs_d = dict()
+    assert_fixed_costs_d(fixed_costs_d)
+    
+    #remove excess stories
+ 
+    
+    for k in list(fixed_costs_d.keys()):
+        if k>0:
+            log.warning(f'found fixed_cost story values >0.... deleting')
+            fixed_costs_d.pop(k)
     
     if len(fixed_costs_d)>0:
         fc_ser = pd.Series(fixed_costs_d, name='rcv', dtype=float)

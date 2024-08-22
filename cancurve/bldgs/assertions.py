@@ -4,7 +4,7 @@ Created on Apr. 16, 2024
 @author: cef
 '''
 
-import os
+import os, warnings
 import sqlite3
 import pandas as pd
 
@@ -15,7 +15,7 @@ from ..hp.basic import view_web_df as view
 expected_tables_base = ['project_meta','project_settings','c00_bldg_meta', 'c00_cost_items','c00_drf']
 
 
-def assert_ci_df(df):
+def assert_ci_df(df, msg=''):
     """
     Asserts that the provided DataFrame conforms to CI data expectations.
 
@@ -44,8 +44,15 @@ def assert_ci_df(df):
         else:
             if dstr != colns_dtypes[coln]:  # More specific check
                 raise AssertionError(f"Incorrect data type for column '{coln}'. Expected: {colns_dtypes[coln]}, Found: {dstr}")
-
+    #check storeys
+    msg1 = f'\nCanCurve only supports basement (-1) and main floor (0) cost items\n  '+ msg
+                             #f'remove cost items with these designations\n  '+\
  
+    if not df['story'].max()<=0:
+        warnings.warn(f'CostItem maximum story value exceeds expectation of \'0\'  '+msg1)
+
+    if not df['story'].min()>=-1:
+        warnings.warn(f'CostItem minimum story value exceeds expectation \'-1\'  '+msg1)
 #===============================================================================
 # Project database
 #===============================================================================
@@ -142,21 +149,43 @@ def assert_drf_df(df):
         if not 'float' in df[col].dtype.name:  # Assuming you want specifically float64
             raise TypeError(f'DRF column \'{col}\' ({i}) expected as dtype float. instead got \'{df[col].dtype}\'')
         
-def assert_bldg_meta_d(bldg_meta):
+def assert_bldg_meta_d(bldg_meta, msg=''):
     """check the bldg_meta_d meets expectations"""
     
     #check the minumn key requirements
         
     miss_s = set(bldg_meta_rqmt_df['varName_core'].dropna().values.tolist()).difference(bldg_meta.keys())
     if not miss_s==set():
-        raise KeyError(f'bldg_meta missing keys \'{miss_s}\'')
+        raise KeyError(f'bldg_meta missing keys \'{miss_s}\'' + '\n'+msg)
     
     #check types
     type_d = bldg_meta_rqmt_df.loc[:, ['varName_core', 'type']].dropna().set_index('varName_core').iloc[:, 0].to_dict()
     for k,v in type_d.items():
         if not v in type(bldg_meta[k]).__name__:
-            raise TypeError(f'unrecognized type on \'{k}\' ({type(bldg_meta[k])})')
+            raise TypeError(f'unrecognized type on \'{k}\' ({type(bldg_meta[k])})'+ '\n'+msg)
         
+def assert_fixed_costs_d(d, msg=''):
+    """check the fixed_costs_d meets expectations
+    
+    decided to allow len(d)>2 and just removing excess data
+    for backwards compatability
+    """
+    assert isinstance(d, dict)
+    
+    #ssert len(d)<=2
+    for k,v in d.items():
+        
+        #key expectations
+        assert isinstance(k, int)        
+        assert k>=-1
+        #assert k<=0
+        
+        #value exectations
+        if not isinstance(v, float):
+            raise TypeError(k)
+        assert v>=0
+        
+ 
 
 def assert_CanFlood_ddf(df):
     from cancurve.bldgs.core import DFunc
