@@ -859,7 +859,7 @@ QGroupBox {
           <item>
            <widget class="QRadioButton" name="radioButton_6">
             <property name="text">
-             <string>RCV</string>
+             <string>Total ($/structure)</string>
             </property>
             <attribute name="buttonGroup">
              <string notr="true">buttonGroup_costbasis</string>
@@ -869,7 +869,7 @@ QGroupBox {
           <item>
            <widget class="QRadioButton" name="radioButton_tab3dataInput_rcvm2">
             <property name="text">
-             <string>RCV/area</string>
+             <string>Area-based ($/area)</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -1774,7 +1774,7 @@ QLabel {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_costbasis"/>
   <buttongroup name="buttonGroup_runControl"/>
+  <buttongroup name="buttonGroup_costbasis"/>
  </buttongroups>
 </ui>
