@@ -642,7 +642,7 @@ def c00_setup_project(
 
         
         ):
-    """build project SQLite. load data into it
+    """build project SQLite database and load data into it
     
     
     Params
@@ -923,7 +923,7 @@ def c00_setup_project(
 def c01_join_drf(proj_db_fp,        
         log=None, 
         ):
-    """Join DRF to CI then multiply through to create 'depth_rcv' table
+    """Join DRF to CI then multiply through to create fractional restoration costs
     
     
     Params
