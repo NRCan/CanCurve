@@ -4,7 +4,7 @@ Tutorials
 ==========================
 
 This section contains a collection of tutorials with example data and results.
-Be sure to read and follow the `Getting Started Section <sec01-gettingStarted>` before attempting these tutorials.
+Be sure to read and follow the :ref:`Getting Started Section <sec01-gettingStarted>` before attempting these tutorials.
 
 .. _sec03-tut01:
 
@@ -33,6 +33,7 @@ Open the :ref:`Buildings Tool <sec02-bldgs>`, navigate to the **Metadata** tab, 
    :align: center
    :width: 900px
 
+   Metadata for Tutorial 1
 
 Step 3: Data Input
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,6 +51,8 @@ Navigate to the **Data Input** tab and, using the below image for reference, pop
    :align: center
    :width: 900px
 
+   Data Input page for Tutorial 1
+
 Step 4: Create Curve
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Navigate to the **Create Curve** tab.
@@ -57,9 +60,11 @@ In the **Run Control** box, select **All**, then click **Run**.
 You should see the progress of each of the four :ref:`Curve Creation Steps <sec02-Core>` along with a message in the bottom window informing you that the DDF has been output to the **Working Directory** you specified in Step 3, similar to what is shown below.
 
 .. figure:: /assets/03_01_cc.PNG
-   :alt: Data Input Tab
+   :alt: Curve Creation Tab
    :align: center
    :width: 900px
+
+   Curve Creation page for Tutorial 1
 
 For additional log messages, you can return to the main QGIS window, open the log panel (View>Panels>Log Messages), and select the **CanCurve** tab.
 Scrolling up, you should see diagnostic messages for each of the four steps you just ran.

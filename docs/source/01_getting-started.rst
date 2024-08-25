@@ -24,22 +24,12 @@ Overviews
 CanCurve is a collection of tools for generating Depth Damage Functions (DDF) used by platforms like `CanFlood <https://github.com/NRCan/CanFlood>`_ to create flood risk models.
 CanCurve's :ref:`Buildings Tool <sec02-bldgs>` for example facilitates the creation of DDFs from detailed restoration cost data for archetypal buildings.
 This tool joins a table of restoration activities (e.g., repair dry-wall for $1000), called the :ref:`Cost-Item Table <sec02-costItem>`, to a database of information on the flood vulnerability of those items, called the :ref:`Depth-Replacement-Factor (DRF) Database <sec02-DRF>`.
-After identifying the target building or archetype for which a user would like to construct a DDF, typically a Cost-Item table is prepared using local pricing tables and expert knowledge on the restoration of the building.
-For the DRF Database, either the version shipped with CanCurve can be used (default), or an alternate file can be specified.
-Once these inputs and the building metadata are prepared and entered into the Buildings Tool, the four *Curve Creation* steps can be run to create and export a DDF in :ref:`CanFlood format <sec02-CanFloodFormat>`.
+After identifying the target building or archetype for which a user would like to construct a DDF, typically a :ref:`Cost-Item Table <sec02-costItem>` is prepared using local pricing tables and expert knowledge on the restoration of the building.
+For the :ref:`DRF Database <sec02-DRF>`, either the version shipped with CanCurve can be used (default), or an alternate file can be specified.
+Once these inputs and the building metadata are prepared and entered into the Buildings Tool, the four :ref:`Curve Creation <sec02-Core>` steps can be run to create and export a DDF in :ref:`CanFlood format <sec02-CanFloodFormat>`.
 
 
-:numref:`fig01-conceptual-diagram` provides a diagram of how the remote, local, and project datasets are related.
-See the  :ref:`Quick Start Guide <sec01-quick>` to learn more.
 
-.. _fig01-conceptual-diagram:
-
-.. figure:: /assets/01-conceptual-diagram.png
-   :alt: Conceptual Diagram
-   :align: center
-   :width: 900px
-
-   Conceptual diagram of the CanCurve Buildings Tool.
 
 
 .. _sec01-quick:
@@ -67,8 +57,8 @@ To start working with CanCurve, click the |CanCurve_icon| to open the :ref:`Buil
 
 
 To use the tool to create a DDF from data for your archetypal building, first populate the **Metadata** tab with whatever information is available (see the :ref:`Tutorials <sec03-tutorials>` section for example data).
-Note that not all fields are required, but the more information you provide, the more complete your DDF will be.
-To specify settings, the :ref:`Cost-Item Table <sec02-costItem>`, the :ref:`Depth-Replacement-Factor (DRF) Database <sec02-DRF>`, and the :ref:`Fixed Costs <sec02-fixedCosts>` data, complete the **Data Input** tab.
+Note only fields marked with an asterisk (*) are required, but the more information you provide, the more complete your DDF will be.
+To specify settings, the :ref:`Cost-Item Table <sec02-costItem>`, the :ref:`Depth-Replacement Factor (DRF) Database <sec02-DRF>`, and the :ref:`Fixed Costs <sec02-fixedCosts>` data, complete the **Data Input** tab.
 Finally, the four curve creation steps can be executed from the **Create Curve** tab, ending in an export of your DDF in :ref:`CanFlood format <sec02-CanFloodFormat>`.
 
 
@@ -88,6 +78,12 @@ Frequently Asked Questions
 
 **Where can I go to get help?**
     The best place to get help is the `CanCurve GitHub Issues <https://github.com/NRCan/CanCurve/issues>`_ page where you can read through questions posted by others or ask your own.
+
+
+**Do I really need to install an old version of QGIS to use CanCurve**
+      No, but we recommend it for best performance. If you have a newer version of QGIS installed, you can try CanCurve with it, but you may experience issues.
+
+      
 
 
 
