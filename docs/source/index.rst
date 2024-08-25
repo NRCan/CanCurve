@@ -1,4 +1,4 @@
-Welcome to CanCurve documentation!
+Welcome to CanCurve!
 ===================================
 
 

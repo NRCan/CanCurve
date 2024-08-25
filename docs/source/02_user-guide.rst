@@ -1,14 +1,14 @@
 .. _sec02-userGuide:
 
+
 User Guide: Buildings Tool
 ==========================
 
 .. _sec02-bldgs:
 
 
-
 The CanCurve **Buildings Tool** is designed to create Depth Damage Functions (DDF) for an archetypal Canadian building from detailed restoration cost data.
-Basically, the tool joins this cost data to a database of item vulnerability then groups the data by depth to create a simple function for *flood damage* against *flood depth* (with some additional features of course). 
+Basically, the tool joins this cost data to a database of item vulnerability then groups the data by depth to create a simple function for *flood damage* against *flood depth* (with some additional features of course).
 
 Introduction
 -------------
@@ -127,7 +127,6 @@ The database is composed of several tables, each of which is used by one or more
 
 .. _tab02-ProjectDatabase:
 
- 
 .. table:: Project Database tables and corresponding Curve Creation Steps
    :widths: auto
 
@@ -169,7 +168,7 @@ CanFlood requires three keys in the metadata section:
 
 It is good practice to include additional metadata (e.g., location); however, these are not strictly required by CanFlood.
 Below is a minimum example CanFlood format DDF.
- 
+
 .. _fig02-CanCurve-format:
 
 .. figure:: /assets/02-CanCurve-format.png
@@ -178,6 +177,14 @@ Below is a minimum example CanFlood format DDF.
    :width: 900px
 
    CanFlood format DDF minimum example.
+
+.. _sec02-costBasis:
+
+Cost Basis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CanCurve supports two cost bases:
+ - **Total** ($/structure): The resulting DDF will reflect the total restoration costs for the archetype as a function of depth. This can be useful for debugging and for risk models with very similar structures. For DDFs of this type, the calculated impacts should not be scaled.
+ - **Area-based** ($/area): The resulting DDF will reflect the restoration costs per area of the structure as a function of depth. The units of the DDF impact values can be $/ft^2 or $/m^2 depending on what was specified in the **Structure area** field on the **Metadata** tab. This basis is useful for adapting the resulting archetypal DDF to other structures by scaling the impact values by the area of the structure.
 
 
 
