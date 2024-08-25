@@ -29,11 +29,11 @@ CanCurve currently only supports discrete tangible depth-damage functions.
 
 Flood Risk Modelling in Canada
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-NRCan develops and maintains flood risk software and data tools to support disaster resilience in Canada. 
-In particular, NRCan maintains `CanFlood <https://github.com/NRCan/CanFlood>`_, a QGIS plugin for building flood risk models. 
-A major input or component of CanFlood models are DDFs. 
-Traditionally, CanFlood users struggled to obtain DDFs from past projects or public repositories, leading to inefficient and inaccurate risk modelling. 
-To address this gap, in 2023 NRCan commissioned the Arcadis company to develop a system for constructing local DDFs in Canada. 
+NRCan develops and maintains flood risk software and data tools to support disaster resilience in Canada.
+In particular, NRCan maintains `CanFlood <https://github.com/NRCan/CanFlood>`_, a QGIS plugin for building flood risk models.
+A major input or component of CanFlood models are DDFs.
+Traditionally, CanFlood users struggled to obtain DDFs from past projects or public repositories, leading to inefficient and inaccurate risk modelling.
+To address this gap, in 2023 NRCan commissioned the Arcadis company to develop a system for constructing local DDFs in Canada.
 This resulted in a formal process for constructing DDFs called *Program for the Development of Flood Damage (Vulnerability) Curves for buildings in Canada* (a.k.a. the DDF Program or DDFP).
 To operationalize DDFP, NRCan initiated the CanCurve project.
 
@@ -41,42 +41,60 @@ To operationalize DDFP, NRCan initiated the CanCurve project.
 
 Data Requirements
 -----------------
-The **Buildings Tool** requires three types of data about the archetypal building in order to generate a DDF.
+The **Buildings Tool** requires three types of data about the archetypal building in order to generate a DDF summarized in the following sections.
+See :ref:`Tutorials <sec03-tutorials>` for example data.
 
 Building Metadata
 ~~~~~~~~~~~~~~~~~
-Building metadata includes any information that might be relevant to estimating the flood vulnerability of an archetype, like the year of construction, the date associated with the cost estimate, the person preparing the estimate, etc.
+Building metadata is simple information relevant to estimating the flood vulnerability of an archetype, like the year of construction, the date associated with the cost estimate, the person preparing the estimate, etc.
 This information is used by the Buildings Tool to populate metadata fields on output DDFs and, in some cases, to assemble the DDF.
 Metadata is specified on the **Metadata** tab and stored in the **c00_bldg_meta** table of the Project Database.
-The user is expected to obtain this information from expert knowledge and documentation on the archetype. 
+The user is expected to obtain this information from expert knowledge and documentation on the archetype.
+To assemble the DDF, the following metadata is required:
 
-.. _sec02-costInformation:
+ - **Building Layout** (``bldg_layout``): Corresponds to categories in the DRF dataset.
+ - **Basement height value** (``basement_height_m``): The height of the basement in meters, used to concatenate the cost values between storys.
+ - **Structure area value** (``scale_value``): The area of the structure in square meters used to scale the cost values for Area-based cost basis.
 
-Cost Information
+It is good practice to specify additional metadata fields, which the  Buidings Tool  propagates onto the output DDFs.
+
+.. _sec02-costItem:
+
+Cost-Item Table
 ~~~~~~~~~~~~~~~~
 
-This restoration item and cost data is specifed as a CSV file on the Data Input tab. Click here for an example. [Click here for an example].
+This restoration item and cost data is specifed as a CSV file on the **Data Input** tab.
+Typically this information is obtained from cost restoration experts using specialized software like Xactimate and a detailed model of the structure.
+
 
 .. _sec02-DRF:
 
-Depth-Replacement-Factor (DRF) Dataset
+Depth Replacement-Factor (DRF) Dataset
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This dataset relates flood depth to the percentage loss or damage of a restoration item and is specified on the Data Input tab. By default, the DRF dataset shipped with CanCurve will be used.
+This dataset relates flood depth to the percentage loss or damage of a restoration item and is specified on the **Data Input** tab.
+By default, the DRF dataset shipped with CanCurve will be used, which is installed into the `./db` directory of the CanCurve plugin.
+The DRF dataset is a SQLite database with three tables:
+
+ - **cost_item_meta**: lookup and description fields for each cost-item with key fields ``cat``, ``sel``, and ``bldg_layout``.
+ - **drf**: the depth-replacement-factor for each cost-item with key fields ``cat``, ``sel``, and ``bldg_layout``.
+ - **meta**: metadata for the DRF dataset.
+
+
 
 .. _sec02-fixedCosts:
 
 Fixed Costs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-This simple dataset has two simple values, the fixed costs for the restoration of the basement and the mainfloor.
-This represents the sum of all depth-invariant cost items for each floor.
-For example, mobilization costs or permit fees --- restoration costs that would be incurred no mater how severe the flood exposure.
-
+This simple dataset has two values: the fixed costs for the restoration of the basement and the mainfloor.
+This represents the sum of all depth-invariant cost items for each floor i.e., restoration costs that would be incurred no mater how severe the flood exposure.
+For example, mobilization costs or permit fees.
+This dataset is specified on the **Data Input** tab and stored in the **c00_fixed_costs** table of the Project Database.
 
 
 Key Concepts
 -----------------
-The **Buildings Tool** is composed of the Graphical User Interface (GUI) front-end and a collection of python scripts for performing the data operations in the back-end, called the *core* which contains four *curve creation* steps.
-A typical workflow starts by preparing the :ref:`Input Data <sec02-dataRequirements>`, populating the fields in the GUI, then executing the :ref:`Curve Creation Steps <_sec02-Core>`. 
+The **Buildings Tool** is composed of the Graphical User Interface (GUI) front-end and a collection of python scripts for performing the data operations in the back-end, called the ``core`` which contains four *curve creation* steps.
+A typical workflow starts by preparing the :ref:`Input Data <sec02-dataRequirements>`, populating the fields in the GUI, then executing the :ref:`Curve Creation Steps <sec02-Core>`.
 
 .. _sec02-Core:
 
@@ -85,26 +103,27 @@ Core: Curve Creation Steps
 At the core of the Buildings Tool are four curve creation steps that are executed in sequence to generate a DDF.
 These are controlled from the **Create Curve** tab and can be executed individually or all at once:
 
-1. **Setup project**: 
-   Construct the :ref:`project SQLite database <sec02-projectDatabase>` and load data into it from the GUI.
+1. **Setup project**:
+   Construct the :ref:`Project Database <sec02-projectDatabase>` and load data into it from the GUI.
 
-2. **Data join and multiply costs**: 
-   Join DRF to the Cost-Item table, then multiply through to create fractional restoration costs.
+2. **Data join and multiply costs**:
+   Join DRF to the :ref:`Cost-Item table <sec02-costItem>`, then multiply through to create fractional restoration costs.
 
-3. **Data group and concat stories**: 
+3. **Data group and concat stories**:
    Group restoration costs by story and concatenate them into a single table.
 
-4. **Export result in CanFlood format**: 
-   Export the DDF in the CanFlood format.
+4. **Export result in CanFlood format**:
+   Export the DDF in the :ref:`CanFlood format <sec02-CanFloodFormat>`.
 
-To pass information between these steps and to save the user's progress to a file, all of these steps read or write to a SQLite database, called the :ref:`Project Database <sec02-projectDatabase>`.
+To pass information between these steps and to save the user's progress to a file, all of these steps read or write to the :ref:`Project Database <sec02-projectDatabase>`.
 
+.. _sec02-projectDatabase:
 
 Project Database
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The **Project Database** is a SQLite database that stores the data and metadata for the project.
-While knowledge of the project database is not strictly necessary to use CanCurve, it can be useful for debugging and understanding the tool's operation.
-The database is composed of several tables, each of which is used by one or more of the curve creation steps, as shown in the table below.
+The **Project Database** is a SQLite database that the Buildings Tool uses to store the data and metadata for the project.
+For most workflows, the Project Database is hidden in teh background; however, knowledge of the project database can be useful for debugging and understanding the tool's operation.
+The database is composed of several tables, each of which is used by one or more of the :ref:`curve creation steps <sec02-Core>`, as shown in the table below.
 
 .. _tab02-ProjectDatabase:
 
@@ -119,7 +138,7 @@ The database is composed of several tables, each of which is used by one or more
    +------------------+--------------------------------------------+------+
    | c00_cost_items   | Cost-Item table                            | 1    |
    +------------------+--------------------------------------------+------+
-   | c00_drf          | DRF database                               | 1    |
+   | c00_drf          | DRF database [#4]_                         | 1    |
    +------------------+--------------------------------------------+------+
    | c00_fixed_costs  | Fixed costs                                | 1    |
    +------------------+--------------------------------------------+------+
@@ -139,15 +158,17 @@ To view and manipulate the project database, the user can use a SQLite database 
 
 CanFlood Format DDF
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Currently, the buildings tool supports exporting DDFs in the CanFlood format.
 The `CanFlood <https://github.com/NRCan/CanFlood>`_ program expects DDFs to be in a certain format, namely an XLSX file with two columns divided into two sections.
 The first section contains the metadata in key-value pairs while the second section contains the exposure-impact series.
 CanFlood requires three keys in the metadata section:
-- **tag**: used for linking the curve to the inventory. 
-- **impact_units**: used for indicating what units the impact values are in (e.g., $CAD) on plots and reports.
-- **exposure**: used to indicate the transition between the metadata and the exposure-impact sections.
+
+ - ``tag``: used for linking the curve to the inventory.
+ - ``impact_units``: used for indicating what units the impact values are in (e.g., $CAD) on plots and reports.
+ - ``exposure``: used to indicate the transition between the metadata and the exposure-impact sections.
+
 It is good practice to include additional metadata (e.g., location); however, these are not strictly required by CanFlood.
 Below is a minimum example CanFlood format DDF.
- 
  
 .. _fig02-CanCurve-format:
 
@@ -156,7 +177,7 @@ Below is a minimum example CanFlood format DDF.
    :align: center
    :width: 900px
 
-   Conceptual diagram of the CanCurve Buildings Tool.
+   CanFlood format DDF minimum example.
 
 
 

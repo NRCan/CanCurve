@@ -147,7 +147,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: These standard flood-related building properties are specified on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. This metadata will be used to populate the metadata of your DDF. Some of the fields are also used in the calculation process.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Cost-Item Table: &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;This table of restoration items and their costs is specifed as a CSV file on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Data Input&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. Click &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/blob/main/tests/data/bldgs/case1/R_1-L-BD-CU_ABCA.csv&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; for an example. &lt;/span&gt;&lt;span style=&quot; font-size:14px;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are optional:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Depth-Replacement-Factor (DRF) dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: This dataset relates flood depth to the percentage loss or damage of a restoration item and is specified on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Data Input&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. By default, the DRF dataset shipped with CanCurve will be used.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Depth Replacement-Factor (DRF) dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: This dataset relates flood depth to the percentage loss or damage of a restoration item and is specified on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Data Input&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. By default, the DRF dataset shipped with CanCurve will be used.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Navigate through the tabs at the top of the window from left-to-right to create your own DDF.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -364,7 +364,7 @@ QGroupBox {
                 <item row="9" column="0">
                  <widget class="QLabel" name="buildingLayoutLabel">
                   <property name="text">
-                   <string>Building Layout</string>
+                   <string>Building Layout*</string>
                   </property>
                  </widget>
                 </item>
@@ -413,7 +413,7 @@ QGroupBox {
                 <item row="1" column="0">
                  <widget class="QLabel" name="basementHeightLabel_2">
                   <property name="text">
-                   <string>Basement height (value)</string>
+                   <string>Basement height (value)*</string>
                   </property>
                  </widget>
                 </item>
@@ -505,14 +505,14 @@ QGroupBox {
                    <string>This value is used when 'RCV/Area' is selected to scale the replacement costs (e.g., to footprint area)</string>
                   </property>
                   <property name="text">
-                   <string>Area (value)</string>
+                   <string>Structure area (value)*</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="0">
                  <widget class="QLabel" name="qualityOfBuildingMaterialsLabel">
                   <property name="text">
-                   <string>Quality of Building Materials</string>
+                   <string>Quality of building materials</string>
                   </property>
                  </widget>
                 </item>
@@ -797,7 +797,7 @@ QGroupBox {
        <item>
         <widget class="QGroupBox" name="groupBox_t03_03">
          <property name="title">
-          <string>Cost-Item Table File:</string>
+          <string>Cost-Item Table:</string>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
           <item>
@@ -948,7 +948,7 @@ QGroupBox {
        <item>
         <widget class="QGroupBox" name="groupBox_t03_06">
          <property name="title">
-          <string>Depth-Replacement-Fraction File</string>
+          <string>Depth Replacement-Factor (DRF) Database:</string>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_11">
           <item>
@@ -1403,6 +1403,9 @@ QLabel {
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="toolTip">
+                  <string>build project SQLite database and load data into it</string>
+                 </property>
                  <property name="text">
                   <string>Run</string>
                  </property>
@@ -1511,6 +1514,9 @@ QLabel {
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="toolTip">
+                  <string>Join DRF to CI then multiply through to create fractional restoration costs</string>
+                 </property>
                  <property name="text">
                   <string>Run</string>
                  </property>
@@ -1599,6 +1605,9 @@ QLabel {
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="toolTip">
+                  <string>group by story and assemble DDF</string>
                  </property>
                  <property name="text">
                   <string>Run</string>
