@@ -908,6 +908,9 @@ QGroupBox {
          <layout class="QHBoxLayout" name="horizontalLayout_10">
           <item>
            <widget class="QRadioButton" name="radioButton_6">
+            <property name="toolTip">
+             <string>The resulting DDF will reflect the total restoration costs for the archetype as a function of depth</string>
+            </property>
             <property name="text">
              <string>Total ($/structure)</string>
             </property>
@@ -918,6 +921,9 @@ QGroupBox {
           </item>
           <item>
            <widget class="QRadioButton" name="radioButton_tab3dataInput_rcvm2">
+            <property name="toolTip">
+             <string>The resulting DDF will reflect the restoration costs per area of the structure as a function of depth</string>
+            </property>
             <property name="text">
              <string>Area-based ($/area)</string>
             </property>
