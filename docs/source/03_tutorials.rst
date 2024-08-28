@@ -16,7 +16,7 @@ This tutorial will demonstrate how to create a :ref:`CanFlood format DDF <sec02-
 Step 1: Download the example Cost-Item Table
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-From the project repository, download the `example Cost-Item Table <https://github.com/NRCan/CanCurve/blob/main/tutorial/case1/R_1-L-BD-CU_ABCA.csv>`_ somewhere easy to find.
+From the project repository, download the `example Cost-Item Table <https://github.com/NRCan/CanCurve/blob/main/tutorial/01/R_1-L-BD-CU_ABCA.csv>`_ somewhere easy to find.
 
 Step 2: Enter Metadata
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
