@@ -806,14 +806,17 @@ def c00_setup_project(
     bx = np.invert(ci_df.index.isin(drf_df2.index))
     if bx.any():
         """TODO: add some support for populating missing entries into the DRF"""
-        msg = f'DRF ({os.path.basename(drf_db_fp)}) is missing {bx.sum()}/{len(bx)} entries from the cost-items'
+        msg = f'The specified DRF ({os.path.basename(drf_db_fp)}) is missing {bx.sum()}/{len(bx)} entries found in the Cost-Item Table.  '
         
         ofp1 = os.path.join(out_dir, f'missing_DRF.csv')
         ci_df[bx].to_csv(ofp1)
         
-        msg+=f'\noutput missing entries {ci_df[bx].shape} to:\n    {ofp1}'
-        
-        msg+=f'\nupdate the DRF and re-run this step before proceeding'
+        msg+=f'For reference, the missing entries have been written to file:\n\n{ofp1}'        
+        msg+=f'\n\nTo proceed, update the DRF to provide factors for the missing cost items' + \
+        ' (or remove the entries from the Cost Items table).  '+\
+        'Typically, this is done by editing the Project Database with a third-party SQLite3 editor. '+\
+        'Once the tables are corrected, proceed with \'Step 2\'.'
+ 
  
         log.warning(msg)
  
@@ -954,9 +957,13 @@ def c01_join_drf(proj_db_fp,
         drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['cat', 'sel'])
         
         #check
-        bx = ~ci_df['drf_intersect'].astype(bool)
+        bx = np.invert(ci_df.index.isin(drf_df.index))
+        
+        #no... this flag is just for helping the user to fix the intersect
+        #need to re-calc the intersect to allow the user to update the database
+        #bx = ~ci_df['drf_intersect'].astype(bool)
         if bx.any():
-            msg = f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF... update your DRF and re-run step 1'
+            msg = f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF\n    add keys to DRF or remove from cost-items'
             log.error(msg)
             raise KeyError(msg)
         

@@ -507,7 +507,8 @@ def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_t
 @pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
-    #'case2',
+    pytest.param('case2', marks=pytest.mark.xfail(raises=(ValueError), reason="this case is missing some DRF entries")),
+    'case3',
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
 def test_action_tab4actions_runAll(dialog, set_all_tabs): 

@@ -20,6 +20,16 @@ from cancurve.bldgs.assertions import assert_bldg_meta_d
 from tests.data.bldgs_data_scripts import fixed_costs_master_d, test_data_dir_master#, bldg_meta_rqmt_df_test
 
 
+#these cases are setup for unit tests
+#end-to-end test cases are in bldgs_data_scripts.test_cases_l
+cases_l = [
+    'case1',
+    'case2',
+    'case3',
+    'AB-Calgary_R_1-L-C-ST_ABCA'
+    ]
+
+
 #===============================================================================
 # fixtrues--------
 #===============================================================================
@@ -33,7 +43,8 @@ def proj_db_fp(testCase, testPhase, tmp_path):
     
     #get the target directory
     tdata_dir = os.path.join(test_data_dir_master, testCase, testPhase)
-    assert os.path.exists(tdata_dir), tdata_dir
+    if not os.path.exists(tdata_dir):
+        raise FileNotFoundError(tdata_dir)
     
     #get the project db file
     fp = find_single_file_by_extension(tdata_dir, '.cancurve')
@@ -51,6 +62,15 @@ def ci_fp(testCase):
 
 @pytest.fixture(scope='function')
 def fixed_costs_d(testCase):
+    """retrieve fixed_costs_d from master
+    
+    normally, fixed_costs_master_d is hard-coded and kept in 
+        bldgs.dialog_test_scripts.fixed_costs_master_d
+       
+    However, this can also be updated using pickels by calling
+        tests.data.bldgs_data_scripts.load_tests_cases_from_file()
+    """
+    
     if not testCase in fixed_costs_master_d:
         raise AssertionError(f'test case \'{testCase}\' missing from fixed_costs_master_d')
     return fixed_costs_master_d[testCase]
@@ -66,29 +86,5 @@ def bldg_meta_d(testCase):
     d = _get_bldg_meta_d(testCase, df=bldg_meta_rqmt_df_test)
     return d
   
-#===============================================================================
-# @pytest.fixture(scope='function')
-# def bldg_meta_d_ui(testCase):
-#     """full set of parameters for the UI"""    
-#     
-#     if testCase=='case1':
-#         #just take first from parameters
-#         d = {k:v[0] for k,v in building_details_options_d.items()}
-#     
-#     elif testCase=='case2':
-#     
-#         #random choice
-#         d = {k: random.choice(v) for k, v in building_details_options_d.items()}
-#     
-#     """
-#     for k,v in d.items():
-#         print(f'{k}\n    {v} ({type(v)})')
-#     """
-#     return d
-# 
-#  
-# @pytest.fixture(scope='function')
-# def bldg_meta_d_strict(testCase):
-#     """strict building meta parameters needed by core"""
-#     return {'basement_height_m':1.8, 'scale_value_m2':232.0, 'bldg_layout':'default'}
-#===============================================================================
+
+

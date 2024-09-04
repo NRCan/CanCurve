@@ -140,7 +140,7 @@ QTabBar::tab:selected { /* Style for selected tabs */
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:14px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to the CanCurve &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Buildings Tool.&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; This tool is designed to create &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Depth Damage Functions&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; (DDF) for Canadian buildings.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to the CanCurve &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Buildings Tool.&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; This tool is designed to create &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Depth Damage Functions&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; (DDF) for Canadian buildings. To get started or to learn more, see the &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Documentation&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/plugins/cancurve/img/icon.png&quot; /&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are required:&lt;/span&gt;&lt;/p&gt;
@@ -149,7 +149,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are optional:&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Depth Replacement-Factor (DRF) dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: This dataset relates flood depth to the percentage loss or damage of a restoration item and is specified on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Data Input&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. By default, the DRF dataset shipped with CanCurve will be used.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Navigate through the tabs at the top of the window from left-to-right to create your own DDF.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Navigate through the tabs at the top of the window from left-to-right to create your own DDF. For help and support, see the &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/issues&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;CanCurve Project GitHub Issues Page&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>
@@ -160,39 +160,98 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item alignment="Qt::AlignHCenter">
-        <widget class="QGroupBox" name="groupBox_dev">
-         <property name="styleSheet">
-          <string notr="true">QPushButton {
-  background-color: red;
-  color: black;
-}</string>
+        <widget class="QgsCollapsibleGroupBox" name="mGroupBox">
+         <property name="minimumSize">
+          <size>
+           <width>750</width>
+           <height>0</height>
+          </size>
          </property>
          <property name="title">
-          <string>!DEVELOPMENT ONLY! EASY PARAMETER LOADING OF TEST CASES</string>
+          <string>Tutorials</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <property name="collapsed">
+          <bool>true</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_22">
           <item>
-           <widget class="QComboBox" name="comboBox_dev">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+           <widget class="QLabel" name="label_10">
+            <property name="text">
+             <string>Use this box to load tutorial data into the Buildings Tool. Note this will overwrite all fields.</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_dev">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Load Testing Values</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_12">
+            <item>
+             <spacer name="horizontalSpacer_7">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_9">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Name:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBox_dev">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>100</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_dev">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Load</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -908,6 +967,9 @@ QGroupBox {
          <layout class="QHBoxLayout" name="horizontalLayout_10">
           <item>
            <widget class="QRadioButton" name="radioButton_6">
+            <property name="toolTip">
+             <string>The resulting DDF will reflect the total restoration costs for the archetype as a function of depth</string>
+            </property>
             <property name="text">
              <string>Total ($/structure)</string>
             </property>
@@ -918,6 +980,9 @@ QGroupBox {
           </item>
           <item>
            <widget class="QRadioButton" name="radioButton_tab3dataInput_rcvm2">
+            <property name="toolTip">
+             <string>The resulting DDF will reflect the restoration costs per area of the structure as a function of depth</string>
+            </property>
             <property name="text">
              <string>Area-based ($/area)</string>
             </property>
@@ -1957,7 +2022,7 @@ QLabel {
  </resources>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_costbasis"/>
   <buttongroup name="buttonGroup_runControl"/>
+  <buttongroup name="buttonGroup_costbasis"/>
  </buttongroups>
 </ui>

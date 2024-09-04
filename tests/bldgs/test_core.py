@@ -42,6 +42,18 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=overwrite_testdata
         shutil.copy(proj_db_fp, dest_fp)
         
         print(f'coipied sqlite database to \n    {dest_fp}')
+        
+#===============================================================================
+# data---------
+#===============================================================================
+from ..data.bldgs_data_scripts import load_tests_cases_from_file, test_cases_l
+load_tests_cases_from_file(
+    #===========================================================================
+    # caseName_l = [ #only loading a few for unit tests
+    #      'AB-Calgary_R_1-L-C-ST_ABCA' 
+    #     ]
+    #===========================================================================
+    ) #setup file-based test cases
 
 #===============================================================================
 # fixtures-------
@@ -59,11 +71,21 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=overwrite_testdata
 
 
 #@pytest.mark.dev
-@pytest.mark.parametrize('testCase',[
-    'case1',
-    #'case2',
-    #pytest.param('case3', marks=pytest.mark.xfail(raises=KeyError, reason="story data mismatch")), 
-    ], indirect=False)
+@pytest.mark.parametrize('testCase',
+                         test_cases_l
+    #===========================================================================
+    #                      [
+    # #===========================================================================
+    # # 'case1',
+    # # 'case2',
+    # # pytest.param('case3', marks=pytest.mark.xfail(raises=KeyError, reason="story data mismatch")),
+    # #===========================================================================
+    # 'AB-Calgary_R_1-L-C-ST_ABCA' 
+    # ]
+    #===========================================================================
+                         
+                         
+                         )
 #===============================================================================
 # @pytest.mark.parametrize('fixed_costs_d',[
 #     {0:10000, -1:8000},
@@ -93,10 +115,16 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d,
     
     
 #@pytest.mark.dev
-@pytest.mark.parametrize('testCase',[
-    'case1',
-    #pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
-    ], indirect=False)
+@pytest.mark.parametrize('testCase',
+                         test_cases_l
+    #===========================================================================
+    #                      [
+    # 'case1',
+    # pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
+    # ]
+    #===========================================================================
+                         
+                         )
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)
 def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
     from cancurve.bldgs.core import c01_join_drf as func   
@@ -110,8 +138,12 @@ def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
      
      
  
-
-@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',
+                         ##['case1']
+                         test_cases_l
+                         
+                         )
 @pytest.mark.parametrize('testPhase',['c02'], indirect=False)
 @pytest.mark.parametrize('scale_m2',[None, 
                                      #True, False
@@ -127,7 +159,7 @@ def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
     copy_sqlite(proj_db_fp, testCase, 'c03')
     
     
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('testCase',['case1'], indirect=False)
 @pytest.mark.parametrize('testPhase',['c03'], indirect=False)
 def test_c03_export(proj_db_fp, testCase, testPhase, tmp_path):
