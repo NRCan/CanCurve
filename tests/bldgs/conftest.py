@@ -43,7 +43,8 @@ def proj_db_fp(testCase, testPhase, tmp_path):
     
     #get the target directory
     tdata_dir = os.path.join(test_data_dir_master, testCase, testPhase)
-    assert os.path.exists(tdata_dir), tdata_dir
+    if not os.path.exists(tdata_dir):
+        raise FileNotFoundError(tdata_dir)
     
     #get the project db file
     fp = find_single_file_by_extension(tdata_dir, '.cancurve')

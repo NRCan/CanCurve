@@ -42,6 +42,18 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=overwrite_testdata
         shutil.copy(proj_db_fp, dest_fp)
         
         print(f'coipied sqlite database to \n    {dest_fp}')
+        
+#===============================================================================
+# data---------
+#===============================================================================
+from ..data.bldgs_data_scripts import load_tests_cases_from_file, test_cases_l
+load_tests_cases_from_file(
+    #===========================================================================
+    # caseName_l = [ #only loading a few for unit tests
+    #      'AB-Calgary_R_1-L-C-ST_ABCA' 
+    #     ]
+    #===========================================================================
+    ) #setup file-based test cases
 
 #===============================================================================
 # fixtures-------
@@ -55,14 +67,7 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=overwrite_testdata
 #===============================================================================
 # tests---------
 #===============================================================================
-from ..data.bldgs_data_scripts import load_tests_cases_from_file, test_cases_l
-load_tests_cases_from_file(
-    #===========================================================================
-    # caseName_l = [ #only loading a few for unit tests
-    #      'AB-Calgary_R_1-L-C-ST_ABCA' 
-    #     ]
-    #===========================================================================
-    ) #setup file-based test cases
+
 
 
 #@pytest.mark.dev

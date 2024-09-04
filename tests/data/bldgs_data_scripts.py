@@ -166,7 +166,7 @@ def load_tests_cases_from_file(
 
 test_cases_l = [
     'case1',
- pytest.param('case2', marks=pytest.mark.xfail(raises=(KeyError, AssertionError), reason="this case is missing some DRF entries")),
+ pytest.param('case2', marks=pytest.mark.xfail(raises=(KeyError, FileNotFoundError, ValueError), reason="this case is missing some DRF entries")),
  'case3',
  'case4_R2',
  'AB-Calgary_R_1-L-BD-CU_ABCA',

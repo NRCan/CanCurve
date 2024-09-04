@@ -67,7 +67,7 @@ def assert_proj_db_fp(fp, **kwargs):
             assert_proj_db(conn, **kwargs)
     
     except Exception as e:
-        raise AssertionError(f'project DB connection failed w/\n    {e}')
+        raise ValueError(f'project DB connection failed w/\n    {e}')
         
         
     
