@@ -811,8 +811,7 @@ def c00_setup_project(
         ofp1 = os.path.join(out_dir, f'missing_DRF.csv')
         ci_df[bx].to_csv(ofp1)
         
-        msg+=f'For reference, the missing entries {ci_df[bx].shape} have been written to file:\n\n{ofp1}'
-        
+        msg+=f'For reference, the missing entries have been written to file:\n\n{ofp1}'        
         msg+=f'\n\nTo proceed, update the DRF to provide factors for the missing cost items' + \
         ' (or remove the entries from the Cost Items table).  '+\
         'Typically, this is done by editing the Project Database with a third-party SQLite3 editor. '+\
