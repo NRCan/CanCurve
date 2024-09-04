@@ -82,7 +82,7 @@ def plot_c00_costitems(df_raw,
     #sum and pivot
     ser1 = ser.groupby(['group_code', 'story', 'drf_intersect']).sum() #.unstack('group_code')
  
-    
+    log.debug(f'groupby.sum to {len(ser1)}')
     
     #===========================================================================
     # plot
@@ -108,21 +108,23 @@ def plot_c00_costitems(df_raw,
  
                 
     #create two axijs side by side 
-    stories_l = ser1.index.unique('story').to_list()
+    story_l = ser1.index.unique('story').to_list()
+    log.debug(f'on storys: {story_l}')
     
     # Create subplots based on the number of stories
-    if len(stories_l) == 1:
+    if len(story_l) == 1:
         # When there's only one story, subplots returns a single Axes object
-        ax_d = {stories_l[0]: figure.subplots(nrows=1, ncols=1, sharey=True)}
+        ax_d = {story_l[0]: figure.subplots(nrows=1, ncols=1, sharey=True)}
     else:
         # When there are multiple stories, subplots returns a list of Axes
-        ax_list = figure.subplots(nrows=1, ncols=len(stories_l), sharey=True)
+        ax_list = figure.subplots(nrows=1, ncols=len(story_l), sharey=True)
         # Ensure ax_list is iterable, even if it contains just one element
-        ax_d = dict(zip(stories_l, ax_list))
+        ax_d = dict(zip(story_l, ax_list))
     
     
     ymax = max(ser1.groupby('story').sum())
     
+    log.debug(f'plotting on {len(ax_d)}')
     for k0, ax in ax_d.items():
         gser = ser1.xs(k0, level='story') 
  
@@ -176,7 +178,7 @@ def plot_c00_costitems(df_raw,
                     ha=next(ha_l), va='bottom',
                     arrowprops=dict(arrowstyle="->", connectionstyle="arc3"))
             else:
-                ax.bar_label(container, labels = [f'{group_name} {100*(val/gser.sum()):.0f}% ({val:,.0f})'], label_type='center')
+                ax.bar_label(container, labels = [f'{group_name}: {100*(val/gser.sum()):.0f}% ({val:,.0f})'], label_type='center')
                 
  
             
@@ -208,7 +210,7 @@ def plot_c00_costitems(df_raw,
         #ax.set_xlabel(f'story \'{k0}\'')
         
         #left-most
-        if k0==stories_l[0]:
+        if k0==story_l[0]:
             ax.yaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:,.0f}'))
             ax.set_ylabel('Replacement Cost (Sum)')
             

@@ -34,10 +34,11 @@ load_tests_cases_from_file(
 #===============================================================================
 # helpers-----
 #===============================================================================
-def write_fig(figure, ofp, write=True):
+def write_fig(figure, ofp, write=True, log=None):
     if write:
         figure.savefig(ofp, format='svg')
-        print(f'wrote figure to \n    {ofp}')
+        if not log is None:
+            log.info(f'wrote figure to \n    {ofp}')
         
     plt.close('all')
 
@@ -76,14 +77,14 @@ def action_result(testCase, testPhase):
 @pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',test_cases_l, indirect=False)
-def test_plot_c00_costitems(action_result, tmp_path):
+def test_plot_c00_costitems(action_result, tmp_path, logger):
     ci_df, _, _ , _= action_result #c00 returns both of these
     
     from cancurve.bldgs.plots import plot_c00_costitems as func
     
-    figure = func(ci_df)
+    figure = func(ci_df, log=logger)
     
-    write_fig(figure, os.path.join(tmp_path, 'plot_c00_costitems.svg'))
+    write_fig(figure, os.path.join(tmp_path, 'plot_c00_costitems.svg'), log=logger)
     
 
     
@@ -91,42 +92,42 @@ def test_plot_c00_costitems(action_result, tmp_path):
  
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',test_cases_l, indirect=False)
-def test_plot_c00_DRF(action_result, tmp_path):
+def test_plot_c00_DRF(action_result, tmp_path, logger):
     _, drf_df, _, _ = action_result #c00 returns both of these
     
     from cancurve.bldgs.plots import plot_c00_DRF as func
     
-    figure = func(drf_df)
+    figure = func(drf_df, log=logger)
  
-    write_fig(figure, os.path.join(tmp_path, 'plot_c00_DRF.svg'))
+    write_fig(figure, os.path.join(tmp_path, 'plot_c00_DRF.svg'), log=logger)
     
     
 
  
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)
 @pytest.mark.parametrize('testCase',test_cases_l, indirect=False)
-def test_plot_c01_depth_rcv(action_result, tmp_path):
+def test_plot_c01_depth_rcv(action_result, tmp_path, logger):
     data = action_result #c00 returns both of these
     
     from cancurve.bldgs.plots import plot_c01_depth_rcv as func
     
-    figure = func(data)
+    figure = func(data, log=logger)
     
-    write_fig(figure, os.path.join(tmp_path, 'plot_c01_depth_rcv.svg'))
+    write_fig(figure, os.path.join(tmp_path, 'plot_c01_depth_rcv.svg'), log=logger)
     
     
 
 @pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c02'], indirect=False)
 @pytest.mark.parametrize('testCase',test_cases_l, indirect=False)
-def test_plot_c02_ddf(action_result, tmp_path):
+def test_plot_c02_ddf(action_result, tmp_path, logger):
     data = action_result #c00 returns both of these
     
     from cancurve.bldgs.plots import plot_c02_ddf as func
     
-    figure = func(data)
+    figure = func(data, log=logger)
     
-    write_fig(figure, os.path.join(tmp_path, 'plot_c02_ddf.svg'))
+    write_fig(figure, os.path.join(tmp_path, 'plot_c02_ddf.svg'), log=logger)
     
     
     
