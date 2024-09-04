@@ -20,13 +20,7 @@ from .conftest import find_single_file_by_extension, test_data_dir_master
 #===============================================================================
 # data
 #===============================================================================
-#===============================================================================
-# test_data_dir_master = os.path.join(src_dir, 'tests', 'data')
-# 
-# def get_sqlite_table(proj_db_fp, table_name, **kwargs):
-#     with sqlite3.connect(proj_db_fp) as conn:
-#         return pd.read_sql(f'SELECT * FROM {table_name}', conn, **kwargs)
-#===============================================================================
+
 
 #===============================================================================
 # helpers-----
@@ -69,10 +63,7 @@ def action_result(testCase, testPhase):
 #===============================================================================
 @pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
-@pytest.mark.parametrize('testCase',[
-    'case1',
-    'case2'
-    ], indirect=False)
+@pytest.mark.parametrize('testCase',cases_l, indirect=False)
 def test_plot_c00_costitems(action_result, tmp_path):
     ci_df, _, _ , _= action_result #c00 returns both of these
     
@@ -87,7 +78,7 @@ def test_plot_c00_costitems(action_result, tmp_path):
     
  
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
-@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+@pytest.mark.parametrize('testCase',cases_l, indirect=False)
 def test_plot_c00_DRF(action_result, tmp_path):
     _, drf_df, _, _ = action_result #c00 returns both of these
     
@@ -101,7 +92,7 @@ def test_plot_c00_DRF(action_result, tmp_path):
 
  
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)
-@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+@pytest.mark.parametrize('testCase',cases_l, indirect=False)
 def test_plot_c01_depth_rcv(action_result, tmp_path):
     data = action_result #c00 returns both of these
     
@@ -115,7 +106,7 @@ def test_plot_c01_depth_rcv(action_result, tmp_path):
 
 @pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c02'], indirect=False)
-@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+@pytest.mark.parametrize('testCase',cases_l, indirect=False)
 def test_plot_c02_ddf(action_result, tmp_path):
     data = action_result #c00 returns both of these
     
