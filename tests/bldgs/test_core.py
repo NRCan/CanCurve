@@ -22,7 +22,7 @@ from .conftest import find_single_file_by_extension, test_data_dir_master
 #===============================================================================
 # helpers
 #===============================================================================
-overwrite_testdata=True
+overwrite_testdata=False
 def write_pick(result, ofp, write=overwrite_testdata):
     if write:
         if not os.path.exists(os.path.dirname(ofp)):
