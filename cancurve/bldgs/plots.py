@@ -109,7 +109,18 @@ def plot_c00_costitems(df_raw,
                 
     #create two axijs side by side 
     stories_l = ser1.index.unique('story').to_list()
-    ax_d = dict(zip(stories_l, figure.subplots(nrows=1, ncols=len(stories_l), sharey=True)))
+    
+    # Create subplots based on the number of stories
+    if len(stories_l) == 1:
+        # When there's only one story, subplots returns a single Axes object
+        ax_d = {stories_l[0]: figure.subplots(nrows=1, ncols=1, sharey=True)}
+    else:
+        # When there are multiple stories, subplots returns a list of Axes
+        ax_list = figure.subplots(nrows=1, ncols=len(stories_l), sharey=True)
+        # Ensure ax_list is iterable, even if it contains just one element
+        ax_d = dict(zip(stories_l, ax_list))
+    
+    
     ymax = max(ser1.groupby('story').sum())
     
     for k0, ax in ax_d.items():
