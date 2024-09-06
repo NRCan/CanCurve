@@ -13,7 +13,17 @@ CanCurve is an open-source tool for developing flood depth-damage (stage-damage)
 
 
 ## Documentation
- 
+ CanCurve is an open-source tool which can be used to create depth-damage (stage-damage) functions for use in flood loss estimation and flood risk assessments. 
+## Background
+In Canada, a limited number of developed damage functions are available to support flood risk assessments. The existing functions lack a standardized process, and the underlying algorithms and data to derive them are unclear, making them a bit of a ‘black box.’ Additionally, transferability from one region to another can be challenging. 
+<p>
+Previous work in 2023 explored the development of a framework for developing depth damage functions. This work resulted in a synthesis of the existing methods being used in Canada to develop depth damage functions. Additionally, it included some details on work done internationally. Several limitations to existing approaches were identified, and a novel and more transparent way to develop depth damage curves was proposed.
+<p></p>
+CanCurve uses room component replacement costs to generate Depth Damage Functions (DDF) from detailed restoration cost data. This approach allows for a clearer understanding of the contributing components to the overall losses experienced during a flood event. The tool joins cost data to a database of item vulnerability. Then, it groups the data by water depth to create a simple function for flood damage against flood depth. 
+<p></p>
+The tool also allows users to aggregate data using pivot tables to view items, rooms, and damage estimates at various levels of aggregation. This added flexibility and transparency will provide users with a better understanding of the DDF data used in the calculation, allowing for more informed decisions on the applicability of curves to use and allow for easier translation for use in other regions.  
+<p></p>
+
 
 ## Installing for the first time
 - Install [QGIS 3.34.5](https://download.qgis.org/downloads/) (with Qt 5.15.13)
