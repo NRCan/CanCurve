@@ -19,50 +19,41 @@ For best performance, ensure you have the specified version of QGIS installed.
 
 .. _sec01-overview:
 
-Overviews
+Overview
 -----------------------
-CanCurve is a collection of tools for generating Depth Damage Functions (DDF) used by platforms like `CanFlood <https://github.com/NRCan/CanFlood>`_ to create flood risk models.
-CanCurve's :ref:`Buildings Tool <sec02-bldgs>` for example facilitates the creation of DDFs from detailed restoration cost data for archetypal buildings.
-This tool joins a table of restoration activities (e.g., repair dry-wall for $1000), called the :ref:`Cost-Item Table <sec02-costItem>`, to a database of information on the flood vulnerability of those items, called the :ref:`Depth-Replacement-Factor (DRF) Database <sec02-DRF>`.
-After identifying the target building or archetype for which a user would like to construct a DDF, typically a :ref:`Cost-Item Table <sec02-costItem>` is prepared using local pricing tables and expert knowledge on the restoration of the building.
-For the :ref:`DRF Database <sec02-DRF>`, either the version shipped with CanCurve can be used (default), or an alternate file can be specified.
-Once these inputs and the building metadata are prepared and entered into the Buildings Tool, the four :ref:`Curve Creation <sec02-Core>` steps can be run to create and export a DDF in :ref:`CanFlood format <sec02-CanFloodFormat>`.
+CanCurve is a collection of tools for generating Depth Damage Functions (DDF)for use in flood risk modelling platforms like `CanFlood <https://github.com/NRCan/CanFlood>`.
 
+The CanCurve Buildings Tool generates DDFs from detailed restoration cost data for archetypal buildings.:ref:`Buildings Tool <sec02-bldgs>`
+The tool joins together multiple datasets to  
+#. Cost-Item Table: a table of restoration activities and their costs (e.g., repair dry-wall for $1000), :ref:`Cost-Item Table <sec02-costItem>`.
+#. Depth-Replacement-Factor (DRF) Database: This database provides information on the flood vulnerability of varios items, :ref:`Depth-Replacement-Factor (DRF) Database <sec02-DRF>`.
 
-
+A DDF, is generated with the following steps: 
+#. **Item 1. Populating Building Metadata:** input building metadata using the Buildings Tool.
+#. **Item 2. Prepare the Cost-Item Table:** Use local pricing data and expert knowledge to compile a list of restoration activities and costs for the target building or archetype. :ref:`Cost-Item Table <sec02-costItem>`
+#. **Item 3. Select DRF Database:** Either use the default DRF Database included with CanCurve, or add your own file. :ref:`DRF Database <sec02-DRF>` 
+ #. **Item 4. Create the DDF Curve:** Create and export a DDF for use in CanFlood :ref:`Curve Creation <sec02-Core>`  
 
 
 .. _sec01-quick:
 
 Quick-Start
 -----------------------
-After installation of the plugin, the |CanCurve_icon| icon should appear on your plugins toolbar.
+After installing the plugin, the |CanCurve_icon| icon should appear on your plugins toolbar.
 If you don't see the icon, first ensure the plugin is checked on the **Installed** tab of the **Manage and Install Plugins..** dialog; then ensure the **plugins toolbar** is enabled by right-clicking the QGIS toolbar.
 
 .. |CanCurve_icon| image:: /assets/icon_solid.png
    :align: middle
    :width: 14
 
-To start working with CanCurve, click the |CanCurve_icon| to open the :ref:`Buildings Tool <sec02-bldgs>` dialog.
+To start using CanCurve, click the |CanCurve_icon| and open the :ref:`Buildings Tool <sec02-bldgs>` dialog.
+
+#. **Step 1. Populate the Metadata tab:** Enter availabel information into the Metadata tab. Only fields marked with an asterisk (*) are mandatory, but the more information you provide, the more complete your DDF will be. For example data, see the (:ref:`Tutorials <sec03-tutorials>`. 
+#. **Step 2. Data input tab:** Specify settings for datasets including the **Cost-Item Table**, the **Depth-Replacement Factor (DRF)** and **Fixed Costs**. (:ref:`Cost-Item Table <sec02-costItem>`, :ref:`Depth-Replacement Factor (DRF) Database <sec02-DRF>`, and :ref:`Fixed Costs <sec02-fixedCosts>`. 
+#. **Step 3. Create and Export the DDF:** Go to the **Create Curve** tag and execute the four curve creation steps. This will generate and export your DDF in the :ref:`CanFlood format <sec02-CanFloodFormat>`.
 
 
-.. _fig01-dialog-welcome:
-
-.. figure:: /assets/01-dialog-welcome.png
-   :alt: Welcome Tab
-   :align: center
-   :width: 900px
-
-   Welcome tab of the Buildings Tool.
-
-
-To use the tool to create a DDF from data for your archetypal building, first populate the **Metadata** tab with whatever information is available (see the :ref:`Tutorials <sec03-tutorials>` section for example data).
-Note only fields marked with an asterisk (*) are required, but the more information you provide, the more complete your DDF will be.
-To specify settings, the :ref:`Cost-Item Table <sec02-costItem>`, the :ref:`Depth-Replacement Factor (DRF) Database <sec02-DRF>`, and the :ref:`Fixed Costs <sec02-fixedCosts>` data, complete the **Data Input** tab.
-Finally, the four curve creation steps can be executed from the **Create Curve** tab, ending in an export of your DDF in :ref:`CanFlood format <sec02-CanFloodFormat>`.
-
-
-See the :ref:`User Guide <sec02-userGuide>` and the :ref:`Tutorials <sec03-tutorials>` section to learn more.
+For additional guidance, see the :ref:`User Guide <sec02-userGuide>` and the :ref:`Tutorials <sec03-tutorials>`.
 
 
 .. _sec01-faq:
@@ -74,14 +65,13 @@ Frequently Asked Questions
     Typically this information is obtained from cost restoration experts using specialized software like Xactimate and a detailed model of the structure.
 
 **How can I add entries to my Depth-Replacement-Factor (DRF) Database**
-    You'll need to use some software that allows editing of SQLite databases. We recommend `DB Browser for SQLite <https://sqlitebrowser.org/>`_.
+    You'll need to use software that allows editing of SQLite databases. We recommend `DB Browser for SQLite <https://sqlitebrowser.org/>`_.
 
 **Where can I go to get help?**
     The best place to get help is the `CanCurve GitHub Issues <https://github.com/NRCan/CanCurve/issues>`_ page where you can read through questions posted by others or ask your own.
 
-
 **Do I really need to install an old version of QGIS to use CanCurve**
-      No, but we recommend it for best performance. If you have a newer version of QGIS installed, you can try CanCurve with it, but you may experience issues.
+      No, but we recommend it for best performance. If you have a newer version of QGIS installed, you can try CanCurve, but you may experience issues.
 
       
 
