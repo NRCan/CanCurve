@@ -11,7 +11,9 @@ We suggest reading these sections first.
 Installation
 ------------
 
-To install CanCurve, you first need to install QGIS, then you can install CanCurve from the Plugin Repository.
+To install CanCurve, follow these steps:
+- Download and install the Long Term Release version 3.4 of QGIS, <https://qgis.org/download/> 
+- Once QGIS is installed, add CanCurve from the Plugin Repository within QGIS.
 
 For detailed instructions, refer to the `project README <https://github.com/NRCan/CanCurve/tree/main?tab=readme-ov-file#installation>`_.
 For best performance, ensure you have the specified version of QGIS installed.
