@@ -11,6 +11,8 @@ import pytest, os, shutil, pickle
 import pandas as pd
 from .conftest import test_data_dir_master
 from .bldgs.conftest import ci_fp, fixed_costs_d, bldg_meta_d
+
+from definitions import test_data_dir as test_data_dir_master
 test_data_dir_master = os.path.join(test_data_dir_master, 'misc')
 #===============================================================================
 # test data
