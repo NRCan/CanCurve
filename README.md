@@ -1,5 +1,6 @@
 # CanCurve
 CanCurve is an open-source tool for developing flood depth-damage (stage-damage) functions for use flood assessments.
+It is presently undergoing evalutaion and validation. 
 
 <p align="center">
   <img src="./cancurve/img/icon.png" alt="CanCurve Icon"> 
