@@ -1290,7 +1290,7 @@ QGroupBox {
                </widget>
               </item>
               <item row="5" column="1">
-               <widget class="QComboBox" name="comboBox">
+               <widget class="QComboBox" name="comboBox_tab4actions_costBasis">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
