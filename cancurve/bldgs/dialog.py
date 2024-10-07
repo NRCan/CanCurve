@@ -88,6 +88,11 @@ FORM_CLASS, _ = uic.loadUiType(ui_fp, resource_suffix='')
 
 class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     
+    scale_m2_index_d = {
+        0:False, # Total ($/structure)
+        1:True #Area-based ($/area)
+        }
+    
 
     
     
@@ -1039,15 +1044,27 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 raise TypeError(f'got unexpected type on fixed Data Input > Fixed Costs (story {k})')
             
         return d
+    
+    def _get_costBasis(self):
+        """shortcut to retrieve option from Radio Button as a Boolean
+        
+        Originally, just had this as self.radioButton_tab3dataInput_rcvm2.isChecked()
+            see ._get_settings()
+        the setting is then written to the project_settings table as "scale_m2"
+        
+        """
+        
+        return self.scale_m2_index_d[self.comboBox_tab4actions_costBasis.currentIndex()]
  
             
  
         
     def _get_settings(self, logger=None):
-        """retrieve project settings from Data Input  tab"""
+        """retrieve project settings from Data Input tab"""
         return {
             'curve_name':self.lineEdit_tab3dataInput_curveName.text(),
-            'scale_m2':self.radioButton_tab3dataInput_rcvm2.isChecked(), #retrieve from radio buttons
+            #'scale_m2':self.radioButton_tab3dataInput_rcvm2.isChecked(), #retrieve from radio buttons
+            'scale_m2':self._get_costBasis(), #retrieve from radio buttons
             }
 
 

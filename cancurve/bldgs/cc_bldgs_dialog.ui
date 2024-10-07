@@ -960,57 +960,6 @@ QGroupBox {
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_t03_05">
-         <property name="title">
-          <string>Cost Basis</string>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_10">
-          <item>
-           <widget class="QRadioButton" name="radioButton_6">
-            <property name="toolTip">
-             <string>The resulting DDF will reflect the total restoration costs for the archetype as a function of depth</string>
-            </property>
-            <property name="text">
-             <string>Total ($/structure)</string>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_costbasis</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="radioButton_tab3dataInput_rcvm2">
-            <property name="toolTip">
-             <string>The resulting DDF will reflect the restoration costs per area of the structure as a function of depth</string>
-            </property>
-            <property name="text">
-             <string>Area-based ($/area)</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <attribute name="buttonGroup">
-             <string notr="true">buttonGroup_costbasis</string>
-            </attribute>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBox_t03_06">
          <property name="title">
           <string>Depth Replacement-Factor (DRF) Database:</string>
@@ -1328,6 +1277,42 @@ QGroupBox {
                 <property name="checked">
                  <bool>true</bool>
                 </property>
+               </widget>
+              </item>
+              <item row="5" column="0">
+               <widget class="QLabel" name="costBasisLabel_2">
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Specify how CanCurve should calculate the impact values on the resulting DDF&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="text">
+                 <string>Cost Basis:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="QComboBox" name="comboBox_tab4actions_costBasis">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>Total ($/structure)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Area-based ($/area)</string>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>

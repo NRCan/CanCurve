@@ -86,7 +86,7 @@ def dialog(qgis_iface):
 # populating dialog for tests
 #===============================================================================
 @pytest.fixture(scope='function') 
-def set_all_tabs(tab2bldgDetils, tab3dataInput):
+def set_all_tabs(tab2bldgDetils, tab3dataInput, tab4createCurve):
     """call all the fixtures"""
     
     return True
@@ -134,10 +134,12 @@ def tab3dataInput(dialog, tableWidget_tab3dataInput_fixedCosts,
     dialog.lineEdit_tab3dataInput_curveName.setText(testCase)
     dialog.lineEdit_tab3dataInput_cifp.setText(ci_fp)
     
+    """changed this to a drop down on tab4
     if scale_m2: 
         dialog.radioButton_tab3dataInput_rcvm2.setChecked(True)
     else:
         dialog.radioButton_tab3dataInput_rcvm2.setChecked(False)
+    """
         
     """not needed... the default is set during connect_slots
     dialog.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)"""
@@ -147,6 +149,38 @@ def tab3dataInput(dialog, tableWidget_tab3dataInput_fixedCosts,
     return True
     
 
+@pytest.fixture(scope='function') 
+def tab4createCurve(dialog, scale_m2,
+                      tmp_path):
+    
+    """
+    
+        scale_m2_index_d = {
+        0:False, # Total ($/structure)
+        1:True #Area-based ($/area)
+        }
+        
+    """
+    
+    # Find the index corresponding to scale_m2 directly using dictionary comprehension
+    index = next((k for k, v in dialog.scale_m2_index_d.items() if v == scale_m2), None)
+
+    if index is not None:
+        dialog.comboBox_tab4actions_costBasis.setCurrentIndex(index)
+        
+        assert dialog.scale_m2_index_d[dialog.comboBox_tab4actions_costBasis.currentIndex()]==scale_m2
+        
+ 
+    else:
+        # Optionally, handle the case where scale_m2 is not found in the dictionary
+        raise ValueError(f"Invalid scale_m2 value: {scale_m2}")
+    
+    #check
+            
+ 
+    
+ 
+    
 
 
 @pytest.fixture(scope='function')    
@@ -404,7 +438,6 @@ def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
  
 def test_action_tab4actions_step1(dialog,
                                   set_all_tabs, ciPlot, drfPlot, 
- 
                                   ):
     
     
