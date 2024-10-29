@@ -13,6 +13,7 @@ import pandas as pd
 import numpy as np
 import sqlite3
 from datetime import datetime
+from pprint import pprint
 
 from ..hp.logr import get_log_stream
 from ..hp.basic import view_web_df as view
@@ -111,7 +112,7 @@ def load_ci_df(fp, log=None):
     
     return ci_df
 
-def load_drf(fp, log=None):
+def load_drf(fp, log=None, expo_units='meters'):
     """load the DRF table from teh database
     
     TODO: load just the necessary rows (once the database is larger)
@@ -135,14 +136,35 @@ def load_drf(fp, log=None):
         assert_drf_db(conn)
         df_raw =  pd.read_sql('SELECT * FROM drf', conn, index_col=['cat', 'sel', 'bldg_layout'])
         
+        depths_df = pd.read_sql('SELECT * FROM depths', conn, index_col=['depth_idx'])
+        
+        
+ 
     #===========================================================================
-    # post
+    # post-------
     #===========================================================================
     df1 = df_raw.copy()
-
-    df1.columns.name='meters'
-    df1.columns = df1.columns.astype('float')
     
+    #===========================================================================
+    # set depths index
+    #===========================================================================
+    df1.columns=df1.columns.astype(int)
+    
+    #check
+    miss_s = set(df1.columns).symmetric_difference(depths_df.index)
+    if not miss_s==set():
+        raise IndexError(f'index mismatch between depths and drf tables\n    {miss_s}')
+    
+    assert expo_units in depths_df.columns, f'bad exposure unit'
+    
+    #replace the df1 integer-like columns with the float values from depths_df
+    log.debug(f'attaching exposure values for \'{expo_units}\'')
+    df1.columns = df1.columns.to_frame().join(depths_df[expo_units])[expo_units].astype('float')
+    
+    #===========================================================================
+    # wrap
+    #===========================================================================
+ 
     try:
         assert_drf_df(df1)
     except Exception as e:
@@ -154,14 +176,7 @@ def load_drf(fp, log=None):
     return df1
     
     
-def _get_bldg_meta_d(testCase, df=None):
-    if testCase in df.columns:
-        d = df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
-    else:
-        raise KeyError(testCase)
-    d = {k:convert_to_float(v) for k, v in d.items()}
-    assert_bldg_meta_d(d, msg=testCase)
-    return d
+
 
 def _get_proj_meta_d(log, 
                    #curve_name=None,
@@ -635,7 +650,7 @@ def c00_setup_project(
         
         fixed_costs_d=None,        
         
-        curve_name=None,
+        curve_name=None, expo_units=None,
         settings_d=None,
         
         log=None,ofp=None,out_dir=None,overwrite=True,
@@ -656,7 +671,7 @@ def c00_setup_project(
         
     bldg_layout: str, optional
         building layout used to slice the DRF
-        derfaults to value in bldg_meta
+        defaults to value in bldg_meta
         
     curve_name: str, optional
         filename base
@@ -718,6 +733,12 @@ def c00_setup_project(
         settings_d['curve_name'] = curve_name
     assert isinstance(curve_name, str) 
     
+    if expo_units is None:
+        expo_units = settings_d['expo_units']
+    else:
+        settings_d['expo_units'] = expo_units
+    assert isinstance(expo_units, str)
+    
     #===========================================================================
     # filepaths------
     #===========================================================================
@@ -778,7 +799,7 @@ def c00_setup_project(
     #===========================================================================
     # load depth-replacement-factor database
     #===========================================================================
-    drf_df_raw = load_drf(drf_db_fp, log=log)
+    drf_df_raw = load_drf(drf_db_fp, log=log, expo_units=expo_units)
     
     """
     view(ci_df)
@@ -1006,7 +1027,7 @@ def c01_join_drf(proj_db_fp,
 def c02_group_story(proj_db_fp,
             log=None,
             scale_m2=None,            
-            basement_height_m=None, scale_value_m2=None, scale_factor=None,
+            basement_height=None, scale_value_m2=None, scale_factor=None,
             ):
     """group by story and assemble DDF
     
@@ -1019,7 +1040,7 @@ def c02_group_story(proj_db_fp,
         whether curves are $/m2 or $
         None: retrieve from project_settings
         
-    basement_height_m: float, optional
+    basement_height: float, optional
         vertical distance with which to shift the basement curve in meters
         defaults to value in c00_bldg_meta
         
@@ -1052,7 +1073,7 @@ def c02_group_story(proj_db_fp,
         #cost information
         cid_df = pd.read_sql('SELECT * FROM c01_depth_rcv', conn, index_col=['cat', 'sel', 'story'])
         cid_df.columns = cid_df.columns.astype(float)
-        cid_df.columns.name = 'depths_m'
+        cid_df.columns.name = 'depths' #can be any unit. controlled by expo_units
         
         #fixed costs
         if table_exists(conn, 'c00_fixed_costs'):
@@ -1068,8 +1089,8 @@ def c02_group_story(proj_db_fp,
         
         #building metadata defaults
         bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn).iloc[0, :].to_dict()
-        if basement_height_m is None:
-            basement_height_m = float(bldg_meta_d['basement_height_m'])
+        if basement_height is None:
+            basement_height = float(bldg_meta_d['basement_height'])
             
         
         if scale_m2:
@@ -1086,7 +1107,7 @@ def c02_group_story(proj_db_fp,
  
         assert_scale_factor(scale_factor)
         
-        params_d = dict(scale_m2=scale_m2, basement_height_m=basement_height_m, 
+        params_d = dict(scale_m2=scale_m2, basement_height=basement_height, 
                         scale_value_m2=scale_value_m2, scale_factor=scale_factor)
 
             
@@ -1122,9 +1143,9 @@ def c02_group_story(proj_db_fp,
         
         elif len(ddf1.columns)==2:
  
-            assert isinstance(basement_height_m, float), f'multi-story requires \'basement_height_m\' value'
+            assert isinstance(basement_height, float), f'multi-story requires \'basement_height\' value'
           
-            log.info(f'concating stories together w/ basement_height_m={basement_height_m} ')
+            log.info(f'concating stories together w/ basement_height={basement_height} ')
  
             
             #===================================================================
@@ -1137,7 +1158,7 @@ def c02_group_story(proj_db_fp,
             bsmt_s = ddf1.iloc[~bx, 0]
             
             #shift down
-            bsmt_s1 = pd.Series(bsmt_s.values, index = bsmt_s.index.values - basement_height_m, name='base')
+            bsmt_s1 = pd.Series(bsmt_s.values, index = bsmt_s.index.values - basement_height, name='base')
             bsmt_s1.index.name=ddf1.index.name
             
             #===================================================================
@@ -1202,7 +1223,7 @@ def c02_group_story(proj_db_fp,
         
         """
                        main       base   combined
-        depths_m                                 
+        depths                                 
         -1.80      10000.00    8000.00   18000.00
         -1.77      10000.00   66471.69   76471.69
         -1.75      10000.00   82639.88   92639.88
@@ -1275,9 +1296,24 @@ def c03_export(
         #=======================================================================
         crve_d = wrkr.crve_d.copy() #start with a copy of the template        
         
-        #update with user supplied metadata
+        
         crve_d['tag'] = settings_d['curve_name']
-        crve_d.update(bldg_meta_d) #preserves order
+        
+        #re-label per CanFlood standards
+        cf_names_d = bldg_meta_rqmt_df.loc[:, ['varName_core', 'varName_canflood']].dropna(how='any'
+                           ).set_index('varName_core').iloc[:,0].to_dict()
+                           
+        #re-label all keys in bldg_meta_d if they are in cf_names_d
+        relabelled_bldg_meta_d = {
+            (cf_names_d[key] if key in cf_names_d else key): value
+            for key, value in bldg_meta_d.items()
+        }
+        
+        #update with user supplied metadata
+        crve_d.update(relabelled_bldg_meta_d) #preserves order
+        """
+        pprint(bldg_meta_d)
+        """
         
         #force exposure to the end
         if not list(crve_d.keys())[-1]=='exposure': 
@@ -1295,12 +1331,15 @@ def c03_export(
         #=======================================================================
         # #extract depth-damage
         #=======================================================================
-        dd_d = ddf.loc[:, ['depths_m', 'combined']].astype(float).round(3).set_index('depths_m').iloc[:,0].to_dict()
+        dd_d = ddf.loc[:, ['depths', 'combined']].astype(float).round(3).set_index('depths').iloc[:,0].to_dict()
         
         #=======================================================================
         # #assemble
         #=======================================================================
         dcurve_d = {**crve_d, **dd_d}
+        """
+        pprint(crve_d)
+        """
         
         #check
         assert wrkr.check_crvd(dcurve_d)

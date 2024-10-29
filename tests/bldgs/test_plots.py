@@ -22,12 +22,12 @@ from .conftest import find_single_file_by_extension, test_data_dir_master
 # data---------
 #===============================================================================
 from ..data.bldgs_data_scripts import load_tests_cases_from_file, test_cases_l
+
+test_cases_l = ['case1', 'case4_R2'] #case override
+
+
 load_tests_cases_from_file(
-    #===========================================================================
-    # caseName_l = [ #only loading a few for unit tests
-    #      'AB-Calgary_R_1-L-C-ST_ABCA' 
-    #     ]
-    #===========================================================================
+    caseName_l = test_cases_l
     ) #setup file-based test cases
 
 
@@ -54,7 +54,7 @@ def write_fig(figure, ofp, write=True, log=None):
 @pytest.fixture(scope='function')
 def action_result(testCase, testPhase):
     """intelligently retrieve result for this case and phase from test_core"""
-    
+    print(f'on {testCase} x {testPhase}')
     tdata_dir = os.path.join(test_data_dir_master, testCase, testPhase)
     if not os.path.exists(tdata_dir):
         raise FileNotFoundError(tdata_dir)
@@ -74,7 +74,7 @@ def action_result(testCase, testPhase):
 #===============================================================================
 # tests---------
 #===============================================================================
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',test_cases_l, indirect=False)
 def test_plot_c00_costitems(action_result, tmp_path, logger):
@@ -89,11 +89,14 @@ def test_plot_c00_costitems(action_result, tmp_path, logger):
 
     
     
- 
+#@pytest.mark.dev
 @pytest.mark.parametrize('testPhase',['c00'], indirect=False)
 @pytest.mark.parametrize('testCase',test_cases_l, indirect=False)
-def test_plot_c00_DRF(action_result, tmp_path, logger):
+def test_plot_c00_DRF(action_result, tmp_path, logger, testCase):
+    
     _, drf_df, _, _ = action_result #c00 returns both of these
+    
+    
     
     from cancurve.bldgs.plots import plot_c00_DRF as func
     

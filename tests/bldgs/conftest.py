@@ -5,7 +5,7 @@ Created on Apr. 28, 2024
 '''
 import pytest, os, shutil, random, logging, sys
 
-from cancurve.bldgs.core import _get_bldg_meta_d
+ 
 from cancurve.hp.basic import find_single_file_by_extension, convert_to_number, convert_to_float
 
 from cancurve.bldgs.parameters_ui import building_details_options_d
@@ -29,6 +29,20 @@ cases_l = [
     'AB-Calgary_R_1-L-C-ST_ABCA'
     ]
 
+#===============================================================================
+# helpers--------
+#===============================================================================
+def _get_bldg_meta_d(testCase, df=None):
+    """retrieve the bldg_meta_d from the 'bldg_meta_rqmts.csv
+    just those entries in 'varName_core' column
+    """
+    if testCase in df.columns:
+        d = df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
+    else:
+        raise KeyError(testCase)
+    d = {k:convert_to_float(v) for k, v in d.items()}
+    assert_bldg_meta_d(d, msg=testCase)
+    return d
 
 #===============================================================================
 # fixtrues--------
@@ -75,16 +89,21 @@ def fixed_costs_d(testCase):
         raise AssertionError(f'test case \'{testCase}\' missing from fixed_costs_master_d')
     return fixed_costs_master_d[testCase]
         
-
-
+        
+@pytest.fixture(scope='function')
+def expo_units(bldg_meta_d):
+    return bldg_meta_d['expo_units']
 
 
 @pytest.fixture(scope='function')
 def bldg_meta_d(testCase):
-    from tests.data.bldgs_data_scripts import bldg_meta_rqmt_df_test
+    """build a dict from the 'bldg_meta_rqmts.csv' for this case"""
     
-    d = _get_bldg_meta_d(testCase, df=bldg_meta_rqmt_df_test)
-    return d
+    #get a copy of the 'bldg_meta_rqmts.csv' as a dataframe
+    from tests.data.bldgs_data_scripts import bldg_meta_rqmt_df_test 
+ 
+    #extract dictionary for this case
+    return _get_bldg_meta_d(testCase, df=bldg_meta_rqmt_df_test)
   
 
 

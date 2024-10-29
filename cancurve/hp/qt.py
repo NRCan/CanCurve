@@ -160,6 +160,8 @@ def _get_widget_value(widget):
     """Handles common widget types to extract their value."""
     if isinstance(widget, QLineEdit):
         return widget.text()
+    elif isinstance(widget, QLabel):
+        return widget.text()
     elif isinstance(widget, QComboBox):
         return widget.currentText() 
     elif isinstance(widget, QLabel):
@@ -189,6 +191,9 @@ def set_widget_value(widget, value):
     """
 
     if isinstance(widget, QLineEdit):
+        widget.setText(str(value))  # Ensure value is a string for LineEdit
+    
+    elif isinstance(widget, QLabel):
         widget.setText(str(value))  # Ensure value is a string for LineEdit
     elif isinstance(widget, QDoubleSpinBox):
         widget.setValue(float(value))

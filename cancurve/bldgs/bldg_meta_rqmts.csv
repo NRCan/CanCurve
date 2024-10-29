@@ -2,13 +2,11 @@
 ,,tag,str,FALSE,TRUE,?,,test_case1,test_case2,heather_0509,R_2-L-BD-CU_ABCA,R_1-L-C-ST_ABCA
 ,currency,impact_units,str,FALSE,TRUE,$CAD,currency_ComboBox,,,,,
 ,costBasis,impact_var,str,FALSE,FALSE,damage,costBasis_ComboBox,,,Depreciated Costs,,
-,,exposure_units,str,FALSE,FALSE,m,comboBox_tab3dataInput_expoUnits,,,,,
+expo_units,expoUnits,exposure_units,str,FALSE,FALSE,meters,basementHeightUnits_label,meters,meters,meters,feet,meters
 ,,exposure_var,str,FALSE,FALSE,flood depth above floor,,,,,,
 ,,scale_var,str,FALSE,FALSE,building footprint,,,,,,
 bldg_layout,buildingLayout,,str,TRUE,FALSE,,buildingLayout_ComboBox,default,default,default,default,
-,basementHeight,,float,FALSE,FALSE,,basementHeight_DoubleSpinBox,1.8,2.1,0,2.7,0
-,basementHeightUnits,,str,FALSE,FALSE,,basementHeightUnits_ComboBox,m,m,m,m,m
-basement_height_m,,,float,TRUE,FALSE,,,1.8,2.1,0,2.7,0
+basement_height,basementHeight,,float,FALSE,FALSE,,basementHeight_DoubleSpinBox,1.8,2.1,0,10,0
 ,sizeOrAreaValue,,float,FALSE,FALSE,,sizeOrAreaValue_DoubleSpinBox,232.1,232.2,344,139,232
 ,sizeOrAreaUnits,scale_units,str,FALSE,FALSE,m2,sizeOrAreaUnits_ComboBox,m2,m2,m2,m2,m2
 scale_value_m2,,,float,TRUE,FALSE,,,232.1,232.2,344,139,232

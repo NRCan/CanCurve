@@ -14,7 +14,7 @@ from ..parameters import src_dir, home_dir, today_str
 #===============================================================================
 # directories and files
 #===============================================================================
-drf_db_default_fp = os.path.join(src_dir, 'cancurve', 'db', 'mrb_20240416.db')
+drf_db_default_fp = os.path.join(src_dir, 'cancurve', 'db', 'mrb_20241007.db')
 
 #===============================================================================
 # params
@@ -35,6 +35,7 @@ bldg_layout_options_l = ['default',
                          '1storybase', '2storybase','1storycrawl', '2storycrawl']
 
 
+"""for testing these, usually hard code as a paramter (dont use buidling metadata)"""
 settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName'}
 
 #===============================================================================

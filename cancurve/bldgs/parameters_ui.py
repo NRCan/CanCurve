@@ -24,12 +24,14 @@ building_details_options_d = {
     
     #foundation/basement
     'foundationType':['Basement', 'Crawlspace', 'Slab', 'Other'],
-    'basementHeightUnits':['m', 'ft'],
+    #'basementHeightUnits':['m', 'ft'],
     
     
     
     #size age materials
-    'sizeOrAreaUnits':['m2', 'ft\u00B2'],
+    'sizeOrAreaUnits':['m2', 
+                       #'ft\u00B2'
+                       'ft2'],
     'qualityOfBuildingMaterials': ['Below Average', 'Average', 'Above Average', 'Custom'],
     
     
@@ -51,8 +53,5 @@ building_details_options_d = {
                         ],
     'taxesIncluded': ['PST', 'PST & GST', 'GST', 'None'],
     'currency':['$CAD', '$USD', 'Other'],
-    'costBasis':['Replacement Cost', 'Depreciated Costs']
+    'costBasis':['Replacement Cost', 'Depreciated Cost']
 }
-
-
- 

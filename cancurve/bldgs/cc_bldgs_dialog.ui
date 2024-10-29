@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>819</height>
+    <height>848</height>
    </rect>
   </property>
   <property name="palette">
@@ -264,6 +264,13 @@ p, li { white-space: pre-wrap; }
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
+        <widget class="QLabel" name="label_13">
+         <property name="text">
+          <string>Populate the metadta for your building. *required field</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QScrollArea" name="scrollArea">
          <property name="palette">
           <palette>
@@ -279,9 +286,9 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-298</y>
             <width>745</width>
-            <height>976</height>
+            <height>947</height>
            </rect>
           </property>
           <property name="styleSheet">
@@ -323,7 +330,7 @@ QGroupBox {
                    </font>
                   </property>
                   <property name="text">
-                   <string>Occupancy Classification</string>
+                   <string>Occupancy classification</string>
                   </property>
                   <property name="textFormat">
                    <enum>Qt::PlainText</enum>
@@ -359,7 +366,7 @@ QGroupBox {
                 <item row="3" column="0">
                  <widget class="QLabel" name="BedroomCount">
                   <property name="text">
-                   <string>Number of Bedrooms (Residential)</string>
+                   <string>Number of bedrooms (residential)</string>
                   </property>
                  </widget>
                 </item>
@@ -369,7 +376,7 @@ QGroupBox {
                 <item row="4" column="0">
                  <widget class="QLabel" name="BathroomCount">
                   <property name="text">
-                   <string>Number of Bathrooms</string>
+                   <string>Number of bathrooms</string>
                   </property>
                  </widget>
                 </item>
@@ -383,7 +390,7 @@ QGroupBox {
                 <item row="5" column="0">
                  <widget class="QLabel" name="heatingTypeLabel">
                   <property name="text">
-                   <string>Heating Type</string>
+                   <string>Heating type</string>
                   </property>
                  </widget>
                 </item>
@@ -393,7 +400,7 @@ QGroupBox {
                 <item row="6" column="0">
                  <widget class="QLabel" name="coolingTypeLabel">
                   <property name="text">
-                   <string>Cooling Type</string>
+                   <string>Cooling type</string>
                   </property>
                  </widget>
                 </item>
@@ -403,7 +410,7 @@ QGroupBox {
                 <item row="7" column="0">
                  <widget class="QLabel" name="garageTypeLabel">
                   <property name="text">
-                   <string>Garage Type</string>
+                   <string>Garage type</string>
                   </property>
                  </widget>
                 </item>
@@ -413,7 +420,7 @@ QGroupBox {
                 <item row="8" column="0">
                  <widget class="QLabel" name="garageSizeLabel">
                   <property name="text">
-                   <string>Garage Size</string>
+                   <string>Garage size</string>
                   </property>
                  </widget>
                 </item>
@@ -423,7 +430,7 @@ QGroupBox {
                 <item row="9" column="0">
                  <widget class="QLabel" name="buildingLayoutLabel">
                   <property name="text">
-                   <string>Building Layout*</string>
+                   <string>Building layout*</string>
                   </property>
                  </widget>
                 </item>
@@ -455,52 +462,30 @@ QGroupBox {
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_17">
               <item>
-               <layout class="QFormLayout" name="formLayout_t02_02a">
+               <layout class="QGridLayout" name="gridLayout_t02_02a">
                 <property name="horizontalSpacing">
                  <number>12</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="foundationBasementTypeLabel">
-                  <property name="text">
-                   <string>Foundation/Basement Type</string>
+                <item row="1" column="2">
+                 <widget class="QLabel" name="label_11">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
                   </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QComboBox" name="foundationType_ComboBox"/>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="basementHeightLabel_2">
-                  <property name="text">
-                   <string>Basement height (value)*</string>
+                  <property name="minimumSize">
+                   <size>
+                    <width>30</width>
+                    <height>0</height>
+                   </size>
                   </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox">
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="basementHeightUnitsLabel">
                   <property name="text">
-                   <string>Basement height (units)</string>
+                   <string>units:</string>
                   </property>
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="QComboBox" name="basementHeightUnits_ComboBox"/>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="basementFinishLabel">
-                  <property name="text">
-                   <string>Basement finish (percent)</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
                  <widget class="QDoubleSpinBox" name="basementFinish_DoubleSpinBox">
                   <property name="decimals">
                    <number>0</number>
@@ -510,6 +495,74 @@ QGroupBox {
                   </property>
                   <property name="value">
                    <double>100.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="foundationBasementTypeLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text">
+                   <string>Foundation/Basement type</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="basementHeightLabel_2">
+                  <property name="text">
+                   <string>Basement height*</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QDoubleSpinBox" name="basementHeight_DoubleSpinBox">
+                  <property name="toolTip">
+                   <string>Enter the vertical distance from the basement floor to the main floor</string>
+                  </property>
+                  <property name="statusTip">
+                   <string/>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="basementFinishLabel">
+                  <property name="text">
+                   <string>Basement finish (percent)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="foundationType_ComboBox"/>
+                </item>
+                <item row="1" column="3">
+                 <widget class="QLabel" name="basementHeightUnits_label">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>units for basement height. Select the units on the 'Data Input' tab using the 'exposure units' field.</string>
+                  </property>
+                  <property name="statusTip">
+                   <string/>
+                  </property>
+                  <property name="text">
+                   <string>m</string>
                   </property>
                  </widget>
                 </item>
@@ -560,11 +613,17 @@ QGroupBox {
                 </item>
                 <item row="0" column="0">
                  <widget class="QLabel" name="sizeOrAreaValueLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="toolTip">
                    <string>This value is used when 'RCV/Area' is selected to scale the replacement costs (e.g., to footprint area)</string>
                   </property>
                   <property name="text">
-                   <string>Structure area (value)*</string>
+                   <string>Structure area*</string>
                   </property>
                  </widget>
                 </item>
@@ -584,8 +643,14 @@ QGroupBox {
                 </item>
                 <item row="0" column="2">
                  <widget class="QLabel" name="sizeOrAreaUnitsLabel">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="text">
-                   <string>units</string>
+                   <string>units:</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -593,7 +658,20 @@ QGroupBox {
                  </widget>
                 </item>
                 <item row="0" column="3">
-                 <widget class="QComboBox" name="sizeOrAreaUnits_ComboBox"/>
+                 <widget class="QComboBox" name="sizeOrAreaUnits_ComboBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -659,7 +737,7 @@ QGroupBox {
                 <item row="3" column="0">
                  <widget class="QLabel" name="priceListSourceLabel">
                   <property name="text">
-                   <string>Price List Source</string>
+                   <string>Price list source</string>
                   </property>
                  </widget>
                 </item>
@@ -683,7 +761,7 @@ QGroupBox {
                 <item row="5" column="0">
                  <widget class="QLabel" name="pricingDateLabel">
                   <property name="text">
-                   <string>Pricing Date</string>
+                   <string>Pricing date</string>
                   </property>
                  </widget>
                 </item>
@@ -707,17 +785,21 @@ QGroupBox {
                 <item row="7" column="0">
                  <widget class="QLabel" name="costBasisLabel">
                   <property name="text">
-                   <string>Cost-Basis</string>
+                   <string>Cost-basis</string>
                   </property>
                  </widget>
                 </item>
                 <item row="7" column="1">
-                 <widget class="QComboBox" name="costBasis_ComboBox"/>
+                 <widget class="QComboBox" name="costBasis_ComboBox">
+                  <property name="toolTip">
+                   <string>Cost basis of your cost-items file</string>
+                  </property>
+                 </widget>
                 </item>
                 <item row="8" column="0">
                  <widget class="QLabel" name="scaleFactorLabel">
                   <property name="text">
-                   <string>Scale Factor</string>
+                   <string>Scale factor</string>
                   </property>
                  </widget>
                 </item>
@@ -1002,7 +1084,7 @@ QGroupBox {
             </property>
             <property name="minimumSize">
              <size>
-              <width>50</width>
+              <width>70</width>
               <height>0</height>
              </size>
             </property>
@@ -1014,12 +1096,12 @@ QGroupBox {
             </property>
             <item>
              <property name="text">
-              <string>m</string>
+              <string>meters</string>
              </property>
             </item>
             <item>
              <property name="text">
-              <string>ft</string>
+              <string>feet</string>
              </property>
             </item>
            </widget>
@@ -1238,7 +1320,7 @@ QGroupBox {
                  <string>Toggle the plot control checkBox for each plot</string>
                 </property>
                 <property name="text">
-                 <string>Toggle All</string>
+                 <string>Include All Plots</string>
                 </property>
                </widget>
               </item>
@@ -2008,6 +2090,5 @@ QLabel {
  <connections/>
  <buttongroups>
   <buttongroup name="buttonGroup_runControl"/>
-  <buttongroup name="buttonGroup_costbasis"/>
  </buttongroups>
 </ui>
