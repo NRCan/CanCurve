@@ -665,16 +665,20 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             log.info(f'plotting \'{k}\'')
             if d['cbox'].isChecked():
                 
+                
+                
                 #load the function
                 if k=='ci':
                     from .plots import plot_c00_costitems as func
+                    ylabel = self._get_ylabel(bldg_meta)
                 elif k=='drf':
                     from .plots import plot_c00_DRF as func
+                    ylabel='replacement-factor'
                 else:
                     raise KeyError()
                 
                 #call
-                fig = func(d['df'], log=log, figure=plt.figure(10+i))
+                fig = func(d['df'], log=log, figure=plt.figure(10+i), ylabel=ylabel)
                 
                 self._write_fig(fig, f'plot_c00_{k}', log=log, out_dir=out_dir)
         
@@ -722,6 +726,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
 
 
 
+
+
+
     def _run_c01_join_drf(self, logger=None):
         """retrive and run project setup
         
@@ -750,12 +757,14 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             #retrieve meta
             with sqlite3.connect(proj_db_fp) as conn:
                 bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn).iloc[0, :].to_dict()
-            
+ 
+            ylabel = self._get_ylabel(bldg_meta_d)            
             
             #plt.close('all')
             log.info(f'plotting depth_rcv_df')
             from .plots import plot_c01_depth_rcv 
-            fig = plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log, expo_units=bldg_meta_d['expo_units'])
+            fig = plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log, 
+                                     expo_units=bldg_meta_d['expo_units'], ylabel=ylabel)
             
             
             #write
@@ -830,16 +839,13 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             from .plots import plot_c02_ddf
             
             #build y-label
-            if 'costBasis' in bldg_meta_d: #fancy
-                ylabel='%s (%s)'%(bldg_meta_d['costBasis'], bldg_meta_d['currency'])
-                
-                if settings_d['scale_m2']:
-                    ylabel +=' per ' + bldg_meta_d['sizeOrAreaUnits']
-            else:
-                ylabel = 'damage'
-                if settings_d['scale_m2']:
-                    ylabel +=' per area'
-                
+            ylabel = self._get_ylabel(bldg_meta_d)
+            if settings_d['scale_m2']:
+                if 'sizeOrAreaUnits' in bldg_meta_d:
+                    ylabel +=' (per %s)'%bldg_meta_d['sizeOrAreaUnits']
+                else:
+                    ylabel +=' (per area)' #sizeOrAreaUnits missing from some tests?
+            
  
              
             fig = plot_c02_ddf(ddf, figure=plt.figure(3), log=log,ylabel=ylabel, 
@@ -942,6 +948,14 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # 3. Optionally provide feedback to the user and 
         self.logger.warning('user requested \'Cancel\'')
         #    (e.g., disable the cancel button, show a progress bar)
+        
+    def _get_ylabel(self, bldg_meta_d):
+        
+        if ('costBasis' in bldg_meta_d) and ('currency' in bldg_meta_d): #fancy (replacement vs. depreciated)
+            ylabel = '%s (%s)' % (bldg_meta_d['costBasis'].lower(), bldg_meta_d['currency'])
+        else:
+            ylabel = 'damage'
+        return ylabel
         
     
     def _get_proj_db_fp(self):
@@ -1062,11 +1076,15 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 
         
 
+        """treating this as a unit-less value now"""
+        bldg_meta_d['scale_value_m2'] = bldg_meta_d['sizeOrAreaValue']
         
-        if bldg_meta_d['sizeOrAreaUnits']=='m2':
-            bldg_meta_d['scale_value_m2'] = bldg_meta_d['sizeOrAreaValue']
-        else:
-            raise NotImplementedError(bldg_meta_d['sizeOrAreaUnits'])
+        #=======================================================================
+        # if bldg_meta_d['sizeOrAreaUnits']=='m2':
+        #     
+        # else:
+        #     raise NotImplementedError(bldg_meta_d['sizeOrAreaUnits'])
+        #=======================================================================
         
 
             

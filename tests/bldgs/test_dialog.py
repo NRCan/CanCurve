@@ -434,10 +434,11 @@ def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
 
 
     
-#@pytest.mark.dev
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     'case2',
+    'case4_R2'
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
 @pytest.mark.parametrize('ciPlot',[True], indirect=False)
