@@ -111,7 +111,7 @@ def load_ci_df(fp, log=None):
     
     return ci_df
 
-def load_drf(fp, log=None):
+def load_drf(fp, log=None, depths_unit='meters'):
     """load the DRF table from teh database
     
     TODO: load just the necessary rows (once the database is larger)
@@ -135,14 +135,34 @@ def load_drf(fp, log=None):
         assert_drf_db(conn)
         df_raw =  pd.read_sql('SELECT * FROM drf', conn, index_col=['cat', 'sel', 'bldg_layout'])
         
+        depths_df = pd.read_sql('SELECT * FROM depths', conn, index_col=['depth_idx'])
+        
+        
+ 
     #===========================================================================
-    # post
+    # post-------
     #===========================================================================
     df1 = df_raw.copy()
-
-    df1.columns.name='meters'
-    df1.columns = df1.columns.astype('float')
     
+    #===========================================================================
+    # set depths index
+    #===========================================================================
+    df1.columns=df1.columns.astype(int)
+    
+    #check
+    miss_s = set(df1.columns).symmetric_difference(depths_df.index)
+    if not miss_s==set():
+        raise IndexError(f'index mismatch between depths and drf tables\n    {miss_s}')
+    
+    assert depths_unit in depths_df.columns, f'bad depths unit'
+    
+    #replace the df1 integer-like columns with the float values from depths_df
+    df1.columns = df1.columns.to_frame().join(depths_df[depths_unit])[depths_unit].astype('float')
+    
+    #===========================================================================
+    # wrap
+    #===========================================================================
+ 
     try:
         assert_drf_df(df1)
     except Exception as e:
@@ -778,7 +798,7 @@ def c00_setup_project(
     #===========================================================================
     # load depth-replacement-factor database
     #===========================================================================
-    drf_df_raw = load_drf(drf_db_fp, log=log)
+    drf_df_raw = load_drf(drf_db_fp, log=log, depths_unit=settings_d['depths_unit'])
     
     """
     view(ci_df)

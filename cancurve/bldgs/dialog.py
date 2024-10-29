@@ -51,6 +51,8 @@ from ..hp.qt import (
         enable_widget_and_parents, enable_widget_and_children
         )
 
+from .assertions import assert_drf_db
+
 from .parameters import (
     drf_db_default_fp,home_dir, bldg_meta_rqmt_df
     )
@@ -252,7 +254,39 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # populate ui
         #=======================================================================
-        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp) #DRF default
+        #DRF        
+        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp) #filepath default
+        
+        #function to retrieve exposure units from database
+        #just use meters and feet always
+ #==============================================================================
+ #        def get_exposure_units_from_drf():
+ #            
+ #            try:
+ #                #retrieve the current filepath
+ #                drf_db_fp =     self.lineEdit_tab3dataInput_drfFp.text()  
+ #                assert os.path.exists(drf_db_fp) and drf_db_fp.endswith('.db'), drf_db_fp
+ # 
+ #                #===========================================================================
+ #                # load
+ #                #===========================================================================
+ #                with sqlite3.connect(drf_db_fp) as conn:
+ #                    assert_drf_db(conn)
+ #                    df_raw =  pd.read_sql('SELECT * FROM depths', conn, index_col=['cat', 'sel', 'bldg_layout'])
+ #                    
+ #                #extract
+ #                df_raw
+ #                
+ #                    
+ #            except Exception as e:
+ #                log.warning(f'failed to retrieve \'depths\' table metadata from MRB\n    {e}')
+ #            
+ #        
+ #        get_exposure_units_from_drf()
+ #==============================================================================
+        
+        
+        
         self.lineEdit_wdir.setText(home_dir)
         
         self.pushButton_wd_open.clicked.connect(
@@ -421,7 +455,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         from .assertions import assert_proj_db
         from ..hp.sql import get_table_names
-        import sqlite3
+        #import sqlite3
         
         
  
