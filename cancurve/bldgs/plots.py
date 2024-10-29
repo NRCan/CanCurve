@@ -339,7 +339,7 @@ def plot_c00_DRF(df_raw,
  
     
     figure.suptitle('Depth-Replacement-Factors'+'\nby category')
-    figure.supxlabel('depth (m)')
+    figure.supxlabel('depth (%s)'%df_raw.columns.name)
     figure.supylabel('replacement-factor')
     #figure.subplots_adjust(hspace=0, wspace=0)
  
@@ -357,6 +357,7 @@ def plot_c01_depth_rcv(df_raw,
                            #figsize=(10,10),
                            tight_layout=True,
                            ),
+                       expo_units=None,
                        
                        log=None):
     """plot the cost items dataset"""
@@ -428,11 +429,19 @@ def plot_c01_depth_rcv(df_raw,
         
         ax.yaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:,.0f}'))
         
+        
     #===========================================================================
     # post
     #===========================================================================
+    ax.xaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:.1f}'))
+    
     figure.suptitle('Depth-RCV'+'\nby story')
-    figure.supxlabel('depth (m)')
+    
+    xlab = 'depth'
+    if not expo_units is None:
+        xlab = xlab+' (%s)'%expo_units
+    figure.supxlabel(xlab)
+    
     figure.supylabel('replacement cost value')
     
     log.debug(f'finished')
@@ -455,6 +464,7 @@ def plot_c02_ddf(df_raw,
                        
                        cmap=None,
                        ylabel='total replacement cost',
+                       expo_units=None,
                        
                        log=None):
     """plot depth-damage per-story"""
@@ -507,7 +517,12 @@ def plot_c02_ddf(df_raw,
     ax.xaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:.2f}'))
     
     figure.suptitle('Depth-Damage-Function')
-    figure.supxlabel('depth (m)')
+    
+    xlab = 'depth'
+    if not expo_units is None:
+        xlab = xlab+' (%s)'%expo_units
+    figure.supxlabel(xlab)
+
     figure.supylabel(ylabel)
     
     

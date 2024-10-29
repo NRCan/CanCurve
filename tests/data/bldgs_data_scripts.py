@@ -185,6 +185,7 @@ test_cases_l = [
  pytest.param('case2', marks=pytest.mark.xfail(raises=(KeyError, FileNotFoundError, ValueError), reason="this case is missing some DRF entries")),
  'case3',
   'case4_R2',
+  #'case5_crawl', need to build data for this still?
   'AB-Calgary_R_1-L-BD-CU_ABCA',
   'AB-Calgary_R_1-L-BD-ST_ABCA',
   'AB-Calgary_R_1-L-BU-ST_ABCA',

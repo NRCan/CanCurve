@@ -801,7 +801,7 @@ def convert_CanFlood_to_CanCurve_ddf(df_raw, log=None):
     #===========================================================================
     # clean
     #===========================================================================
-    return ddf_cf_clean.rename(columns={'exposure':'depths_m', 'impact':'combined'}).set_index('depths_m')
+    return ddf_cf_clean.rename(columns={'exposure':'depths', 'impact':'combined'}).set_index('depths')
 
 def p04_summary_plot(dx,
                      out_dir=None,log_level=logging.INFO,

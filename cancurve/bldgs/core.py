@@ -1073,7 +1073,7 @@ def c02_group_story(proj_db_fp,
         #cost information
         cid_df = pd.read_sql('SELECT * FROM c01_depth_rcv', conn, index_col=['cat', 'sel', 'story'])
         cid_df.columns = cid_df.columns.astype(float)
-        cid_df.columns.name = 'depths_m'
+        cid_df.columns.name = 'depths' #can be any unit. controlled by expo_units
         
         #fixed costs
         if table_exists(conn, 'c00_fixed_costs'):
@@ -1223,7 +1223,7 @@ def c02_group_story(proj_db_fp,
         
         """
                        main       base   combined
-        depths_m                                 
+        depths                                 
         -1.80      10000.00    8000.00   18000.00
         -1.77      10000.00   66471.69   76471.69
         -1.75      10000.00   82639.88   92639.88
@@ -1331,7 +1331,7 @@ def c03_export(
         #=======================================================================
         # #extract depth-damage
         #=======================================================================
-        dd_d = ddf.loc[:, ['depths_m', 'combined']].astype(float).round(3).set_index('depths_m').iloc[:,0].to_dict()
+        dd_d = ddf.loc[:, ['depths', 'combined']].astype(float).round(3).set_index('depths').iloc[:,0].to_dict()
         
         #=======================================================================
         # #assemble

@@ -491,17 +491,19 @@ def test_action_tab4actions_step1(dialog,
     
  
  
-#@pytest.mark.dev
+@pytest.mark.dev
 #@patch('matplotlib.pyplot.show')  #breaks enable_widget for some reason...
-@pytest.mark.parametrize('testCase', ['case1'])
+@pytest.mark.parametrize('testCase', ['case4_R2'])
 @pytest.mark.parametrize('button, testPhase, expected_tables', [
-    ##('pushButton_tab4actions_step1', expected_tables_base), #this test is sufficnetly different... see above
-    #('pushButton_tab4actions_step2', 'c01', expected_tables_base+['c01_depth_rcv']),
+    #('pushButton_tab4actions_step1', expected_tables_base), #this test is sufficnetly different... see above
+    ('pushButton_tab4actions_step2', 'c01', expected_tables_base+['c01_depth_rcv']),
     ('pushButton_tab4actions_step3', 'c02', expected_tables_base+['c01_depth_rcv', 'c02_ddf']),
-    #('pushButton_tab4actions_step4', 'c03', expected_tables_base+['c01_depth_rcv', 'c02_ddf']), #export step doesnt write
+    ('pushButton_tab4actions_step4', 'c03', expected_tables_base+['c01_depth_rcv', 'c02_ddf']), #export step doesnt write
 ])
 @pytest.mark.parametrize('run_plot', [True])
-@pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
+@pytest.mark.parametrize('scale_m2',[True,
+                                     #False,
+                                     ], indirect=False)
 def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_tables, 
                             run_plot, testPhase):
     """run test on actions 2, 3, and 4 (see above for action 1)"""
@@ -528,6 +530,8 @@ def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_t
             enable_widget_and_parents(cbox)
             cbox.setChecked(True)
             
+        dialog.checkBox_tab4actions_saveFig.setChecked(True)
+            
 
     #===========================================================================
     # execute
@@ -544,11 +548,12 @@ def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_t
     print('finished')
 
     
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     #'case1',
     #pytest.param('case2', marks=pytest.mark.xfail(raises=(ValueError), reason="this case is missing some DRF entries")),
-    'case3',
+    #'case3',
+    'case4_R2'
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
 def test_action_tab4actions_runAll(dialog, set_all_tabs): 

@@ -570,7 +570,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             if out_dir is None: out_dir = self.lineEdit_wdir.text()
             fig_ofp = os.path.join(out_dir, f'{prefix}_{today_str}.svg')
             fig.savefig(fig_ofp)
-            log.info(f'saving plot to {fig_ofp}')
+            log.info(f'figure written to \n    {fig_ofp}')
             
             return fig_ofp
         
@@ -747,10 +747,15 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # plot------
         #=======================================================================
         if self.checkBox_tab4actions_step2_plot.isChecked():
+            #retrieve meta
+            with sqlite3.connect(proj_db_fp) as conn:
+                bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn).iloc[0, :].to_dict()
+            
+            
             #plt.close('all')
             log.info(f'plotting depth_rcv_df')
             from .plots import plot_c01_depth_rcv 
-            fig = plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log)
+            fig = plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log, expo_units=bldg_meta_d['expo_units'])
             
             
             #write
@@ -837,7 +842,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 
  
              
-            fig = plot_c02_ddf(ddf, figure=plt.figure(3), log=log,ylabel=ylabel)
+            fig = plot_c02_ddf(ddf, figure=plt.figure(3), log=log,ylabel=ylabel, 
+                               expo_units=bldg_meta_d['expo_units'])
  
             self._write_fig(fig, 'plot_c02_ddf', log=log)            
             
