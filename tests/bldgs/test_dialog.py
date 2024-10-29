@@ -62,6 +62,8 @@ use fixtures to parameterize in blocks
     
 @pytest.fixture(scope='function') 
 def dialog(qgis_iface):
+    """dialog fixture.
+    for interactive tests, see 'test_init' (uncomment block)"""
     
     #indirect parameters
  
@@ -71,8 +73,6 @@ def dialog(qgis_iface):
  
                           )
  
-    #dialog.show() #launch the window?
-    
     #disable launching of result
     dialog.checkBox_tab4actions_step4_launch.setChecked(False) #not nice for testing
     
@@ -96,7 +96,9 @@ def set_all_tabs(tab2bldgDetils, tab3dataInput, tab4createCurve):
 
 
 @pytest.fixture(scope='function')    
-def tab2bldgDetils(dialog, testCase, bldg_meta_d):
+def tab2bldgDetils(dialog, testCase, 
+                   bldg_meta_d, #from conftest
+                   ):
     """populate the 'Building Details' tab with test metadata"""
     
     dialog._change_tab('tab2bldgDetils')
@@ -108,8 +110,9 @@ def tab2bldgDetils(dialog, testCase, bldg_meta_d):
     #===========================================================================
     assert bldg_meta_d['bldg_layout']==dialog.buildingLayout_ComboBox.currentText()
     
-    if dialog.basementHeightUnits_ComboBox.currentText()=='m':
-        assert bldg_meta_d['basement_height_m']==dialog.basementHeight_DoubleSpinBox.value()
+    #if dialog.basementHeightUnits_ComboBox.currentText()=='m':
+    assert 'basement_height' in bldg_meta_d
+    assert bldg_meta_d['basement_height']==dialog.basementHeight_DoubleSpinBox.value()
     
     if dialog.sizeOrAreaUnits_ComboBox.currentText()=='m²':
         assert bldg_meta_d['scale_value_m2']==dialog.sizeOrAreaValue_DoubleSpinBox.value()
@@ -127,12 +130,16 @@ def tab2bldgDetils(dialog, testCase, bldg_meta_d):
 
 @pytest.fixture(scope='function') 
 def tab3dataInput(dialog, tableWidget_tab3dataInput_fixedCosts, 
-                      testCase, ci_fp, scale_m2,
+                      testCase, ci_fp, expo_units,
+                      #scale_m2,
                       tmp_path):
     
     dialog.lineEdit_wdir.setText(str(tmp_path))
     dialog.lineEdit_tab3dataInput_curveName.setText(testCase)
     dialog.lineEdit_tab3dataInput_cifp.setText(ci_fp)
+    
+    #set the QComboBox to match the value of 'expo_units'
+    dialog.comboBox_tab3dataInput_expoUnits.setCurrentText(expo_units)
     
     """changed this to a drop down on tab4
     if scale_m2: 
@@ -209,7 +216,7 @@ def test_parameters():
     assert set(building_details_options_d.keys()).difference(df.index)==set(), 'parameters_ui doesnt match paramter csv'
     
 
-
+#@pytest.mark.dev
 def test_init(dialog,):
     
     
@@ -256,7 +263,7 @@ def test_init(dialog,):
     ], indirect=False)
 def test_get_building_details(dialog, 
                          tab2bldgDetils, #calling this sets the values on the UI
-                         bldg_meta_d
+                         bldg_meta_d, #from conftest
                          ):
     
     """manual inspection only"""
@@ -427,7 +434,7 @@ def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
 
 
     
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
     'case2',
@@ -484,7 +491,7 @@ def test_action_tab4actions_step1(dialog,
     
  
  
-@pytest.mark.dev
+#@pytest.mark.dev
 #@patch('matplotlib.pyplot.show')  #breaks enable_widget for some reason...
 @pytest.mark.parametrize('testCase', ['case1'])
 @pytest.mark.parametrize('button, testPhase, expected_tables', [
@@ -539,8 +546,8 @@ def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_t
     
 @pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
-    'case1',
-    pytest.param('case2', marks=pytest.mark.xfail(raises=(ValueError), reason="this case is missing some DRF entries")),
+    #'case1',
+    #pytest.param('case2', marks=pytest.mark.xfail(raises=(ValueError), reason="this case is missing some DRF entries")),
     'case3',
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True, False], indirect=False)

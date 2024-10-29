@@ -35,7 +35,8 @@ bldg_layout_options_l = ['default',
                          '1storybase', '2storybase','1storycrawl', '2storycrawl']
 
 
-settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName', 'depths_unit':'meters'}
+"""for testing these, usually hard code as a paramter (dont use buidling metadata)"""
+settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName'}
 
 #===============================================================================
 # params. building metadata

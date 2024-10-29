@@ -19,6 +19,8 @@ from ..hp.qt import (
     assert_string_in_combobox, set_widget_value
     )
 
+from ..hp.basic import view_web_df as view
+
 from ..parameters import src_dir, plugin_dir
 
 from .parameters_ui import building_details_options_d
@@ -71,6 +73,11 @@ def set_fixedCosts(dialog, fixed_costs_d):
 def set_tab2bldgDetils(dialog, testCase):
     
     df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type'] + test_cases_l].dropna(subset='varName_ui').set_index('varName_ui')
+    
+    """
+    view(df)
+    """
+    
     #loop through and change the combobox to match whats in the dictionary
     for k, row in df.iterrows():
         

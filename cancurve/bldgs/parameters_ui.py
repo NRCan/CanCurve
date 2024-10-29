@@ -24,7 +24,7 @@ building_details_options_d = {
     
     #foundation/basement
     'foundationType':['Basement', 'Crawlspace', 'Slab', 'Other'],
-    'basementHeightUnits':['m', 'ft'],
+    #'basementHeightUnits':['m', 'ft'],
     
     
     

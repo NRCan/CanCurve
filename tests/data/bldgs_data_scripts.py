@@ -9,7 +9,7 @@ import numpy as np
 
 from cancurve.hp.basic import view_web_df as view
 from cancurve.bldgs.assertions import assert_bldg_meta_d, assert_fixed_costs_d
-from cancurve.bldgs.core import _get_bldg_meta_d
+#from cancurve.bldgs.core import _get_bldg_meta_d
 #===============================================================================
 # parametesr
 #===============================================================================
@@ -22,7 +22,7 @@ from cancurve.bldgs.dialog_test_scripts import fixed_costs_master_d #eventually 
 
 from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 
-bldg_meta_rqmt_df_test = bldg_meta_rqmt_df.copy()
+bldg_meta_rqmt_df_test = bldg_meta_rqmt_df.copy() #get a copy of the 'bldg_meta_rqmts.csv' as a dataframe
 
 #===============================================================================
 # helpers
@@ -60,7 +60,18 @@ def _pick_to_d(filename):
 def load_tests_cases_from_file(
         caseName_l=None,
         ):
-    """appends fixed costs to fixed_costs_master_d and returns full list of cases"""
+    """load parameter info for test cases (fixed_d and bldg_meta_d)
+    
+    these are stored as pickles, written with misc.DDFP_compare.port_to_test_data()    
+    
+        to edit or change variables, need to re-run this porting script
+        or add some post-processing here
+        
+    data is deliberately stored outside of repo 
+    
+
+
+    """
     
     global bldg_meta_rqmt_df_test
  
@@ -103,15 +114,20 @@ def load_tests_cases_from_file(
                 #load
                 bldg_meta_d = _pick_to_d(os.path.join(srch_dir, 'bldg_meta_d.pkl'))
                 
-                #workaround because we add this later
-                if not 'scale_factor' in bldg_meta_d:
-                    bldg_meta_d['scale_factor'] = 1.0
+                #post-fixes
+                """to avoid rebuilding the set, adding simple variables here
+                would be nicer to include these in DDFP_compare.p01_extract_DDFP()
+                """
+                if not 'expo_units' in bldg_meta_d:
+                    bldg_meta_d['expo_units'] = 'meters'
                 
-                assert_bldg_meta_d(bldg_meta_d, msg=caseName)
+                    
+ 
+                assert_bldg_meta_d(bldg_meta_d, msg=f'pickled bldg_meta_d for \'{caseName}\'')
                 
                 #fill in blank.. probably a better way to do this
-                if np.isnan(bldg_meta_d['basement_height_m']):
-                    bldg_meta_d['basement_height_m'] = 2.7
+                if np.isnan(bldg_meta_d['basement_height']):
+                    bldg_meta_d['basement_height'] = 2.7
                 
                 s = pd.Series(bldg_meta_d, name=caseName)
                 
@@ -128,9 +144,9 @@ def load_tests_cases_from_file(
            
         break
     
-    #fill in blanks in column 'basement_height_m' with adjacent values
+    #fill in blanks in column 'basement_height' with adjacent values
     #no... too tricky to id the correct columns
-    #loc = bldg_meta_rqmt_df_test.index[bldg_meta_rqmt_df_test.iloc[:,0]=='basement_height_m'][0]
+    #loc = bldg_meta_rqmt_df_test.index[bldg_meta_rqmt_df_test.iloc[:,0]=='basement_height'][0]
     #bldg_meta_rqmt_df_test.iloc[loc, :]
     
     print(f'built bldg_meta_rqmt_df_test w/ {bldg_meta_rqmt_df_test.shape}')
@@ -165,14 +181,16 @@ def load_tests_cases_from_file(
 #for unit tests, see tests.bldgs.conftest.cases_l
 
 test_cases_l = [
-    'case1',
+'case1',
  pytest.param('case2', marks=pytest.mark.xfail(raises=(KeyError, FileNotFoundError, ValueError), reason="this case is missing some DRF entries")),
  'case3',
- 'case4_R2',
- 'AB-Calgary_R_1-L-BD-CU_ABCA',
- 'AB-Calgary_R_1-L-BD-ST_ABCA',
- 'AB-Calgary_R_1-L-BU-ST_ABCA',
- 'AB-Calgary_R_1-L-C-CU_ABCA',
+  'case4_R2',
+  'AB-Calgary_R_1-L-BD-CU_ABCA',
+  'AB-Calgary_R_1-L-BD-ST_ABCA',
+  'AB-Calgary_R_1-L-BU-ST_ABCA',
+  'AB-Calgary_R_1-L-C-CU_ABCA',
+ 
+ 
  #==============================================================================
  # 'AB-Calgary_R_1-L-C-ST_ABCA',
  # 'AB-Calgary_R_1-M-BD-CU_ABCA',

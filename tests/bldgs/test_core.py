@@ -82,27 +82,21 @@ load_tests_cases_from_file(
     # #===========================================================================
     # 'AB-Calgary_R_1-L-C-ST_ABCA' 
     # ]
-    #===========================================================================
-                         
+    #===========================================================================                         
                          
                          )
-#===============================================================================
-# @pytest.mark.parametrize('fixed_costs_d',[
-#     {0:10000, -1:8000},
-#     None,
-#     #pytest.param({0:10000, -2:8000}, marks=pytest.mark.xfail(raises=KeyError, reason="bad story")), 
-#     ])
-#===============================================================================
-def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d,
+#@pytest.mark.parametrize('expo_units', ['meters', 'feet'])
+def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d, expo_units,
                            bldg_meta_d):
     from cancurve.bldgs.core import c00_setup_project as func
     
     result = func(ci_fp, 
          out_dir=tmp_path, 
-         #bldg_meta={'basement_height_m':1.8, 'scale_value_m2':232.0, 'bldg_layout':'default'},
+         #bldg_meta={'basement_height':1.8, 'scale_value_m2':232.0, 'bldg_layout':'default'},
          bldg_meta=bldg_meta_d,
          fixed_costs_d=fixed_costs_d,
-         curve_name=f'{testCase}_c00',
+         expo_units=expo_units,
+         curve_name=f'{testCase}_c00', 
          ofp=os.path.join(tmp_path, f'{testCase}_c00.cancurve'))
     
     
@@ -117,10 +111,11 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d,
 #@pytest.mark.dev
 @pytest.mark.parametrize('testCase',
                          test_cases_l
+                         #[
     #===========================================================================
-    #                      [
-    # 'case1',
-    # pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
+    # #'case1',
+    # #pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
+    # 'case3',
     # ]
     #===========================================================================
                          
@@ -138,7 +133,7 @@ def test_c01_join_drf(proj_db_fp, tmp_path, testCase, testPhase):
      
      
  
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('testCase',
                          ##['case1']
                          test_cases_l
@@ -159,8 +154,11 @@ def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
     copy_sqlite(proj_db_fp, testCase, 'c03')
     
     
-#@pytest.mark.dev
-@pytest.mark.parametrize('testCase',['case1'], indirect=False)
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',
+                         #test_cases_l
+                         ['case3']
+                         )
 @pytest.mark.parametrize('testPhase',['c03'], indirect=False)
 def test_c03_export(proj_db_fp, testCase, testPhase, tmp_path):
     from cancurve.bldgs.core import c03_export as func 
