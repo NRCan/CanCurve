@@ -185,11 +185,14 @@ drf_data = drf_df.transpose().reset_index()
 drf_data = drf_data.drop(columns=['meters', 'feet'])
 
 # Optional: If you have index columns in drf_df, reset the index to include them
-drf_data = drf_data.set_index('depth_idx').transpose().reset_index()
+drf_data = drf_data.set_index('depth_idx').transpose()#.reset_index()
 
+"""
+drf_data.index
+"""
 
 # Write drf_data to SQLite as 'drf_data' table
-drf_data.to_sql('drf', conn, if_exists='replace', index=False)
+drf_data.to_sql('drf', conn, if_exists='replace', index=True)
 
 #===============================================================================
 # add keys
