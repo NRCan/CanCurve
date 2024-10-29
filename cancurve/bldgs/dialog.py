@@ -190,13 +190,23 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 testCase = self.comboBox_dev.currentText()
                 
                 #populate with the test data
-                set_tab2bldgDetils(self, testCase)                
+                
+                #tab2
+                set_tab2bldgDetils(self, testCase)
+                
+                #tab3                
                 set_fixedCosts(self, fixed_costs_master_d[testCase])
                 
                 wdir = os.path.join(os.path.expanduser('~'), 'CanCurve', testCase, 
                                     datetime.now().strftime('%Y%m%d%H%M%S'))
+                
                 self.lineEdit_wdir.setText(wdir)
                 self.lineEdit_tab3dataInput_curveName.setText(testCase)
+                
+                #tab3: expo units 
+                self.comboBox_tab3dataInput_expoUnits.setCurrentText(self.basementHeightUnits_label.text())            
+                
+                
                 
                 #cost information
                 tdata_dir = os.path.join(test_data_dir_master, testCase)
