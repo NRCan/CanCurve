@@ -14,7 +14,8 @@ CanCurve is an open-source tool for developing flood depth-damage (stage-damage)
 
 
 ## Documentation
- CanCurve is an open-source tool which can be used to create depth-damage (stage-damage) functions for use in flood loss estimation and flood risk assessments. 
+Project documentation is [here](https://cancurve.readthedocs.io/en/latest/)
+ 
 ## Background
 In Canada, a limited number of developed damage functions are available to support flood risk assessments. The existing functions lack a standardized process, and the underlying algorithms and data to derive them are unclear, making them a bit of a ‘black box.’ Additionally, transferability from one region to another can be challenging. 
 <p>

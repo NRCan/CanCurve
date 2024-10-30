@@ -195,11 +195,27 @@ Below is a minimum example CanFlood format DDF.
 Cost Basis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-CanCurve supports two cost bases:
+The Buildings Tool supports two cost bases:
 
  - **Total** ($/structure): The resulting DDF will reflect the total restoration costs for the archetype as a function of depth. This can be useful for debugging and for risk models with very similar structures. For DDFs of this type, the calculated impacts should not be scaled.
  - **Area-based** ($/area): The resulting DDF will reflect the restoration costs per area of the structure as a function of depth. The units of the DDF impact values can be $/ft^2 or $/m^2 depending on what was specified in the **Structure area** field on the **Metadata** tab. This basis is useful for adapting the resulting archetypal DDF to other structures by scaling the impact values by the area of the structure. Most CanFlood models use this cost basis.
 
+
+.. _sec02-units:
+
+Units
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The Buildings Tool is unit-agnostic, meaning any units you specify are supported.
+Any units explicitly specified (e.g., through drop downs) or implicitly (e.g., through input data) are propagated into CanFlood's project tables and the final DDF outputs.
+In otherwords, there are *no unit conversions* under-the-hood, by design.
+Users should be aware of the three main units concerning DDFs:
+ - **Currency**: This is related to the :ref:`Cost Basis <sec02-costBasis>`_, and is input implicitly from the :ref:`Cost Items <_sec02-costItem>`_ table. Users should ensure the **Currency** drop down on the **Metadata** tab is consistent with this table so that the resulting DDF metadata is accurate.
+ - **Vertical Distances**: Both the *exposure depths* and the *basement heights* must be provided in the same units (no checks are performed on this). These units are specified on the *Data Input* tab under *exposure units* (feet or meters). These values are used to calculate the *exposure depths* on the resulting DDF.
+ - **Structure Area**: To calculate *area-based curves*, the user must provide a *Structure area* value and unit on the *Metadata* tab (ft2 or m2). These units must be consistent with the intended application of the DDFs. For example, if you plan to use building area as a scaler in your flood risk model, the units of the area in the exposure data must match the units of your DDF. Often this is the same system as the **vertical distance** (e.g., metric), but this is not a requirement, i.e., a curve with a vertical distance of meters and an area of square feet is valid. 
+
+
+ 
 
 
 
