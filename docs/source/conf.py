@@ -50,5 +50,6 @@ language = "en"
 
 # Enable numref
 numfig = True
+numfig_secnum_depth = 0
 
 

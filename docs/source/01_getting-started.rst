@@ -12,9 +12,15 @@ Installation
 ------------
 
 To install CanCurve, you first need to install QGIS, then you can install CanCurve from the Plugin Repository.
-
 For detailed instructions, refer to the `project README <https://github.com/NRCan/CanCurve/tree/main?tab=readme-ov-file#installation>`_.
 For best performance, ensure you have the specified version of QGIS installed.
+
+After installation of the plugin, the |CanCurve_icon| icon should appear on your plugins toolbar.
+If you don't see the icon, first ensure the plugin is checked on the **Installed** tab of the "**Manage and Install Plugins..**" dialog, then ensure the **plugins toolbar** is enabled by right-clicking the QGIS toolbar.
+
+.. |CanCurve_icon| image:: /assets/icon_solid.png
+   :align: middle
+   :width: 14
 
 
 .. _sec01-overview:
@@ -36,17 +42,12 @@ Once these inputs and the building metadata are prepared and entered into the Bu
 
 Quick-Start
 -----------------------
-After installation of the plugin, the |CanCurve_icon| icon should appear on your plugins toolbar.
-If you don't see the icon, first ensure the plugin is checked on the **Installed** tab of the **Manage and Install Plugins..** dialog; then ensure the **plugins toolbar** is enabled by right-clicking the QGIS toolbar.
 
-.. |CanCurve_icon| image:: /assets/icon_solid.png
-   :align: middle
-   :width: 14
 
 To start working with CanCurve, click the |CanCurve_icon| to open the :ref:`Buildings Tool <sec02-bldgs>` dialog.
 
 
-.. _fig01-dialog-welcome:
+.. _fig-dialog-welcome:
 
 .. figure:: /assets/01-dialog-welcome.png
    :alt: Welcome Tab
@@ -83,7 +84,7 @@ Frequently Asked Questions
 **Do I really need to install an old version of QGIS to use CanCurve**
       No, but we recommend it for best performance. If you have a newer version of QGIS installed, you can try CanCurve with it, but you may experience issues.
 
-      
+
 
 
 
