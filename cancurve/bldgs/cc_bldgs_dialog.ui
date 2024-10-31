@@ -353,10 +353,10 @@ QGroupBox {
                 <item row="2" column="0">
                  <widget class="QLabel" name="storysLabel">
                   <property name="toolTip">
-                   <string>Number of storys/levels/floors for the building. Typically this excludes the basement.</string>
+                   <string>Number of storeys/levels/floors for the building. Typically this excludes the basement.</string>
                   </property>
                   <property name="text">
-                   <string>Storys/Levels</string>
+                   <string>Storeys/Levels</string>
                   </property>
                  </widget>
                 </item>
@@ -978,14 +978,14 @@ QGroupBox {
                <item row="0" column="0">
                 <widget class="QLabel" name="basementRCVstory1Label">
                  <property name="text">
-                  <string>Basement RCV (story -1):   </string>
+                  <string>Basement RCV (storey -1):   </string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="mainFloorRCVstory0Label">
                  <property name="text">
-                  <string>Main Floor RCV (story 0):</string>
+                  <string>Main Floor RCV (storey 0):</string>
                  </property>
                 </widget>
                </item>
@@ -1739,7 +1739,7 @@ QLabel {
                   </sizepolicy>
                  </property>
                  <property name="toolTip">
-                  <string>group by story and assemble DDF</string>
+                  <string>group by storey and assemble DDF</string>
                  </property>
                  <property name="text">
                   <string>Run</string>
@@ -1787,7 +1787,7 @@ QLabel {
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>depth-damage per-story plot</string>
+                  <string>depth-damage per-storey plot</string>
                  </property>
                 </widget>
                </item>
