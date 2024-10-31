@@ -9,14 +9,21 @@ User Guide: Buildings Tool
 
 The CanCurve **Buildings Tool** creates Depth Damage Functions (DDF) for archetypal Canadian buildings using detailed restoration cost data.
 The resulting DDFs can be used to estimate potential costs and losses from flood scenarios using a flood risk modelling tool such as CanFlood.
-The tool joins restoration cost data with information on an item's vulnerability to floods. It then groups the data by flood depth to create a simple function that represents *flood damage* in relation to *flood depth*. In addition, the tool includes several advanced features.
+The tool joins restoration cost data with information on an item's vulnerability to floods. It then groups the data by flood depth to create a simple function that represents *flood damage* in relation to *flood depth*.
+
 
 
 Introduction
 -------------
-Canada is a large country with diverse and varied geographies. Many communities are built on floodplains, near lakes and coastlines, exposing areas to short and long-term impacts from flooding. These impacts can include economic losses, environmental damage, and impacts on people. With climate change projections indicating more frequent and severe natural hazards, these consequences will likely escalate.
-Flood risk assessments are essential to plan and prepare adaptation strategies that can reduce future costs and suffering. Traditionally, assessments have focussed on a single flood scenario, which can lead to an underestimation or overestimation of modelled impacts. A more effective approach is a risk-based approach that considers a range of flood scenarios - from frequent nuisance floods to rare catastrophic events. This approach helps communities to better understand and plan for a range of strategies that address both current and future.
-Water on the floodplain is not the problem; it is how flood water interacts with both the natural and human environments. Flood risk models take into account the flood hazard data, exposure to flooding, and the vulnerability of those elements. Depth Damage Functions (DDFs) are the most effective method to estimate direct damages. For instance, DDFs can estimate the costs of damage to a building based on the depth of floodwater.
+Canada is a large country with diverse and varied geographies. Many communities are built on floodplains, near lakes and coastlines, exposing areas to short and long-term impacts from flooding.
+These impacts can include economic losses, environmental damage, and impacts on people. With climate change projections indicating more frequent and severe natural hazards, these consequences will likely escalate.
+Flood risk assessments are essential to plan and prepare adaptation strategies that can reduce future costs and suffering.
+Traditionally, assessments have focused on a single flood scenario, which can lead to an underestimation or overestimation of modelled impacts.
+A more effective approach is a risk-based approach that considers a range of flood scenarios - from frequent nuisance floods to rare catastrophic events.
+This approach helps communities to better understand and plan for a range of strategies that address both current and future flood risks.
+Water on the floodplain is not the problem; it is how flood water interacts with both the natural and human environments. Flood risk models take into account the flood hazard data, exposure to flooding, and the vulnerability of those elements.
+Depth Damage Functions (DDFs) are the most effective method to estimate direct damages.
+For instance, DDFs can estimate the costs of damage to a building based on the depth of floodwater.
 However, the accuracy of these models depends on the robustness of the Depth Damage Function applied. In Canada, there are limited DDFs available, and many may not be suitable for all regions due to variations in both the built environment and the type of flood events, from flash floods to ice jams, high-energy coastal floods or even tsunamis.
 
 
@@ -49,7 +56,7 @@ To operationalize this, NRCan initiated the CanCurve project.
 
 Welcome Tab
 ------------
-The :ref:`Welcome tab <fig-dialog-welcome>` provides a brief introduction to the Buildings Tool and links to the User Guide and Project Page.
+The :ref:`Welcome Tab <fig-dialog-welcome>` provides a brief introduction to the Buildings Tool and links to the User Guide and Project Page.
 If you want to load a tutorial dataset, select one of the Tutorial Case Examples by loading the testing values button. See :ref:`Tutorials <sec03-tutorials>` for data examples.
 
 .. _sec02-tabs-metadata:
@@ -63,11 +70,11 @@ Enter available information into the Metadata tab.
 Only fields marked with an asterisk (*) are mandatory, but the more information you provide, the more complete your DDF will be.
 To assemble the DDF, the following metadata is required:
 
- - **Building Layout** (``bldg_layout``): Corresponds to categories in the DRF dataset.
- - **Basement height value** (``basement_height_m``): The height of the basement in meters, used to concatenate the cost values between storys.
+ - **Building Layout** (``bldg_layout``): Corresponds to categories in the :ref:`DRF Database <sec02-drf>`.
+ - **Basement height value** (``basement_height_m``): The height of the basement in meters, used to concatenate the cost values between storeys.
  - **Structure area value** (``scale_value``): The area of the structure in square meters used to scale the cost values for :ref:`Area-based <sec02-costbasis>` cost basis.
 
-It is good practice to specify additional metadata fields, which the  Buildings Tool  propagates onto the output DDFs.
+Specifying additional metadata fields is recommended, as the Buildings Tool will include them in the output DDFs.
 For example data, see the :ref:`Tutorials <sec03-tutorials>`.
 
 .. _fig-tab-metadata:
@@ -79,20 +86,38 @@ For example data, see the :ref:`Tutorials <sec03-tutorials>`.
 
    Metadata tab of the Buildings Tool.
 
-.. _sec02-costitem:
-.. _sec02-drf:
-.. _sec02-fixedCosts:
 
 Data Input Tab
 ----------------
-Specify settings and locations for datasets:
-
- - **Cost-item table**: This table provides detailed information on restoration costs for various items. The data is specified as a CSV file and is typically sourced from cost restoration experts using specialized software like Xactimate, combined with a detailed model of the building structure.
- - **Fixed Costs**: This simple dataset contains two values: the fixed restoration costs for the basement and the main floor. These costs represent the sum of all depth-invariant cost items, i.e., costs that are incurred regardless of flood depth, such as mobilization fees or permit charges.
- - **Depth-Replacement Factor (DRF) Database**: This dataset includes information on the Depth-Replacement Factor, which is essential for calculating restoration costs based on flood depth. This database relates flood depth to the percentage loss or damage of a restoration item. By default, the DRF database included with CanCurve will be used, and  is installed into the `./db` directory of the CanCurve plugin. The database was developed in consultation with cost-restoration specialists and reflects the vulnerability of a typical Canadian building to stillwater flooding. :numref:`fig-conceptual-diagram` provides a diagram of how the remote, local, and project datasets are related.
+Specify settings and locations for the three main datasets.
 
 
-The DRF database is a SQLite database with three tables:
+.. _sec02-costitem:
+
+Cost-item table
+~~~~~~~~~~~~~~~~
+This table provides detailed information on restoration costs for various items.
+The data is specified as a CSV file and is typically sourced from cost restoration experts using specialized software like Xactimate, combined with a detailed model of the building structure.
+
+.. _sec02-fixedCosts:
+
+Fixed Costs
+~~~~~~~~~~~~
+This dataset contains fixed restoration costs for the basement and main floor.
+These costs represent the sum of all depth-invariant cost items, i.e., costs that are incurred regardless of flood depth, such as mobilization fees or permit charges.
+
+
+.. _sec02-drf:
+
+Depth-Replacement Factor (DRF) Database
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This dataset includes information on the Depth-Replacement Factor, which is essential for calculating restoration costs based on flood depth.
+This database relates flood depth to the percentage loss or damage of a restoration item. By default, the DRF Database included with CanCurve will be used, and is installed into the `./db` directory of the CanCurve plugin.
+The database was developed in consultation with cost-restoration specialists and reflects the vulnerability of a typical Canadian building to stillwater flooding.
+:numref:`fig-conceptual-diagram` provides a diagram of how the remote, local, and project datasets are related.
+
+
+The DRF Database is a SQLite database with three tables:
  - **cost_item_meta**: lookup and description fields for each cost-item with key fields ``cat``, ``sel``, and ``bldg_layout``.
  - **drf**: the depth-replacement-factor for each cost-item with key fields ``cat``, ``sel``, and ``bldg_layout``.
  - **depths**: depth values (in feet and meters) corresponding to the columns in the DRF table.
@@ -143,7 +168,7 @@ Because of this, you can save and restore progress by selecting an existing :ref
 
 Core: Curve Creation Steps
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-At the core of the Buildings Tool are four curve creation steps that are executed in sequence to generate a DDF.
+At the core of the Buildings Tool are four curve creation steps that are executed sequentially to generate a DDF.
 These are controlled from the **Create Curve** tab and can be executed individually or all at once:
 
 1. **Setup project**:
@@ -153,7 +178,7 @@ These are controlled from the **Create Curve** tab and can be executed individua
    Join :ref:`DRF Database <sec02-drf>` to the :ref:`Cost-Item table <sec02-costItem>`, then multiply through to create fractional restoration costs.
 
 3. **Data group and concat stories**:
-   Group restoration costs by story and concatenate them into a single table.
+   Group restoration costs by storey and concatenate them into a single table.
 
 4. **Export result in CanFlood format**:
    Export the DDF in the :ref:`CanFlood format <sec02-CanFloodFormat>`.
@@ -175,7 +200,7 @@ The `CanFlood <https://github.com/NRCan/CanFlood>`_ program expects DDFs to be i
 The first section contains the metadata in key-value pairs while the second section contains the exposure-impact series.
 CanFlood requires three keys in the metadata section:
 
- - ``tag``: used for linking the curve to the inventory.
+ - ``tag``: used for linking the DDF to the inventory.
  - ``impact_units``: used for indicating what units the impact values are in (e.g., $CAD) on plots and reports.
  - ``exposure``: used to indicate the transition between the metadata and the exposure-impact sections.
 
@@ -218,13 +243,13 @@ The database is composed of several tables, each of which is used by one or more
    +------------------+--------------------------------------------+------+
    | c00_cost_items   | Cost-Item table                            | 1    |
    +------------------+--------------------------------------------+------+
-   | c00_drf          | DRF database [#4]_                         | 1    |
+   | c00_drf          | DRF Database [#4]_                         | 1    |
    +------------------+--------------------------------------------+------+
    | c00_fixed_costs  | Fixed costs                                | 1    |
    +------------------+--------------------------------------------+------+
    | c01_depth_rcv    | Fractional item cost for each depth        | 2    |
    +------------------+--------------------------------------------+------+
-   | c02_ddf          | DDF for each story                         | 3    |
+   | c02_ddf          | DDF for each storey                        | 3    |
    +------------------+--------------------------------------------+------+
    | project_meta     | Metadata tracking operations on the db     | all  |
    +------------------+--------------------------------------------+------+
@@ -249,12 +274,13 @@ The Buildings Tool supports two cost bases:
 
 .. _sec02-units:
 
+
 Units
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Buildings Tool is unit-agnostic, meaning any units you specify are supported.
 Any units explicitly specified (e.g., through drop downs) or implicitly (e.g., through input data) are propagated into CanFlood's project tables and the final DDF outputs.
-In otherwords, there are *no unit conversions* under-the-hood, by design.
+In other words, there are *no unit conversions* under-the-hood, by design.
 Users should be aware of the three main units concerning DDFs:
 
  - **Currency**: This is related to the :ref:`Cost Basis <sec02-costBasis>`, and is input implicitly from the :ref:`Cost Items <sec02-costItem>` table. Users should ensure the **Currency** drop down on the **Metadata** tab is consistent with this table so that the resulting DDF metadata is accurate.

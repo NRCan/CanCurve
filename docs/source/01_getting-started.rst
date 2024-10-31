@@ -2,6 +2,7 @@
 
 Getting Started
 ==================
+
 The following sections will help you get started using CanCurve.
 We suggest reading these sections first.
 
@@ -74,14 +75,14 @@ Frequently Asked Questions
 **Where can I find Cost-Item data for my archetype?**
     Typically this information is obtained from cost restoration experts using specialized software like Xactimate and a detailed model of the structure.
 
-**How can I add entries to my Depth-Replacement-Factor (DRF) Database**
+**How can I add entries to my Depth-Replacement-Factor (DRF) Database?**
     You'll need to use some software that allows editing of SQLite databases. We recommend `DB Browser for SQLite <https://sqlitebrowser.org/>`_.
 
 **Where can I go to get help?**
     The best place to get help is the `CanCurve GitHub Issues <https://github.com/NRCan/CanCurve/issues>`_ page where you can read through questions posted by others or ask your own.
 
 
-**Do I really need to install an old version of QGIS to use CanCurve**
+**Do I really need to install an old version of QGIS to use CanCurve?**
       No, but we recommend it for best performance. If you have a newer version of QGIS installed, you can try CanCurve with it, but you may experience issues.
 
 
