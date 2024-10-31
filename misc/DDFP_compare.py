@@ -295,7 +295,7 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
             #===================================================================
             # extract metadata------
             #===================================================================
-            #{'bldg_layout': 'default', 'basement_height_m': '1.8', 'scale_value_m2': '232.1'}
+            #{'bldg_layout': 'default', 'basement_height': '1.8', 'scale_value_m2': '232.1'}
             #load resulting curve
             curve_ser = ddfp_lib_d[ddf_name+'_m2'].iloc[:,0]
             
@@ -304,11 +304,12 @@ def p01_extract_DDFP(ddfp_lib_fp_d,
             try:
                 meta_lib[study_name][ddf_name] = {
                     'bldg_layout':'default', 
-                    'basement_height_m':get_v(['base to main height']),
+                    'basement_height':get_v(['base to main height']),
                     #'scale_value_m2':get_v(['estimate GFA (m2)']),
                     #scale values on ddf tabs are wrong. need to pull thsi from DDFwrk_grp2
                     'curve_name':ddf_name,
-                    'storys':curve_ser['storys']                
+                    'storys':curve_ser['storeys'] ,
+                    #'expo_units':'meters',               
                     }
             except Exception as e:
                 raise KeyError(f'failed on {ddf_name} w/\n    {e}')
@@ -429,8 +430,8 @@ def p02_CanCurve_workflow(ci_df_lib, meta_lib, fixd_lib,
             #building meta
             bldg_meta_d=meta_lib[study_name][ddf_name].copy()
             
-            if pd.isnull(bldg_meta_d['basement_height_m']):
-                bldg_meta_d['basement_height_m'] = 2.7
+            if pd.isnull(bldg_meta_d['basement_height']):
+                bldg_meta_d['basement_height'] = 2.7
                 
                 
             #cost items
@@ -800,7 +801,7 @@ def convert_CanFlood_to_CanCurve_ddf(df_raw, log=None):
     #===========================================================================
     # clean
     #===========================================================================
-    return ddf_cf_clean.rename(columns={'exposure':'depths_m', 'impact':'combined'}).set_index('depths_m')
+    return ddf_cf_clean.rename(columns={'exposure':'depths', 'impact':'combined'}).set_index('depths')
 
 def p04_summary_plot(dx,
                      out_dir=None,log_level=logging.INFO,
@@ -967,7 +968,7 @@ def p04_summary_plot(dx,
 def port_to_test_data(
         fixd_lib,meta_lib,
         search_dir = r'l:\10_IO\CanCurve\misc\DDFP_compare\p01',
-        out_dir = r'l:\09_REPOS\04_TOOLS\CanCurve\tests\data\bldgs'
+        out_dir = r'c:\GD\10_IO\CanCurve\test_data\bldgs'
         
         ): 
     """extract the data into a format for the test cases"""
@@ -1012,9 +1013,13 @@ def port_to_test_data(
             _d_to_pick(fixed_d, os.path.join(dest_dir, 'fixed_d.pkl'))
             
             #===================================================================
-            # metadata
+            # bldg_meta_d
             #===================================================================
             d = meta_lib[relative_root][dir_name]
+            
+            #workaround because we add this later
+            if not 'scale_factor' in d:
+                d['scale_factor'] = 1.0
             
             assert_bldg_meta_d(d)
             

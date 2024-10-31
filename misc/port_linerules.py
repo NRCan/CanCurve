@@ -11,7 +11,7 @@ script for porting MRB 'LineRules' to a SQLite
 raw_linerules_xls = r'l:\02_WORK\CEF\2403_CanCurve\02_INFO\davids_tool\linerules_20240415.xls'
 
 
-sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20240416.db'
+sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20241007.db'
 
 
 #===============================================================================
@@ -19,11 +19,12 @@ sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20240416.db'
 #===============================================================================
 import pandas as pd
 from pandas import IndexSlice as idx
+import numpy as np
 
 import sqlite3
 
 from cancurve.hp.basic import view_web_df as view
-from cancurve.parameters import index_cols
+index_cols = ['cat', 'sel', 'bldg_layout']
 
 
 
@@ -84,6 +85,54 @@ drf_df.columns.name = 'meters'
 #join index
 drf_df = drf_df.join(df_left.loc[:, index_cols]).set_index(index_cols)
 
+# Assuming drf_df.columns contains the meter values as strings or numbers
+# Convert column names to floats if they aren't already
+meters = drf_df.columns.astype(float)
+
+# Convert meters to feet
+feet = meters * 3.28084  # Conversion factor from meters to feet
+
+# Initialize depth_idx array
+depth_idx = np.zeros(len(meters), dtype=int)
+
+# Identify indices for negative, zero, and positive meters
+neg_indices = meters < 0
+zero_indices = meters == 0
+pos_indices = meters > 0
+
+# For negative meters, assign depth_idx starting from -1, decreasing
+# Sort negative meters in increasing order (from most negative to least negative)
+neg_meters = meters[neg_indices]
+neg_sorted_indices = np.argsort(neg_meters)
+neg_depth_idx = -np.arange(1, len(neg_meters) + 1)  # -1, -2, -3, ...
+
+# Map the negative depth indices back to their original positions
+depth_idx_neg = np.empty(len(neg_meters), dtype=int)
+depth_idx_neg[neg_sorted_indices] = neg_depth_idx
+depth_idx[neg_indices] = depth_idx_neg
+
+# For zero meters, depth_idx is already zero (initialized)
+
+# For positive meters, assign depth_idx starting from 1, increasing
+# Sort positive meters in increasing order
+pos_meters = meters[pos_indices]
+pos_sorted_indices = np.argsort(pos_meters)
+pos_depth_idx = np.arange(1, len(pos_meters) + 1)  # 1, 2, 3, ...
+
+# Map the positive depth indices back to their original positions
+depth_idx_pos = np.empty(len(pos_meters), dtype=int)
+depth_idx_pos[pos_sorted_indices] = pos_depth_idx
+depth_idx[pos_indices] = depth_idx_pos
+
+# Create the MultiIndex
+multi_index = pd.MultiIndex.from_arrays(
+    [depth_idx, meters, feet],
+    names=['depth_idx', 'meters', 'feet']
+)
+
+# Assign the new MultiIndex to drf_df.columns
+drf_df.columns = multi_index
+
 #===============================================================================
 # # Create metadata DataFrame
 #===============================================================================
@@ -105,15 +154,54 @@ metadata_df = pd.DataFrame({
 })
 
 #===============================================================================
-# port to SQLite
+# port to SQLite-------
 #===============================================================================
 # Database connection
 conn = sqlite3.connect(sql_fp)
 
 # Add DataFrames to the database
-cost_meta_df.to_sql('cost_item_meta', conn, if_exists='replace', index=True)
-drf_df.to_sql('drf', conn, if_exists='replace', index=True)
+cost_meta_df.to_sql('cost_items', conn, if_exists='replace', index=True)
 metadata_df.to_sql('meta', conn, if_exists='replace', index=False)
+
+#===============================================================================
+# #write the DRF. split out the multi-index columns into a separate table
+#===============================================================================
+#and link the two tables using depth_idx
+#write both tables to the sqlite database
+# 1. Extract the MultiIndex columns information into a DataFrame
+# Reset the MultiIndex columns to a DataFrame
+drf_columns = drf_df.columns.to_frame(index=False)
+
+# Write the columns DataFrame to SQLite as 'drf_columns' table
+drf_columns.to_sql('depths', conn, if_exists='replace', index=False)
+
+# 2. Prepare the data DataFrame by resetting the MultiIndex columns
+# Transpose drf_df to swap rows and columns
+drf_data = drf_df.transpose().reset_index()
+
+# Now drf_data has columns: 'depth_idx', 'meters', 'feet', plus the index columns from drf_df
+
+# Drop 'meters' and 'feet' as they're already in drf_columns
+drf_data = drf_data.drop(columns=['meters', 'feet'])
+
+# Optional: If you have index columns in drf_df, reset the index to include them
+drf_data = drf_data.set_index('depth_idx').transpose()#.reset_index()
+
+"""
+drf_data.index
+"""
+
+# Write drf_data to SQLite as 'drf_data' table
+drf_data.to_sql('drf', conn, if_exists='replace', index=True)
+
+#===============================================================================
+# add keys
+#===============================================================================
+#add primary keys to drf_data
+#index: cat, sel, bldg_layout
+
+#add the same to cost_meta_df and link the keys together between the two tables
+ 
 
 # Close the connection
 conn.close()

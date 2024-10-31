@@ -13,7 +13,7 @@ building_details_options_d = {
     #general
     'occupancyClassification': ['Residential', 'Commercial', 'Industrial', 'Other'],
     'subClassification': ['Single Family', 'Construction', 'Duplex', 'Entertainment and Recreation', 'Food/Drugs/Chemicals', 'Heavy', 'High rise apartment', 'High technology', 'Hospital', 'Light', 'Low rise apartment', 'Medical office', 'Metals/Minerals Processing', 'Mobile home', 'Multifamily', 'Other', 'Personal and repair', 'Recreational', 'Retail trade', 'Theatre', 'Townhouse', 'Wholesale trade'],
-    'storys': ['1', '2', 'Split', 'Multi-story'],
+    'storys': ['1', '2', 'Split', 'Multi-storey'],
     
     'heatingType': ['Baseboard-electric', 'Baseboard-hot Water', 'Forced Air - Electric', 'Forced Air - Gas', 'Forced Air - Unknown', 'Heatpump', 'Mixed', 'Solar', 'Oil', 'Woodstove', 'Other'],
     'coolingType': ['Central air', 'Heat pump'],
@@ -24,12 +24,14 @@ building_details_options_d = {
     
     #foundation/basement
     'foundationType':['Basement', 'Crawlspace', 'Slab', 'Other'],
-    'basementHeightUnits':['m', 'ft'],
+    #'basementHeightUnits':['m', 'ft'],
     
     
     
     #size age materials
-    'sizeOrAreaUnits':['m2', 'ft\u00B2'],
+    'sizeOrAreaUnits':['m2', 
+                       #'ft\u00B2'
+                       'ft2'],
     'qualityOfBuildingMaterials': ['Below Average', 'Average', 'Above Average', 'Custom'],
     
     
@@ -51,8 +53,5 @@ building_details_options_d = {
                         ],
     'taxesIncluded': ['PST', 'PST & GST', 'GST', 'None'],
     'currency':['$CAD', '$USD', 'Other'],
-    'costBasis':['Replacement Cost', 'Depreciated Costs']
+    'costBasis':['Replacement Cost', 'Depreciated Cost']
 }
-
-
- 

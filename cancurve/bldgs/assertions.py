@@ -15,6 +15,17 @@ from ..hp.basic import view_web_df as view
 expected_tables_base = ['project_meta','project_settings','c00_bldg_meta', 'c00_cost_items','c00_drf']
 
 
+
+#===============================================================================
+# helpers--------
+#===============================================================================
+def _assert_sqlite_table_exists(conn, table_name): 
+    cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name, ))
+    result = cursor.fetchone()
+    if not result:
+        raise AssertionError(f"Table '{table_name}' not found in database") # Check if DRF table exists
+
+
 def assert_ci_df(df, msg=''):
     """
     Asserts that the provided DataFrame conforms to CI data expectations.
@@ -100,21 +111,23 @@ def assert_proj_db(conn,
 
 
 #===============================================================================
-# DRF database
+# DRF database-------
 #===============================================================================
-def assert_drf_db(conn, table_name='drf'):
+
+
+
+
+def assert_drf_db(conn):
     """check the drf database meets expectations"""
 
     try:
-        # Check if the table exists
-        cursor = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
-        result = cursor.fetchone()
-
-        if not result:
-            raise AssertionError(f"Table '{table_name}' not found in database")
-
+        _assert_sqlite_table_exists(conn, 'drf') 
+        _assert_sqlite_table_exists(conn, 'depths')
+        
+         
+        
     except sqlite3.Error as e:
-        raise AssertionError(f"Error checking database': {e}") 
+        raise AssertionError(f"MasterRuleBook failed expectation check\n    {e}")
     
     
 def assert_drf_df(df):
@@ -148,6 +161,17 @@ def assert_drf_df(df):
     for i, col in enumerate(df.columns):
         if not 'float' in df[col].dtype.name:  # Assuming you want specifically float64
             raise TypeError(f'DRF column \'{col}\' ({i}) expected as dtype float. instead got \'{df[col].dtype}\'')
+        
+def assert_mrb_depths_df(df):
+    
+    # Check if it's a DataFrame
+    if not isinstance(df, pd.DataFrame):
+        raise TypeError("Input must be a Pandas DataFrame")
+
+    # Check index 
+    if not set(df.index.names).difference(['meters', 'feet']) == set():
+        raise KeyError("Incorrect index names in DataFrame")
+    
         
 def assert_bldg_meta_d(bldg_meta, msg=''):
     """check the bldg_meta_d meets expectations"""
@@ -188,7 +212,9 @@ def assert_fixed_costs_d(d, msg=''):
             raise TypeError(k)
         assert v>=0
         
- 
+#===============================================================================
+# MISC-----------
+#===============================================================================
 
 def assert_CanFlood_ddf(df, msg=''):
     from cancurve.bldgs.core import DFunc

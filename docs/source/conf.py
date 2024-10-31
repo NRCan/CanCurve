@@ -50,5 +50,11 @@ language = "en"
 
 # Enable numref
 numfig = True
+numfig_secnum_depth = 1
+numfig_format = {
+    'figure': 'Figure %s',
+    'table': 'Table %s',
+    'code-block': 'Listing %s'
+}
 
 

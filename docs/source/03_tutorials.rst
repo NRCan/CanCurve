@@ -8,10 +8,10 @@ Be sure to read and follow the :ref:`Getting Started Section <sec01-gettingStart
 
 .. _sec03-tut01:
 
-Tutorial 1: Single-Story Residential
+Tutorial 1: Single-storey Residential
 -------------------------------------
 
-This tutorial will demonstrate how to create a :ref:`CanFlood format DDF <sec02-CanFloodFormat>` from a :ref:`Cost-Item Table <sec02-costItem>` and some default values for a single-story residential building using the :ref:`Buildings Tool <sec02-bldgs>`.
+This tutorial will demonstrate how to create a :ref:`CanFlood format DDF <sec02-CanFloodFormat>` from a :ref:`Cost-Item Table <sec02-costItem>` and some default values for a single-storey residential building using the :ref:`Buildings Tool <sec02-bldgs>`.
 
 Step 1: Download the example Cost-Item Table
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

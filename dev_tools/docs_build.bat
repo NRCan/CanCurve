@@ -17,7 +17,7 @@ cd %~dp0..\docs
 :: call builder CLI
 ECHO on
  
-sphinx-build -M html .\source .\build --jobs=4 --verbose --show-traceback --nitpicky --warning-file=.\build\sphinx_warnings.txt
+sphinx-build -M html .\source .\build --jobs=4 --verbose --show-traceback --nitpicky --warning-file=.\build\sphinx_warnings.txt -c .\source
 
 
 :: launch it

@@ -55,6 +55,7 @@ def plot_c00_costitems(df_raw,
                        figure=None,
                        fig_kwargs=dict(
                            figsize=(6,10)),
+                       ylabel='cost',
                        
                        log=None):
     """plot the cost items dataset as bar charts
@@ -212,7 +213,7 @@ def plot_c00_costitems(df_raw,
         #left-most
         if k0==story_l[0]:
             ax.yaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:,.0f}'))
-            ax.set_ylabel('Replacement Cost (Sum)')
+            ax.set_ylabel(ylabel)
             
         else:
             ax.spines['left'].set_visible(False)
@@ -231,7 +232,7 @@ def plot_c00_costitems(df_raw,
  
 
 
-    figure.suptitle('Cost-item totals')
+    figure.suptitle('Cost-Item Totals')
     figure.subplots_adjust(hspace=0, wspace=0)
  
  
@@ -249,7 +250,9 @@ def plot_c00_DRF(df_raw,
                            tight_layout=True,
                            ),
                        
-                       log=None):
+                       log=None, 
+                       ylabel='replacement-factor',
+                       ):
     """matrix line plots"""
     
     log = get_slog('plot_c00_DRF', log)
@@ -339,8 +342,8 @@ def plot_c00_DRF(df_raw,
  
     
     figure.suptitle('Depth-Replacement-Factors'+'\nby category')
-    figure.supxlabel('depth (m)')
-    figure.supylabel('replacement-factor')
+    figure.supxlabel('depth (%s)'%df_raw.columns.name)
+    figure.supylabel(ylabel)
     #figure.subplots_adjust(hspace=0, wspace=0)
  
  
@@ -357,6 +360,8 @@ def plot_c01_depth_rcv(df_raw,
                            #figsize=(10,10),
                            tight_layout=True,
                            ),
+                       expo_units=None, 
+                       ylabel='cost',
                        
                        log=None):
     """plot the cost items dataset"""
@@ -428,12 +433,20 @@ def plot_c01_depth_rcv(df_raw,
         
         ax.yaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:,.0f}'))
         
+        
     #===========================================================================
     # post
     #===========================================================================
+    ax.xaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:.1f}'))
+    
     figure.suptitle('Depth-RCV'+'\nby story')
-    figure.supxlabel('depth (m)')
-    figure.supylabel('replacement cost value')
+    
+    xlab = 'depth'
+    if not expo_units is None:
+        xlab = xlab+' (%s)'%expo_units
+    figure.supxlabel(xlab)
+    
+    figure.supylabel(ylabel)
     
     log.debug(f'finished')
         
@@ -454,7 +467,8 @@ def plot_c02_ddf(df_raw,
                            ),
                        
                        cmap=None,
-                       ylabel='total replacement cost',
+                       ylabel='damage',
+                       expo_units=None,
                        
                        log=None):
     """plot depth-damage per-story"""
@@ -507,7 +521,12 @@ def plot_c02_ddf(df_raw,
     ax.xaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:.2f}'))
     
     figure.suptitle('Depth-Damage-Function')
-    figure.supxlabel('depth (m)')
+    
+    xlab = 'depth'
+    if not expo_units is None:
+        xlab = xlab+' (%s)'%expo_units
+    figure.supxlabel(xlab)
+
     figure.supylabel(ylabel)
     
     

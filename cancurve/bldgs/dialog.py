@@ -30,6 +30,7 @@ from datetime import datetime
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from pprint import pprint
 
 from qgis.PyQt import uic
 from qgis.PyQt import QtWidgets
@@ -50,6 +51,8 @@ from ..hp.qt import (
         DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
         enable_widget_and_parents, enable_widget_and_children
         )
+
+from .assertions import assert_drf_db
 
 from .parameters import (
     drf_db_default_fp,home_dir, bldg_meta_rqmt_df
@@ -187,13 +190,23 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 testCase = self.comboBox_dev.currentText()
                 
                 #populate with the test data
-                set_tab2bldgDetils(self, testCase)                
+                
+                #tab2
+                set_tab2bldgDetils(self, testCase)
+                
+                #tab3                
                 set_fixedCosts(self, fixed_costs_master_d[testCase])
                 
                 wdir = os.path.join(os.path.expanduser('~'), 'CanCurve', testCase, 
                                     datetime.now().strftime('%Y%m%d%H%M%S'))
+                
                 self.lineEdit_wdir.setText(wdir)
                 self.lineEdit_tab3dataInput_curveName.setText(testCase)
+                
+                #tab3: expo units 
+                self.comboBox_tab3dataInput_expoUnits.setCurrentText(self.basementHeightUnits_label.text())            
+                
+                
                 
                 #cost information
                 tdata_dir = os.path.join(test_data_dir_master, testCase)
@@ -252,7 +265,21 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # populate ui
         #=======================================================================
-        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp) #DRF default
+        #DRF        
+        self.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp) #filepath default
+        
+        #function to synchronize the exposure units
+        def set_expo_units():
+            expo_units = self.comboBox_tab3dataInput_expoUnits.currentText()            
+            self.basementHeightUnits_label.setText(expo_units)
+            
+        #activaate everytime the QComboBox changes        
+        self.comboBox_tab3dataInput_expoUnits.currentIndexChanged.connect(set_expo_units)
+        
+ 
+        
+        
+        
         self.lineEdit_wdir.setText(home_dir)
         
         self.pushButton_wd_open.clicked.connect(
@@ -421,7 +448,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         from .assertions import assert_proj_db
         from ..hp.sql import get_table_names
-        import sqlite3
+        #import sqlite3
         
         
  
@@ -543,7 +570,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             if out_dir is None: out_dir = self.lineEdit_wdir.text()
             fig_ofp = os.path.join(out_dir, f'{prefix}_{today_str}.svg')
             fig.savefig(fig_ofp)
-            log.info(f'saving plot to {fig_ofp}')
+            log.info(f'figure written to \n    {fig_ofp}')
             
             return fig_ofp
         
@@ -638,16 +665,20 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             log.info(f'plotting \'{k}\'')
             if d['cbox'].isChecked():
                 
+                
+                
                 #load the function
                 if k=='ci':
                     from .plots import plot_c00_costitems as func
+                    ylabel = self._get_ylabel(bldg_meta)
                 elif k=='drf':
                     from .plots import plot_c00_DRF as func
+                    ylabel='replacement-factor'
                 else:
                     raise KeyError()
                 
                 #call
-                fig = func(d['df'], log=log, figure=plt.figure(10+i))
+                fig = func(d['df'], log=log, figure=plt.figure(10+i), ylabel=ylabel)
                 
                 self._write_fig(fig, f'plot_c00_{k}', log=log, out_dir=out_dir)
         
@@ -695,6 +726,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
 
 
 
+
+
+
     def _run_c01_join_drf(self, logger=None):
         """retrive and run project setup
         
@@ -720,10 +754,17 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # plot------
         #=======================================================================
         if self.checkBox_tab4actions_step2_plot.isChecked():
+            #retrieve meta
+            with sqlite3.connect(proj_db_fp) as conn:
+                bldg_meta_d = pd.read_sql('SELECT * FROM c00_bldg_meta', conn).iloc[0, :].to_dict()
+ 
+            ylabel = self._get_ylabel(bldg_meta_d)            
+            
             #plt.close('all')
             log.info(f'plotting depth_rcv_df')
             from .plots import plot_c01_depth_rcv 
-            fig = plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log)
+            fig = plot_c01_depth_rcv(depth_rcv_df, figure=plt.figure(2), log=log, 
+                                     expo_units=bldg_meta_d['expo_units'], ylabel=ylabel)
             
             
             #write
@@ -798,19 +839,17 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             from .plots import plot_c02_ddf
             
             #build y-label
-            if 'costBasis' in bldg_meta_d: #fancy
-                ylabel='%s (%s)'%(bldg_meta_d['costBasis'], bldg_meta_d['currency'])
-                
-                if settings_d['scale_m2']:
-                    ylabel +=' per ' + bldg_meta_d['sizeOrAreaUnits']
-            else:
-                ylabel = 'damage'
-                if settings_d['scale_m2']:
-                    ylabel +=' per area'
-                
+            ylabel = self._get_ylabel(bldg_meta_d)
+            if settings_d['scale_m2']:
+                if 'sizeOrAreaUnits' in bldg_meta_d:
+                    ylabel +=' (per %s)'%bldg_meta_d['sizeOrAreaUnits']
+                else:
+                    ylabel +=' (per area)' #sizeOrAreaUnits missing from some tests?
+            
  
              
-            fig = plot_c02_ddf(ddf, figure=plt.figure(3), log=log,ylabel=ylabel)
+            fig = plot_c02_ddf(ddf, figure=plt.figure(3), log=log,ylabel=ylabel, 
+                               expo_units=bldg_meta_d['expo_units'])
  
             self._write_fig(fig, 'plot_c02_ddf', log=log)            
             
@@ -910,6 +949,14 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.logger.warning('user requested \'Cancel\'')
         #    (e.g., disable the cancel button, show a progress bar)
         
+    def _get_ylabel(self, bldg_meta_d):
+        
+        if ('costBasis' in bldg_meta_d) and ('currency' in bldg_meta_d): #fancy (replacement vs. depreciated)
+            ylabel = '%s (%s)' % (bldg_meta_d['costBasis'].lower(), bldg_meta_d['currency'])
+        else:
+            ylabel = 'damage'
+        return ylabel
+        
     
     def _get_proj_db_fp(self):
         """retrieve the project filedatabse"""
@@ -930,14 +977,15 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log = logger.getChild('_get_building_details')
         
         #=======================================================================
-        # extract from layouts----------
+        # extract from grids and layouts----------
         #=======================================================================
 
         # #general  building details
         bldg_meta_d = get_formLayout_data(self.formLayout_t02_01)
         
         #foundation
-        bldg_meta_d.update(get_formLayout_data(self.formLayout_t02_02a))
+        bldg_meta_d.update(get_gridLayout_data(self.gridLayout_t02_02a))
+        bldg_meta_d['expoUnits'] = self.basementHeightUnits_label.text() #special case as this is synchronized with comboBox_tab3dataInput_expoUnits
 
         # #size age materials (grid layout)
         bldg_meta_d.update(get_gridLayout_data(self.gridLayout_t02_02))
@@ -976,9 +1024,8 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # #check all of the keys are present
         #=======================================================================
         """
-        bldg_meta_d['locationCityTownRegionLineEdit']
-        for k,v in bldg_meta_d.items():
-            print(f'{k}\n    {v} ({type(v)})')
+        pprint(bldg_meta_d)
+        print(df)
         """
         df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type', 'case1']].dropna(
             subset='varName_ui').set_index('varName_ui')
@@ -1000,21 +1047,46 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # set core VarNames
         #=======================================================================
-        """seems better to keep the varnames in as well"""
-        bldg_meta_d['bldg_layout'] = bldg_meta_d['buildingLayout']
         
-        if bldg_meta_d['basementHeightUnits']=='m':
-            bldg_meta_d['basement_height_m'] = bldg_meta_d['basementHeight']
-        else:
-            raise NotImplementedError(bldg_meta_d['basementHeightUnits'])
         
-        if bldg_meta_d['sizeOrAreaUnits']=='m2':
-            bldg_meta_d['scale_value_m2'] = bldg_meta_d['sizeOrAreaValue']
-        else:
-            raise NotImplementedError(bldg_meta_d['sizeOrAreaUnits'])
+        #=======================================================================
+        # """seems better to keep the varnames in as well"""
+        # #not sure why I set it up to require excplit linking between ui and core vars...
+        # bldg_meta_d['bldg_layout'] = bldg_meta_d['buildingLayout']                
+        # bldg_meta_d['scale_factor'] = bldg_meta_d['scaleFactor']
+        # bldg_meta_d['basement_height'] = bldg_meta_d['basementHeight']
+        # bldg_meta_d['expo_units'] = bldg_meta_d['expoUnits']
+        #=======================================================================
         
-        #not sure why I set it up to require excplit linking between ui and core vars...
-        bldg_meta_d['scale_factor'] = bldg_meta_d['scaleFactor']
+        """decided to use core names where available"""
+        #get conversion
+        core_names_d = bldg_meta_rqmt_df.loc[:,['varName_ui', 'varName_core']].dropna(how='any').set_index('varName_ui').iloc[:,0].to_dict()
+        
+        d = dict()
+        for k,v in bldg_meta_d.copy().items():
+            if k in core_names_d:
+                d[core_names_d[k]] = v
+            else:
+                d[k]=v
+                
+        bldg_meta_d = d
+        """
+        pprint(d)
+        """
+                
+        
+
+        """treating this as a unit-less value now"""
+        bldg_meta_d['scale_value_m2'] = bldg_meta_d['sizeOrAreaValue']
+        
+        #=======================================================================
+        # if bldg_meta_d['sizeOrAreaUnits']=='m2':
+        #     
+        # else:
+        #     raise NotImplementedError(bldg_meta_d['sizeOrAreaUnits'])
+        #=======================================================================
+        
+
             
         #=======================================================================
         # check expectations
@@ -1023,6 +1095,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         req_d = {k:eval(v) for k,v in req_d.items()}
         
         for k,type_class in req_d.items():
+            """
+            pprint(bldg_meta_d)
+            """
             assert k in bldg_meta_d, k
             assert isinstance(bldg_meta_d[k], type_class), f'bad type on {k}'
             
@@ -1065,6 +1140,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             'curve_name':self.lineEdit_tab3dataInput_curveName.text(),
             #'scale_m2':self.radioButton_tab3dataInput_rcvm2.isChecked(), #retrieve from radio buttons
             'scale_m2':self._get_costBasis(), #retrieve from radio buttons
+            'expo_units':self.comboBox_tab3dataInput_expoUnits.currentText(),
             }
 
 
