@@ -32,7 +32,7 @@ Project documentation is [here](https://cancurve.readthedocs.io/en/latest/)
 For best performance: follow similar steps to the above, but be sure to **Uninstall** the plugin and restart QGIS first 
 
 
-## USE
+## Use
 1) populate the **Building Details** and **Data Input** tabs to reflect your archetype and cost-item properties
 2) on the **Create Curve** tab, either click `Run All` to execute the full DDF compilation workflow, or select `Individual Steps` and click through the steps individually. The resulting DDF will be exported in CanFlood format.
 
