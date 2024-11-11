@@ -17,8 +17,8 @@ building_details_options_d = {
     
     'heatingType': ['Baseboard-electric', 'Baseboard-hot Water', 'Forced Air - Electric', 'Forced Air - Gas', 'Forced Air - Unknown', 'Heatpump', 'Mixed', 'Solar', 'Oil', 'Woodstove', 'Other'],
     'coolingType': ['Central air', 'Heat pump'],
-    'garageType': ['Yes, Attached', 'Yes, Detached', 'None'],
-    'garageSize': ['Single', 'Single Plus', 'Double', 'Triple'],
+    'garageType': ['None', 'Attached', 'Detached', 'Underground single-level', 'Underground multi-level', 'Surface Parking', 'Other'],
+    'garageSize': ['Single', 'Single Plus', 'Double', 'Triple', '>10'],
     'buildingLayout':['default'], #needed by DRF, but not sure about values other than 'default'
     
     
@@ -51,7 +51,7 @@ building_details_options_d = {
                             "NU",  # Nunavut
                             "YT"   # Yukon
                         ],
-    'taxesIncluded': ['PST', 'PST & GST', 'GST', 'None'],
+    'taxesIncluded': ['PST', 'PST & GST', 'GST', 'HST', 'HST & QST', 'None'],
     'currency':['$CAD', '$USD', 'Other'],
     'costBasis':['Replacement Cost', 'Depreciated Cost']
 }

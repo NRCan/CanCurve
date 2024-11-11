@@ -140,14 +140,16 @@ QTabBar::tab:selected { /* Style for selected tabs */
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:14px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to the CanCurve &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Buildings Tool.&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; This tool is designed to create &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Depth Damage Functions&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; (DDF) for Canadian buildings. To get started or to learn more, see the &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Documentation&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Welcome to the CanCurve &amp;lt;&amp;lt;Buildings Tool&amp;gt;&amp;gt;&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;.&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; This tool is designed to create flood Depth Damage Functions (DDF) for Canadian buildings. To get started or to learn more, see the &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;Documentation&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/plugins/cancurve/img/icon.png&quot; /&gt;&lt;/p&gt;
 &lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:14pt; font-weight:600; color:#ff0000;&quot;&gt;v1.0 limited release&lt;/span&gt;&lt;span style=&quot; font-size:14pt; color:#ff0000;&quot;&gt;: CanCurve is an experimental tool in active development. The Buildings Tool has been released to a select group for feedback and testing prior to the full public release. If you identify any bugs, errors, or typos, please post an &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/issues&quot;&gt;&lt;span style=&quot; font-size:14pt; text-decoration: underline; color:#ff0000;&quot;&gt;issue on the GitHub page&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:14pt; color:#ff0000;&quot;&gt; so we can address the problem as soon as possible. Once you have finished your review, please fill out &lt;/span&gt;&lt;a href=&quot;https://docs.google.com/forms/d/e/1FAIpQLSdpCNen4gyLxOES3XcdfRvGfAb3_sryLp5FIieJfmdQ5ATVMw/viewform?usp=sf_link&quot;&gt;&lt;span style=&quot; font-size:14pt; text-decoration: underline; color:#ff0000;&quot;&gt;this form&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:14pt; color:#ff0000;&quot;&gt; to provide us some feedback.&lt;/span&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are required:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: These standard flood-related building properties are specified on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Metadata&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. This metadata will be used to populate the metadata of your DDF. Some of the fields are also used in the calculation process.&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Cost-Item Table: &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;This table of restoration items and their costs is specifed as a CSV file on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Data Input&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. Click &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/blob/main/tests/data/bldgs/case1/R_1-L-BD-CU_ABCA.csv&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; for an example. &lt;/span&gt;&lt;span style=&quot; font-size:14px;&quot;&gt;&lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Metadata: Information on the building properties is entered on the &amp;lt;&amp;lt;Metadata&amp;gt;&amp;gt; tab. This metadata will be output in the DDF and provides information about the building. Some of the fields are also used in the calculation process.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Cost-Item Table&lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;: &lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;This table provides costing information on restoration of flood damaged items and is input as a csv file on the Data Input tab. Click &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/blob/main/tutorial/01/R_1-L-BD-CU_ABCA.csv&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;here&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; for an example. &lt;br /&gt;&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;The following inputs are optional:&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Depth Replacement-Factor (DRF) dataset&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;: This dataset relates flood depth to the percentage loss or damage of a restoration item and is specified on the &lt;/span&gt;&lt;span style=&quot; font-size:12pt; font-style:italic;&quot;&gt;Data Input&lt;/span&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt; tab. By default, the DRF dataset shipped with CanCurve will be used.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Depth Replacement-Factor (DRF) dataset: This dataset relates flood depth to the percentage loss or damage of a restoration item and is specified on the &amp;lt;&amp;lt;Data Input&amp;gt;&amp;gt; tab. By default, the DRF dataset shipped with CanCurve will be used.&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:12px; margin-bottom:12px; margin-left:16px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Navigate through the tabs at the top of the window from left-to-right to create your own DDF. For help and support, see the &lt;/span&gt;&lt;a href=&quot;https://github.com/NRCan/CanCurve/issues&quot;&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline; color:#0000ff;&quot;&gt;CanCurve Project GitHub Issues Page&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
@@ -266,7 +268,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QLabel" name="label_13">
          <property name="text">
-          <string>Populate the metadta for your building. *required field</string>
+          <string>Populate the metadata for your building. *required field</string>
          </property>
         </widget>
        </item>
@@ -286,7 +288,7 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-298</y>
+            <y>0</y>
             <width>745</width>
             <height>947</height>
            </rect>
@@ -562,7 +564,7 @@ QGroupBox {
                    <string/>
                   </property>
                   <property name="text">
-                   <string>m</string>
+                   <string>meters</string>
                   </property>
                  </widget>
                 </item>
@@ -978,14 +980,14 @@ QGroupBox {
                <item row="0" column="0">
                 <widget class="QLabel" name="basementRCVstory1Label">
                  <property name="text">
-                  <string>Basement RCV (storey -1):   </string>
+                  <string>Basement Costs (storey -1):   </string>
                  </property>
                 </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="mainFloorRCVstory0Label">
                  <property name="text">
-                  <string>Main Floor RCV (storey 0):</string>
+                  <string>Main Floor Costs (storey 0):</string>
                  </property>
                 </widget>
                </item>
@@ -1146,7 +1148,7 @@ QGroupBox {
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The following steps will create your Depth-Damage Function (DDF). You can select &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;All&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; to execute all steps in sequence, or &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-style:italic;&quot;&gt;Individual steps&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; to execute each individually.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;The following steps will create your Depth-Damage Function (DDF). You can select &lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;&amp;lt;&amp;lt;All&amp;gt;&amp;gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; to execute all steps in sequence, or &amp;lt;&amp;lt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Individual steps&amp;gt;&amp;gt;&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; to execute each individually.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
          <property name="wordWrap">
           <bool>true</bool>
@@ -1227,13 +1229,13 @@ QGroupBox {
             </size>
            </property>
            <property name="title">
-            <string notr="true">Output Control</string>
+            <string notr="true">Output Settings</string>
            </property>
            <property name="flat">
             <bool>true</bool>
            </property>
            <property name="collapsed">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="saveCollapsedState">
             <bool>false</bool>
@@ -1260,7 +1262,7 @@ QGroupBox {
                  <string/>
                 </property>
                 <property name="checked">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1327,7 +1329,7 @@ QGroupBox {
               <item row="4" column="0">
                <widget class="QLabel" name="launchResultingDDFLabel">
                 <property name="text">
-                 <string>Launch output DDF:</string>
+                 <string>Open DDF automatically:</string>
                 </property>
                </widget>
               </item>
@@ -1347,7 +1349,7 @@ QGroupBox {
               <item row="1" column="0">
                <widget class="QLabel" name="launchPlotDialogLabel">
                 <property name="text">
-                 <string>Launch plot dialogs:</string>
+                 <string>Launch plot windows:</string>
                 </property>
                </widget>
               </item>
@@ -1590,7 +1592,7 @@ QLabel {
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>cost-item summary plot</string>
+                  <string>cost-item totals plot</string>
                  </property>
                  <property name="checked">
                   <bool>false</bool>
@@ -1603,7 +1605,7 @@ QLabel {
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>DRF summary plot</string>
+                  <string>DRF category plot</string>
                  </property>
                 </widget>
                </item>
@@ -1695,7 +1697,7 @@ QLabel {
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>depth-RCV summary plot</string>
+                  <string>depth-RCV by story plot</string>
                  </property>
                 </widget>
                </item>
@@ -1787,7 +1789,7 @@ QLabel {
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>depth-damage per-storey plot</string>
+                  <string>DDF plot</string>
                  </property>
                 </widget>
                </item>
@@ -1946,7 +1948,7 @@ QLabel {
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>575</width>
+             <width>656</width>
              <height>68</height>
             </rect>
            </property>
@@ -1996,7 +1998,7 @@ QLabel {
 }</string>
               </property>
               <property name="text">
-               <string>Welcome to CanCurve!</string>
+               <string/>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -2016,22 +2018,6 @@ QLabel {
        <layout class="QVBoxLayout" name="verticalLayout_19">
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_7">
-          <item>
-           <widget class="QPushButton" name="cancel_pushButton">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Cancel</string>
-            </property>
-            <property name="flat">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
           <item>
            <widget class="QPushButton" name="close_pushButton">
             <property name="sizePolicy">
