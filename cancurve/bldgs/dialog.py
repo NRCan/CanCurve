@@ -159,8 +159,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 self.pluginObject.first_start=True #not ideal
             self.close()
         
-        self.close_pushButton.clicked.connect(close_dialog) 
-        self.cancel_pushButton.clicked.connect(self.action_cancel_process)
+        self.close_pushButton.clicked.connect(close_dialog)
+        
+        """not using 
+        self.cancel_pushButton.clicked.connect(self.action_cancel_process)"""
         
         from cancurve import __version__
         self.label_version.setText(f'v{__version__}')

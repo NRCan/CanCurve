@@ -216,7 +216,7 @@ def test_parameters():
     assert set(building_details_options_d.keys()).difference(df.index)==set(), 'parameters_ui doesnt match paramter csv'
     
 
-#@pytest.mark.dev
+@pytest.mark.dev
 def test_init(dialog,):
     
     
