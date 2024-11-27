@@ -1858,7 +1858,7 @@ QLabel {
                   </size>
                  </property>
                  <property name="text">
-                  <string>Export result in CanFlood format</string>
+                  <string>Export DDF</string>
                  </property>
                 </widget>
                </item>
