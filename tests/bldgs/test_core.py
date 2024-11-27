@@ -70,9 +70,10 @@ load_tests_cases_from_file(
 
 
 
-#@pytest.mark.dev
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase',
-                         test_cases_l
+                         test_cases_l + \
+                         ['case1_ci_header_case'],
     #===========================================================================
     #                      [
     # #===========================================================================
@@ -154,7 +155,7 @@ def test_c02_group_story(proj_db_fp, scale_m2, testCase, testPhase, tmp_path):
     copy_sqlite(proj_db_fp, testCase, 'c03')
     
     
-@pytest.mark.dev
+#@pytest.mark.dev
 @pytest.mark.parametrize('testCase',
                          #test_cases_l
                          ['case3']

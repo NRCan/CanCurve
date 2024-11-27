@@ -10,6 +10,16 @@ location of test data is set in definitions.test_data_dir
 
 for gui/dialog tutorial, see cancurve.bldgs.dialog_test_scripts
 
+
+#===============================================================================
+# Creating a new test case
+#===============================================================================
+define a case name (no spaces)
+create a directory `c:\GD\10_IO\CanCurve\test_data\bldgs\` with the costItem data
+append fixed cost data to cancurve.bldgs.dialog_test_scripts.fixed_costs_master_d
+append metadtaa to l:\09_REPOS\04_TOOLS\CanCurve\cancurve\bldgs\bldg_meta_rqmts.csv
+
+
 '''
 import os, pickle, copy, pytest
 import pandas as pd
@@ -202,6 +212,7 @@ def load_tests_cases_from_file(
 
 #these are mostly setup for end-to-end tests
 #for unit tests, see tests.bldgs.conftest.cases_l
+#c:\GD\10_IO\CanCurve\test_data\bldgs\
 
 test_cases_l = [
 'case1',
@@ -209,6 +220,7 @@ test_cases_l = [
  'case3',
   'case4_R2',
   #'case5_crawl', need to build data for this still?
+  
   'AB-Calgary_R_1-L-BD-CU_ABCA',
   'AB-Calgary_R_1-L-BD-ST_ABCA',
   'AB-Calgary_R_1-L-BU-ST_ABCA',

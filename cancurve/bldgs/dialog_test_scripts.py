@@ -42,6 +42,7 @@ note the underlying data needs to be duplicated in ./dev_test_data and ./tests/d
 fixed_costs_master_d = {
         '01':{0:10000.0, -1:8000.0}, #case1 for UI display
         'case1':{0:10000.0, -1:8000.0},
+        'case1_ci_header_case':{0:10000.0, -1:8000.0},
         'case2':None,
         'case3':{-1:0.0, 0:25000.0},
         'case4_R2':{-1:19361.0, 0:24879.0, 

@@ -102,6 +102,11 @@ def load_ci_df(fp, log=None):
     log.debug(f'loading costitem table from \n    {fp}')
     ci_df = pd.read_csv(fp, index_col=[0,1])
     
+    #force the column and index names to all be lower
+    ci_df.columns = ci_df.columns.str.lower()
+    ci_df.index.names = [name.lower() for name in ci_df.index.names if name is not None]
+    
+    
     try:
         assert_ci_df(ci_df)
     except Exception as e:
