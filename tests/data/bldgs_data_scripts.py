@@ -2,6 +2,14 @@
 Created on Aug. 22, 2024
 
 @author: cef
+
+
+helpers for loading test data
+
+location of test data is set in definitions.test_data_dir
+
+for gui/dialog tutorial, see cancurve.bldgs.dialog_test_scripts
+
 '''
 import os, pickle, copy, pytest
 import pandas as pd
@@ -18,7 +26,22 @@ from tests.conftest import test_data_dir_master as parent_tdata_dir
 test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
 
-from cancurve.bldgs.dialog_test_scripts import fixed_costs_master_d #eventually copy this back
+#case parameter data
+from cancurve.bldgs.dialog_test_scripts import fixed_costs_master_d
+#separating this from the tutorial data
+#no... pytests are too integrated with  dialog_test_scripts
+#===============================================================================
+# fixed_costs_master_d = {
+#         'case1':{0:10000.0, -1:8000.0},
+#         'case2':None,
+#         'case3':{-1:0.0, 0:25000.0},
+#         'case4_R2':{-1:19361.0, 0:24879.0, 
+#                     #1:22484.0,
+#                     },
+#         'case5_crawl':{0:10000.0}
+#                 
+#         }
+#===============================================================================
 
 from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 

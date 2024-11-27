@@ -4,6 +4,8 @@ Created on Apr. 30, 2024
 @author: cef
 
 testing functions for use in pytests and manual QGIS tests (ie no pytest dependency)
+
+for pytest data handlers, see tests.data.bldgs_data_scripts
 '''
 import os, warnings, copy
 
@@ -30,14 +32,15 @@ from .parameters import bldg_meta_rqmt_df
 #===============================================================================
 # params-----
 #===============================================================================
-test_data_dir_master = os.path.join(plugin_dir, 'dev_test_data') #needs to live in plugin directory for dev ui to work
+test_data_dir_master = os.path.join(plugin_dir, 'tutorial') #needs to live in plugin directory for dev ui to work
 
-#test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
+ 
 
 """this needs to live here so it is accessible by tests after deployment
 note the underlying data needs to be duplicated in ./dev_test_data and ./tests/data/bldgs
 """
 fixed_costs_master_d = {
+        '01':{0:10000.0, -1:8000.0}, #case1 for UI display
         'case1':{0:10000.0, -1:8000.0},
         'case2':None,
         'case3':{-1:0.0, 0:25000.0},

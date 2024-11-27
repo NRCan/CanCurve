@@ -16,7 +16,8 @@ This tutorial will demonstrate how to create a :ref:`CanFlood format DDF <sec02-
 Step 1: Download the example Cost-Item Table
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-From the project repository, download the `example Cost-Item Table <https://github.com/NRCan/CanCurve/blob/main/tutorial/01/R_1-L-BD-CU_ABCA.csv>`_ somewhere easy to find.
+From the project repository, download the `example Cost-Item Table <https://github.com/NRCan/CanCurve/blob/main/cancurve/tutorial/01/R_1-L-BD-CU_ABCA.csv>`_ somewhere easy to find.
+Alternatively, select **Tutorial 01** from the drop down on the **Welcome** tab and skip to :ref:`Step 4 <sec03-tut01-step4>`.
 
 Step 2: Enter Metadata
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,7 +29,7 @@ Open the :ref:`Buildings Tool <sec02-bldgs>`, navigate to the **Metadata** tab, 
    :align: center
    :width: 900px
 
-.. figure:: /assets/03_01_meta02.PNG
+.. .. figure:: /assets/03_01_meta02.PNG
    :alt: Metadata Tab
    :align: center
    :width: 900px
@@ -52,6 +53,9 @@ Navigate to the **Data Input** tab and, using the below image for reference, pop
    :width: 900px
 
    Data Input page for Tutorial 1
+
+
+.. _sec03-tut01-step4:
 
 Step 4: Create Curve
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

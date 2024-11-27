@@ -37,6 +37,7 @@ from tests.test_plugin import logger
 
 from cancurve.bldgs.dialog_test_scripts import test_cases_l, set_tab2bldgDetils, set_fixedCosts
 
+from tests.bldgs.conftest import bldg_meta_d, fixed_costs_d, ci_fp, expo_units
  
 
 #===============================================================================

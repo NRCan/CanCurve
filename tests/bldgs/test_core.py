@@ -14,7 +14,7 @@ import pytest, os, shutil, pickle
 import pandas as pd
 
 
-from .conftest import find_single_file_by_extension, test_data_dir_master
+from .conftest import test_data_dir_master
  
  
 
