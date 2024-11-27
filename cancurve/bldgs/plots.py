@@ -55,7 +55,7 @@ def plot_c00_costitems(df_raw,
                        figure=None,
                        fig_kwargs=dict(
                            figsize=(6,10)),
-                       ylabel='cost',
+                       ylabel='cost ($)',
                        
                        log=None):
     """plot the cost items dataset as bar charts
@@ -194,9 +194,9 @@ def plot_c00_costitems(df_raw,
         #         bbox=dict(boxstyle="round,pad=0.3", fc="white", lw=0.0,alpha=0.5 ),
         #         )
         #=======================================================================
-        txt = f'story \'{k0}\''+f'\nRCV sum: {gser.sum():,.0f}'
+        txt = f'storey \'{k0}\''+f'\ncost sum: {gser.sum():,.0f}'
         if np.any(np.invert(gser.index.get_level_values('drf_intersect'))):
-            txt+=f'\nmissing RCV sum: {gser.xs(False, level=1).sum():,.0f}'                    
+            txt+=f'\nmissing cost sum: {gser.xs(False, level=1).sum():,.0f}'                    
             
         ax.set_title(txt)
             
@@ -208,7 +208,7 @@ def plot_c00_costitems(df_raw,
     for k0, ax in ax_d.items():
         ax.set_xticks([])  # Set a single tick at the center of the bars
         ax.set_xticklabels([])  # Set the label to the 'story' name
-        #ax.set_xlabel(f'story \'{k0}\'')
+ 
         
         #left-most
         if k0==story_l[0]:
@@ -361,7 +361,7 @@ def plot_c01_depth_rcv(df_raw,
                            tight_layout=True,
                            ),
                        expo_units=None, 
-                       ylabel='cost',
+                       ylabel='cost ($)',
                        
                        log=None):
     """plot the cost items dataset"""
@@ -402,7 +402,7 @@ def plot_c01_depth_rcv(df_raw,
     # loop and plot
     #===========================================================================
     for k0, gdf in df_raw.groupby(level='story'):
-        log.debug(f'plotting story {k0}')
+        log.debug(f'plotting storey {k0}')
         ax = ax_d[k0]
         
         #create stacked area plot (one polygon per cat.sum())
@@ -422,7 +422,7 @@ def plot_c01_depth_rcv(df_raw,
         #
         
         #add legend
-        ax.legend(ncols=6, title=f'story {k0}', fontsize=6, loc=2)
+        ax.legend(ncols=6, title=f'storey {k0}', fontsize=6, loc=2)
         
         #=======================================================================
         # ax.set_title(f'story {k0}', 
@@ -439,7 +439,7 @@ def plot_c01_depth_rcv(df_raw,
     #===========================================================================
     ax.xaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:.1f}'))
     
-    figure.suptitle('Depth-RCV'+'\nby story')
+    figure.suptitle('Depth-cost'+'\nby storey')
     
     xlab = 'depth'
     if not expo_units is None:
