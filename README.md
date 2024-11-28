@@ -2,7 +2,7 @@
 
 # CanCurve
 CanCurve is an open source tool for developing flood depth-damage (stage-damage) functions for use flood assessments.
-<p> <em>It is presently undergoing evaluation and validation. </em></p>
+<p> <em>CanCurve is undergoing evaluation and validation. </em></p>
 
 <p align="center">
   <img src="./cancurve/img/icon.png" alt="CanCurve Icon"> 
@@ -10,6 +10,7 @@ CanCurve is an open source tool for developing flood depth-damage (stage-damage)
  
  
 ## Updates
+- 2024-11-27: UI and documentation improvements.
 - 2024-10-31: add sphinx documentation. improve treatment of units. update to QGIS 3.34.12 [v1.0.0](https://github.com/NRCan/CanCurve/releases/tag/v1.0.0)
 - 2024-08-22: priority A and B fixes [v0.1.0](https://github.com/NRCan/CanCurve/releases/tag/v0.1.0)
 - 2024-05-09: small fixes and updates based on initial comments
@@ -24,8 +25,8 @@ Project documentation is [here](https://cancurve.readthedocs.io/en/latest/)
 - Install [QGIS 3.34.12](https://download.qgis.org/downloads/) (with Qt 5.15.13)
 - download the `cancurve.zip` file from the [latest release](https://github.com/NRCan/CanCurve/releases) to your local machine
 - in QGIS, `Manage and Install Plugins...` > `Install from ZIP` > select the downloaded file
-- it is recommended to also install the **First Aid** plugin for more detailed error messages 
-- it is recommended to set up the QGIS Debug Log file as shown [here](https://stackoverflow.com/a/61669864/9871683)
+- we recommended to also install the **First Aid** plugin for more detailed error messages 
+- we recommended to set up the QGIS Debug Log file as shown [here](https://stackoverflow.com/a/61669864/9871683)
 - CanCurve backend and project data is implemented in SQLite relational databases. For enhanced customization and debugging, it is recommended to install a SQLite viewer + editor like [DB Browser for SQLite](https://sqlitebrowser.org/) for working with these files  
 
 ## Re-installation/updating
