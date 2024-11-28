@@ -288,7 +288,7 @@ p, li { white-space: pre-wrap; }
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-298</y>
             <width>745</width>
             <height>947</height>
            </rect>
@@ -1608,7 +1608,7 @@ QLabel {
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>DRF category figure</string>
+                  <string>DRF figure</string>
                  </property>
                 </widget>
                </item>
@@ -1700,7 +1700,7 @@ QLabel {
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>depth-RCV by story figure</string>
+                  <string>depth-cost figure</string>
                  </property>
                 </widget>
                </item>

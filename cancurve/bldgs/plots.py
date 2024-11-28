@@ -341,7 +341,7 @@ def plot_c00_DRF(df_raw,
     
  
     
-    figure.suptitle('Depth-Replacement-Factors'+'\nby category')
+    figure.suptitle('Depth-Replacement-Factors'+'\nby Category')
     figure.supxlabel('depth (%s)'%df_raw.columns.name)
     figure.supylabel(ylabel)
     #figure.subplots_adjust(hspace=0, wspace=0)
@@ -439,7 +439,7 @@ def plot_c01_depth_rcv(df_raw,
     #===========================================================================
     ax.xaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:.1f}'))
     
-    figure.suptitle('Depth-cost'+'\nby storey')
+    figure.suptitle('Depth-Cost'+'\nby Storey')
     
     xlab = 'depth'
     if not expo_units is None:
@@ -490,6 +490,11 @@ def plot_c02_ddf(df_raw,
     assert bx.sum()==1
     
  
+    #try ane rename columns (probably a better way to do this)
+    try:
+        df = df.rename(columns={'main':'storey: 0', 'base':'storey: -1'})
+    except Exception as e:
+        log.error(f'failed to rename columns w/\n    {e}')
     
     #===========================================================================
     # setup figure
@@ -520,7 +525,7 @@ def plot_c02_ddf(df_raw,
     ax.yaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:,.0f}'))
     ax.xaxis.set_major_formatter(plt.matplotlib.ticker.StrMethodFormatter('{x:.2f}'))
     
-    figure.suptitle('Depth-Damage-Function')
+    figure.suptitle('Depth-Damage Function')
     
     xlab = 'depth'
     if not expo_units is None:
