@@ -221,8 +221,8 @@ def test_parameters():
 def test_init(dialog,):
     
     
+    """manual inspection only"""
     #===========================================================================
-    # """manual inspection only"""
     # dialog.show()
     # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    
     # sys.exit(QApp.exec_()) #wrap
