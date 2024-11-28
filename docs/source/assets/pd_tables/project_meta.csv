@@ -1,0 +1,4 @@
+script_name,script_path,now,username,cancurve_version,python_version,platform,qgis_version,function_name,misc
+core.py,L:\09_REPOS\04_TOOLS\CanCurve\cancurve\bldgs,2024-10-29 16:18:07.927856,cef,1.0.0,3.12.3,Windows 10,3.34.5-Prizren,c00_setup_project,"{'ci_fp': 'c:\\GD\\10_IO\\CanCurve\\test_data\\bldgs\\case1\\R_1-L-BD-CU_ABCA.csv', 'drf_db_fp': 'L:\\09_REPOS\\04_TOOLS\\CanCurve\\cancurve\\db\\mrb_20241007.db'}"
+core.py,L:\09_REPOS\04_TOOLS\CanCurve\cancurve\bldgs,2024-10-29 16:18:09.282604,cef,1.0.0,3.12.3,Windows 10,3.34.5-Prizren,c01_join_drf,
+core.py,L:\09_REPOS\04_TOOLS\CanCurve\cancurve\bldgs,2024-10-29 16:18:09.868796,cef,1.0.0,3.12.3,Windows 10,3.34.5-Prizren,c02_group_story,"{'scale_m2': False, 'basement_height': 1.8, 'scale_value_m2': None, 'scale_factor': 1.1}"

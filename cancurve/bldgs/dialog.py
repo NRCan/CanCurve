@@ -167,18 +167,24 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         from cancurve import __version__
         self.label_version.setText(f'v{__version__}')
         
-        #=======================================================================
-        # development-----
-        #=======================================================================
+ 
         if dev_mode:
+            
+            """add tutorial data to welcome tab for easy loading"""
             
             #add the cases 
             from .dialog_test_scripts import (
-                test_cases_l, test_data_dir_master, fixed_costs_master_d
+                test_data_dir_master, fixed_costs_master_d
                 )
-
             
+            test_cases_l = ['01'] #test cases to display in UI
             
+            # Validate that all cases in test_cases_l exist in fixed_costs_master_d
+            missing_cases = [case for case in test_cases_l if case not in fixed_costs_master_d]
+            
+            if missing_cases:
+                raise KeyError(f"The following test cases are missing in fixed_costs_master_d: {missing_cases}")
+ 
             from ..hp.basic import find_single_file_by_extension
             
             self.comboBox_dev.addItems(test_cases_l)
@@ -215,9 +221,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
                 ci_fp = find_single_file_by_extension(tdata_dir, '.csv')
                 self.lineEdit_tab3dataInput_cifp.setText(ci_fp)
                 
-                self.logger.push(f'ui populated for testCase \'{testCase}\'')
+                self.logger.push(f'Data loaded for tutorial {testCase}')
                 
-            self.pushButton_dev.clicked.connect(populate_ui)
+            self.pushButton_tut_load.clicked.connect(populate_ui)
                 
                 
              

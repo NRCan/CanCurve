@@ -37,6 +37,7 @@ from tests.test_plugin import logger
 
 from cancurve.bldgs.dialog_test_scripts import test_cases_l, set_tab2bldgDetils, set_fixedCosts
 
+from tests.bldgs.conftest import bldg_meta_d, fixed_costs_d, ci_fp, expo_units
  
 
 #===============================================================================
@@ -220,8 +221,8 @@ def test_parameters():
 def test_init(dialog,):
     
     
+    """manual inspection only"""
     #===========================================================================
-    # """manual inspection only"""
     # dialog.show()
     # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    
     # sys.exit(QApp.exec_()) #wrap

@@ -2,6 +2,24 @@
 Created on Aug. 22, 2024
 
 @author: cef
+
+
+helpers for loading test data
+
+location of test data is set in definitions.test_data_dir
+
+for gui/dialog tutorial, see cancurve.bldgs.dialog_test_scripts
+
+
+#===============================================================================
+# Creating a new test case
+#===============================================================================
+define a case name (no spaces)
+create a directory `c:\GD\10_IO\CanCurve\test_data\bldgs\` with the costItem data
+append fixed cost data to cancurve.bldgs.dialog_test_scripts.fixed_costs_master_d
+append metadtaa to l:\09_REPOS\04_TOOLS\CanCurve\cancurve\bldgs\bldg_meta_rqmts.csv
+
+
 '''
 import os, pickle, copy, pytest
 import pandas as pd
@@ -18,7 +36,22 @@ from tests.conftest import test_data_dir_master as parent_tdata_dir
 test_data_dir_master = os.path.join(parent_tdata_dir, 'bldgs')
 
 
-from cancurve.bldgs.dialog_test_scripts import fixed_costs_master_d #eventually copy this back
+#case parameter data
+from cancurve.bldgs.dialog_test_scripts import fixed_costs_master_d
+#separating this from the tutorial data
+#no... pytests are too integrated with  dialog_test_scripts
+#===============================================================================
+# fixed_costs_master_d = {
+#         'case1':{0:10000.0, -1:8000.0},
+#         'case2':None,
+#         'case3':{-1:0.0, 0:25000.0},
+#         'case4_R2':{-1:19361.0, 0:24879.0, 
+#                     #1:22484.0,
+#                     },
+#         'case5_crawl':{0:10000.0}
+#                 
+#         }
+#===============================================================================
 
 from cancurve.bldgs.parameters import bldg_meta_rqmt_df
 
@@ -179,6 +212,7 @@ def load_tests_cases_from_file(
 
 #these are mostly setup for end-to-end tests
 #for unit tests, see tests.bldgs.conftest.cases_l
+#c:\GD\10_IO\CanCurve\test_data\bldgs\
 
 test_cases_l = [
 'case1',
@@ -186,6 +220,7 @@ test_cases_l = [
  'case3',
   'case4_R2',
   #'case5_crawl', need to build data for this still?
+  
   'AB-Calgary_R_1-L-BD-CU_ABCA',
   'AB-Calgary_R_1-L-BD-ST_ABCA',
   'AB-Calgary_R_1-L-BU-ST_ABCA',
