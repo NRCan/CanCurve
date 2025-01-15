@@ -38,6 +38,8 @@ For best performance: follow similar steps to the above, but be sure to **Uninst
 1) populate the **Building Details** and **Data Input** tabs to reflect your archetype and cost-item properties
 2) on the **Create Curve** tab, either click `Run All` to execute the full DDF compilation workflow, or select `Individual Steps` and click through the steps individually. The resulting DDF will be exported in CanFlood format.
 
+See the [documentation](https://cancurve.readthedocs.io/en/latest/) for more details.
+
 ## Development
 see [CONTRIBUTING.md](./CONTRIBUTING.md)
 
