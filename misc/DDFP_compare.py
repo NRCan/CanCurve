@@ -62,7 +62,7 @@ framework_label_d = {
 #===============================================================================
 # DDFP data
 #===============================================================================
-ddfp_data_dir = r'l:\02_WORK\CEF\2403_CanCurve\01_MGMT\01_INOUT\2024 03 25 - David - NRCan_DDF_Transfer\OneDrive_2_3-25-2024\DDF_data'
+from definitions import ddfp_data_dir
 ddfp_lib_fp_d = {
     'AB.Calgary':r'Alberta\Calgary\CanFlood_R_ABCA_09-2023.xls',
     'NB.Fredericton':r'NewBrunswick\Fredericton\CanFlood_R_NBFR_09-2023.xlsx'

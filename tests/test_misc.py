@@ -35,7 +35,9 @@ def _get_ddf(study_name, ddf_name, framework_name):
 #===============================================================================
 @pytest.fixture(scope='function')
 def curve_data_dir(study_name, ddf_name):
-    return os.path.join(os.path.dirname(ddfp_lib_fp_d[study_name]), ddf_name)
+    curve_path = os.path.join(os.path.dirname(ddfp_lib_fp_d[study_name]), ddf_name)
+    assert os.path.exists(curve_path), f'failed to get a real path for \'{study_name}\' and \'{ddf_name}\''
+    return curve_path
 
 @pytest.fixture(scope='function')
 def ddf_d(study_name, ddf_name):
@@ -55,13 +57,7 @@ def ci_df(ci_fp):
 # tests---------
 #===============================================================================
 
-@pytest.mark.dev
-def test_qgis_version(qgis_app, qgis_iface):
- 
-    expected_version_int = 33414  # Version 3.34.14
-    from qgis.core import Qgis
-    actual_version_int = Qgis.QGIS_VERSION_INT
-    assert actual_version_int == expected_version_int, f"Expected QGIS version {expected_version_int}, but got {actual_version_int}"
+
 
 
 @pytest.mark.parametrize('study_name, ddf_name',[

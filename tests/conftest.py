@@ -15,12 +15,15 @@ from cancurve.parameters import src_dir
 # data
 #===============================================================================
 from definitions import test_data_dir as test_data_dir_master
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
 #test_data_dir_master = os.path.join(src_dir, 'tests', 'data')
 
 
 #===============================================================================
 # fixtrues--------
 #===============================================================================
+
+
 
 @pytest.fixture(scope='function')
 def logger():
