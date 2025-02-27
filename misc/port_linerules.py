@@ -8,10 +8,10 @@ script for porting MRB 'LineRules' to a SQLite
 #===============================================================================
 # variables
 #===============================================================================
-raw_linerules_xls = r'l:\02_WORK\CEF\2403_CanCurve\02_INFO\davids_tool\linerules_20240415.xls'
+raw_linerules_xls = r's:\02_proj\2403_CanCurve\02_INFO\davids_tool\linerules_20240415.xls'
 
 
-sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20241007.db'
+sql_fp = r's:\02_proj\2403_CanCurve\10_IO\cancurve\misc\mrb_20250226.db'
 
 
 #===============================================================================
