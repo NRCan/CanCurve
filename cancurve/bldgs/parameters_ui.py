@@ -11,8 +11,8 @@ import os
 #options for populating the building details tab
 building_details_options_d = {
     #general
-    'occupancyClassification': ['Residential', 'Commercial', 'Industrial', 'Other'],
-    'subClassification': ['Single Family', 'Construction', 'Duplex', 'Entertainment and Recreation', 'Food/Drugs/Chemicals', 'Heavy', 'High rise apartment', 'High technology', 'Hospital', 'Light', 'Low rise apartment', 'Medical office', 'Metals/Minerals Processing', 'Mobile home', 'Multifamily', 'Other', 'Personal and repair', 'Recreational', 'Retail trade', 'Theatre', 'Townhouse', 'Wholesale trade'],
+    #'occupancyClassification': ['Residential', 'Commercial', 'Industrial', 'Other'],
+    #'subClassification': ['Single Family', 'Construction', 'Duplex', 'Entertainment and Recreation', 'Food/Drugs/Chemicals', 'Heavy', 'High rise apartment', 'High technology', 'Hospital', 'Light', 'Low rise apartment', 'Medical office', 'Metals/Minerals Processing', 'Mobile home', 'Multifamily', 'Other', 'Personal and repair', 'Recreational', 'Retail trade', 'Theatre', 'Townhouse', 'Wholesale trade'],
     'storys': ['1', '2', 'Split', 'Multi-storey'],
     
     'heatingType': ['Baseboard-electric', 'Baseboard-hot Water', 'Forced Air - Electric', 'Forced Air - Gas', 'Forced Air - Unknown', 'Heatpump', 'Mixed', 'Solar', 'Oil', 'Woodstove', 'Other'],
@@ -54,4 +54,76 @@ building_details_options_d = {
     'taxesIncluded': ['PST', 'PST & GST', 'GST', 'HST', 'HST & QST', 'None'],
     'currency':['$CAD', '$USD', 'Other'],
     'costBasis':['Replacement Cost', 'Depreciated Cost']
+}
+
+
+#hierarchical building occupancy classes
+building_occupancy_class_d = {
+    "Residential": [
+        "Single Family",
+        "Townhouse",
+        "Mobile home",
+        "Duplex",
+        "Multiplex",
+        "Low rise apartment",
+        "High rise apartment",
+        "Seniors Housing",
+        "Other",
+    ],
+    "Commercial": [
+        "Retail trade",
+        "Wholesale Trade",
+        "Personal and Repair",
+        "Hospital",
+        "Care Homes",
+        "Medical office",
+        "Entertainment and recreation",
+        "Theatre",
+        "Professional and Technical Services",
+        "Financial Services",
+        "Automobile Services",
+        "Other"
+    ],
+    "Industrial": [
+        "Heavy",
+        "Light",
+        "Food/Drugs/Chemicals",
+        "Metals/Minerals Processing",
+        "High technology",
+        "Construction",
+        "Other",
+    ],
+    "Agriculture": [
+        "Agriculture facilities",
+        "Other",
+
+    ],
+    "Government": [
+        "Government Services",
+        "Emergency Services",
+        "School",
+        "College or University",
+        "Other",
+
+    ],
+    "Cultural": [
+        "Religious",
+        "Community Centres",
+        "Arena",
+        "Swimming Pool",
+        "Museum",
+        "Club Centres",
+        "Aquarium",
+        "Other",
+
+    ],
+    "Critical Infrastructure": [
+        "Electrical substations",
+        "Wastewater Plants",
+        "water treatment plants",
+        "pumpstations",
+        "lighthouses",
+        "Other",
+    ],
+    "Other":["Other"]
 }

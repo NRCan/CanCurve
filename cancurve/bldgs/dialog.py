@@ -58,7 +58,7 @@ from .parameters import (
     drf_db_default_fp,home_dir, bldg_meta_rqmt_df
     )
 
-from .parameters_ui import building_details_options_d
+from .parameters_ui import building_details_options_d, building_occupancy_class_d
  
 
 
@@ -246,6 +246,26 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             comboBox = self._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
             comboBox.addItems([str(e) for e in options_l])
             comboBox.setCurrentIndex(-1)
+            
+        #add hierarchical classification
+        self.occupancyClassification_ComboBox.addItems(list(building_occupancy_class_d.keys()))
+        
+        
+        def set_subclass():
+            parent_key = self.occupancyClassification_ComboBox.currentText()
+            comboBox_child = self.subClassification_ComboBox
+            comboBox_child.clear()
+            if parent_key in building_occupancy_class_d:
+                comboBox_child.addItems(building_occupancy_class_d[parent_key])
+            else:
+                # Optionally handle the error or add a default message/item
+                comboBox_child.addItem("No subclass available")
+        
+        #connect the functino to update subClassification_ComboBox
+        self.occupancyClassification_ComboBox.currentIndexChanged.connect(set_subclass)
+
+ 
+        
             
         #add the current date to the LineEdit
         """this is added by the core functions... no need to let the user edit
