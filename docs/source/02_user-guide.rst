@@ -4,6 +4,7 @@
 User Guide: Buildings Tool
 ==========================
 
+
 .. _sec02-bldgs:
 
 
@@ -46,7 +47,7 @@ Traditionally, CanFlood users struggled to obtain DDFs from past projects or pub
 To address this gap, in 2023 NRCan commissioned the Arcadis company to develop a system for constructing local DDFs in Canada.
 This resulted in a formal process for constructing DDFs called *Program for the Development of Flood Damage (Vulnerability) Curves for buildings in Canada* (a.k.a. the DDF Program or DDFP).
 To operationalize this, NRCan initiated the CanCurve project.
- 
+
 
 
 .. _sec02-tabs:

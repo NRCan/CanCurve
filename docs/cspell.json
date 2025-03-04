@@ -1,18 +1,16 @@
 {
     "language": "en-CA",
-    "dictionaries": ["en-CA"],
-    "dictionaryDefinitions": [
-        {
-            "name": "en-CA",
-            "path": "l:\\09_REPOS\\01_COMMON\\sphinx\\env\\sphinx\\node_modules\\@cspell\\dict-en-ca\\en_CA.trie"
-        }
+    "dictionaries": [
+        "en-CA"
     ],
     "enableFiletypes": [
         "rst"
     ],
     "ignoreRegExpList": [
-        "/<[^>]*>/g",  // Ignore text within angle brackets
-        "/^\\../"  // Ignore lines that begin with ..
+        "/<[^>]*>/g", // Ignore text within angle brackets
+        "/^\\.\\./", // Ignore lines that begin with ..
+        "/^../", // Ignore lines that begin with
+        "/:[^:]+:/g" // Ignore words enclosed with colons
     ],
     "ignorePaths": [
         "package-lock.json",
@@ -23,10 +21,15 @@
         ".vscode-insiders",
         ".settings"
     ],
-    "userWords": [
+    "words": [
+        "Arcadis",
+        "bldgs",
+        "costitem",
+        "DDFP",
+        "numref",
         "operationalize",
         "QGIS",
-        "Xactimate",
-        "DDFP"
+        "stillwater",
+        "Xactimate"
     ]
 }
