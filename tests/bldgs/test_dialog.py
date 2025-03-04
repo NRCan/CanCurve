@@ -303,12 +303,7 @@ def test_get_fixed_costs(dialog,
 #===============================================================================
 
 def test_radioButton_tab4actions_runControl(dialog):
-    
-   #============================================================================
-   #  QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
-   # 
-   #  sys.exit(QApp.exec_()) #wrap
-   #============================================================================
+
     b1 = dialog.radioButton_tab4actions_runControl_all
     b2 = dialog.radioButton_tab4actions_runControl_individ
     
@@ -357,23 +352,7 @@ def test_radioButton_tab4actions_runControl(dialog):
         assert not w.isEnabled(), w.objectName()
                      
                  
-    
 
-#===============================================================================
-# def test_pushButton_tab4actions_browse(dialog):
-#     enable_widget_and_parents(dialog.pushButton_tab4actions_browse)
-#  
-#     
-#     # Mock QFileDialog.getOpenFileName to return a predetermined filename
-#     with patch('PyQt5.QtWidgets.QFileDialog.getOpenFileName', return_value=('test_filename', '')):
-#         # Simulate a mouse click on the browse button
-#         print('clicking browse from within mock')
-#         QTest.mouseClick(dialog.pushButton_tab4actions_browse, Qt.LeftButton)
-# 
-#         # Check that the line edit's text is the expected filename
-#         assert dialog.lineEdit_tab4actions_projdb.text() == 'test_filename'
-#===============================================================================
-   
         
  
 @pytest.mark.parametrize('testCase',[

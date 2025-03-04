@@ -470,23 +470,21 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
     
     def _read_db(self, proj_db_fp, log):
+        """activate tab4 actions/buttons based on the status of the project database"""
         #=======================================================================
         # imports
-        #=======================================================================
-        
+        #=======================================================================        
         from .assertions import assert_proj_db
         from ..hp.sql import get_table_names
-        #import sqlite3
+
         
         
  
         #=======================================================================
         # get table names
         #=======================================================================        
-        
         with sqlite3.connect(proj_db_fp) as conn:
-            assert_proj_db(conn)
-            
+            assert_proj_db(conn)            
             table_names_l =get_table_names(conn)
             
         log.debug(f'read {len(table_names_l)} tables')
@@ -586,6 +584,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self._run_c00_setup_project()
         
+        #activate tab4 buttons
         self._read_db(self._get_proj_db_fp(), log)
         
 
@@ -608,11 +607,11 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             log.info(f'launching matplotlib plot dialog')
             plt.show()
 
-    def _run_c00_setup_project(self, 
-                               logger=None, out_dir=None):
+    def _run_c00_setup_project(self, logger=None, out_dir=None):
         """retrive and run project setup
         
-        re-factored so we can call it from multiple push buttons
+        wrapper around core.c00_setup_project() plus some plotting
+ 
         """
         #=======================================================================
         # defaults
@@ -660,8 +659,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # run action--------
         #=======================================================================
-        from .core import c00_setup_project as func
-        
+        from .core import c00_setup_project as func        
         
         ci_df, drf_df, ofp, err_msg =  func(
             ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
@@ -676,18 +674,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         cbox_d = {
             'ci':{'cbox':self.checkBox_tab4actions_step1_ciPlot,'df':ci_df},
             'drf':{'cbox':self.checkBox_tab4actions_step1_drfPlot, 'df':drf_df},
-            }
-        
-        #setup both
-        #=======================================================================
-        # show_plot=False
-        # for k,v in cbox_d.items():
-        #     if v['cbox'].isChecked():
-        #         plt.close('all')
-        #         show_plot=True
-        #         break
-        #=======================================================================
- 
+            } 
  
         for i, (k,d) in enumerate(cbox_d.items()):
             log.info(f'plotting \'{k}\'')
