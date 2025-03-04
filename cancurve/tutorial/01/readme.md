@@ -12,3 +12,6 @@ See documentation for instructions
 - output_filepath: l:\10_IO\CanCurve\misc\port_estimate\R_1-L-BD-CU_ABCA.csv
 - dataset_shape: (1108, 3)
 - missing_group_codes: ['structurelev', 'deck', 'walkinclose2', 'patio']
+
+# updates
+- 2025-03-03: renamed fields 'cat':'category', 'sel':'component'

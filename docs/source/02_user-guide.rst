@@ -4,6 +4,7 @@
 User Guide: Buildings Tool
 ==========================
 
+
 .. _sec02-bldgs:
 
 
@@ -46,7 +47,7 @@ Traditionally, CanFlood users struggled to obtain DDFs from past projects or pub
 To address this gap, in 2023 NRCan commissioned the Arcadis company to develop a system for constructing local DDFs in Canada.
 This resulted in a formal process for constructing DDFs called *Program for the Development of Flood Damage (Vulnerability) Curves for buildings in Canada* (a.k.a. the DDF Program or DDFP).
 To operationalize this, NRCan initiated the CanCurve project.
- 
+
 
 
 .. _sec02-tabs:
@@ -118,8 +119,8 @@ The database was developed in consultation with cost-restoration specialists and
 
 
 The DRF Database is a SQLite database with three tables:
- - **cost_item_meta**: lookup and description fields for each cost-item with key fields ``cat``, ``sel``, and ``bldg_layout``.
- - **drf**: the depth-replacement-factor for each cost-item with key fields ``cat``, ``sel``, and ``bldg_layout``.
+ - **cost_item_meta**: lookup and description fields for each cost-item with key fields ``category``, ``component``, and ``bldg_layout``.
+ - **drf**: the depth-replacement-factor for each cost-item with key fields ``category``, ``component``, and ``bldg_layout``.
  - **depths**: depth values (in feet and meters) corresponding to the columns in the DRF table.
  - **meta**: metadata for the database.
 

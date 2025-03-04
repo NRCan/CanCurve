@@ -4,9 +4,6 @@ Welcome to CanCurve!
 
 
 
-.. note::
-
-   This project is under active development.
 
 Contents
 --------

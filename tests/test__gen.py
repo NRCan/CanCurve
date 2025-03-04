@@ -5,7 +5,8 @@ Created on Jan. 24, 2025
 
 general project-wide tests
 '''
-import pkg_resources, os
+import importlib.metadata as metadata
+import os
 import pytest
 from .conftest import base_dir
 
@@ -51,12 +52,7 @@ def test_qgis_version(qgis_app, qgis_iface):
     from qgis.core import Qgis
     actual_version_int = Qgis.QGIS_VERSION_INT
     assert actual_version_int == expected_version_int, f"Expected QGIS version {expected_version_int}, but got {actual_version_int}"
-    
-    
-
-
-
-
+    print(f"QGIS version: {Qgis.QGIS_VERSION_INT}")
 
 @pytest.mark.parametrize('requirements_path',[r'cancurve\requirements.txt'])
 def test_requirements(requirements_path):
@@ -72,12 +68,12 @@ def test_requirements(requirements_path):
     for package, required_version in required_packages.items():
         try:
             # Get the installed version of the package
-            installed_version = pkg_resources.get_distribution(package).version
+            installed_version = metadata.version(package)
 
             if required_version and '://' not in required_version and '@' not in required_version:
                 assert installed_version == required_version, (
                     f"Package {package} has version {installed_version}, "
                     f"but {required_version} is required."
                 )
-        except pkg_resources.DistributionNotFound:
+        except metadata.PackageNotFoundError:
             pytest.fail(f"Package {package} is not installed.")

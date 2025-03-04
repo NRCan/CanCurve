@@ -278,12 +278,12 @@ def plot_c00_DRF(df_raw,
         figure = plt.figure('c00_DRF', **fig_kwargs)
         
     
-    cat_l = df_raw.index.unique('cat')
+    cat_l = df_raw.index.unique('category')
     nrows = math.ceil(math.sqrt(len(cat_l)))  # Find smallest square layout accommodating the cats
     ncols = math.ceil(len(cat_l) / nrows)
     
     #create a figure with NxN subplots. each cat_l has a unique subplot (there will be some empty subplots)
-    #return a dictionary keyed by 'cat' values
+    #return a dictionary keyed by 'category' values
     ax_ar  = figure.subplots(nrows=nrows, ncols=ncols, sharey=True, sharex=True)
     #ax_d = dict(zip(cat_l, ax_ar.flat))
     ax_d = dict()
@@ -293,7 +293,7 @@ def plot_c00_DRF(df_raw,
     
     #cmap = matplotlib.colormaps.get_cmap('tab20')
     
-    for i, (k0, gdf) in enumerate(df_raw.groupby(level='cat')):
+    for i, (k0, gdf) in enumerate(df_raw.groupby(level='category')):
         ax = ax_d[k0]
         #color = cmap(i*(1.0/len(cat_l)))
         #markers = itertools.cycle(plt.Line2D.filled_markers)
@@ -406,7 +406,7 @@ def plot_c01_depth_rcv(df_raw,
         ax = ax_d[k0]
         
         #create stacked area plot (one polygon per cat.sum())
-        gdf1 = gdf.groupby(level='cat').sum()
+        gdf1 = gdf.groupby(level='category').sum()
         
         """
              -0.9  -0.46  0.0        0.03  ...      1.22      1.52      1.83       2.7

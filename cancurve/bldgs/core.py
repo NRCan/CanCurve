@@ -22,7 +22,7 @@ from ..hp.basic import convert_to_bool, convert_to_float
 
 from .parameters import (
     drf_db_default_fp, colns_index, today_str, settings_default_d, bldg_meta_rqmt_df,
-    bldg_layout_options_l,
+    bldg_layout_options_l, column_rename_d
     )
  
 from .assertions import (
@@ -88,7 +88,17 @@ def get_out_dir():
     return out_dir
  
 
-def load_ci_df(fp, log=None):
+def load_ci_df(fp, log=None, allow_columnName_conversion=True):
+    """load the cost-item table from the database
+    
+    Parameters
+    ----------
+    fp : str
+        filepath to the cost-item database
+    allow_columnName_conversion : bool
+        convert from the legacy cat sel to the new field names
+        
+    """
     
     
     
@@ -106,6 +116,10 @@ def load_ci_df(fp, log=None):
     ci_df.columns = ci_df.columns.str.lower()
     ci_df.index.names = [name.lower() for name in ci_df.index.names if name is not None]
     
+    #check for column name conversion
+    if allow_columnName_conversion:
+        ci_df.index = ci_df.index.rename(column_rename_d)
+    
     
     try:
         assert_ci_df(ci_df)
@@ -121,6 +135,14 @@ def load_drf(fp, log=None, expo_units='meters'):
     """load the DRF table from teh database
     
     TODO: load just the necessary rows (once the database is larger)
+    
+    Parameters
+    ----------
+    fp : str
+        filepath to the DRF database
+        
+    expo_units : str
+        column/field name to load from the depths table
     
     """
     
@@ -139,7 +161,7 @@ def load_drf(fp, log=None, expo_units='meters'):
     #===========================================================================
     with sqlite3.connect(fp) as conn:
         assert_drf_db(conn)
-        df_raw =  pd.read_sql('SELECT * FROM drf', conn, index_col=['cat', 'sel', 'bldg_layout'])
+        df_raw =  pd.read_sql('SELECT * FROM drf', conn, index_col=['category', 'component', 'bldg_layout'])
         
         depths_df = pd.read_sql('SELECT * FROM depths', conn, index_col=['depth_idx'])
         
@@ -160,7 +182,7 @@ def load_drf(fp, log=None, expo_units='meters'):
     if not miss_s==set():
         raise IndexError(f'index mismatch between depths and drf tables\n    {miss_s}')
     
-    assert expo_units in depths_df.columns, f'bad exposure unit'
+    assert expo_units in depths_df.columns, f'passed expo_units not found in depths_df: \'{expo_units}\''
     
     #replace the df1 integer-like columns with the float values from depths_df
     log.debug(f'attaching exposure values for \'{expo_units}\'')
@@ -655,10 +677,13 @@ def c00_setup_project(
         
         fixed_costs_d=None,        
         
-        curve_name=None, expo_units=None,
+        curve_name=None, 
+        expo_units=None,
         settings_d=None,
         
         log=None,ofp=None,out_dir=None,overwrite=True,
+        
+        allow_ci_columnName_conversion=True,
 
         
         ):
@@ -693,6 +718,9 @@ def c00_setup_project(
         
     fixed_costs_d: dict
         fixed costs per story
+        
+    expo_units: str
+        units of exposure in the DRF
         
         
 
@@ -739,10 +767,14 @@ def c00_setup_project(
     assert isinstance(curve_name, str) 
     
     if expo_units is None:
-        expo_units = settings_d['expo_units']
-    else:
+        if 'expo_units' in settings_d:
+            expo_units = settings_d['expo_units']
+    
+    if not expo_units is None:
         settings_d['expo_units'] = expo_units
-    assert isinstance(expo_units, str)
+        
+    #using default in load_drf
+    #assert isinstance(expo_units, str)
     
     #===========================================================================
     # filepaths------
@@ -788,7 +820,7 @@ def c00_setup_project(
     # load costitem table
     #===========================================================================
     if ci_df is None: 
-        ci_df = load_ci_df(ci_fp, log=log)
+        ci_df = load_ci_df(ci_fp, log=log, allow_columnName_conversion=allow_ci_columnName_conversion)
     else:
         assert ci_fp is None
         ci_df = ci_df.copy()
@@ -979,8 +1011,8 @@ def c01_join_drf(proj_db_fp,
         #=======================================================================
         # retrieve-----------
         #=======================================================================
-        ci_df =  pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['cat', 'sel'])
-        drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['cat', 'sel'])
+        ci_df =  pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['category', 'component'])
+        drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['category', 'component'])
         
         #check
         bx = np.invert(ci_df.index.isin(drf_df.index))
@@ -1076,7 +1108,7 @@ def c02_group_story(proj_db_fp,
         # retrieve
         #=======================================================================
         #cost information
-        cid_df = pd.read_sql('SELECT * FROM c01_depth_rcv', conn, index_col=['cat', 'sel', 'story'])
+        cid_df = pd.read_sql('SELECT * FROM c01_depth_rcv', conn, index_col=['category', 'component', 'story'])
         cid_df.columns = cid_df.columns.astype(float)
         cid_df.columns.name = 'depths' #can be any unit. controlled by expo_units
         

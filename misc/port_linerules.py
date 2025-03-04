@@ -8,10 +8,10 @@ script for porting MRB 'LineRules' to a SQLite
 #===============================================================================
 # variables
 #===============================================================================
-raw_linerules_xls = r'l:\02_WORK\CEF\2403_CanCurve\02_INFO\davids_tool\linerules_20240415.xls'
+raw_linerules_xls = r's:\02_proj\2403_CanCurve\02_INFO\davids_tool\linerules_20240415.xls'
 
 
-sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20241007.db'
+sql_fp = r's:\02_proj\2403_CanCurve\10_IO\cancurve\misc\mrb_20250226.db'
 
 
 #===============================================================================
@@ -24,13 +24,14 @@ import numpy as np
 import sqlite3
 
 from cancurve.hp.basic import view_web_df as view
-index_cols = ['cat', 'sel', 'bldg_layout']
 
+
+from .parameters import index_cols, column_rename_d
 
 
 """
 view(df1)
-view(df_left)
+view(df_raw)
 """
  
 
@@ -38,15 +39,19 @@ view(df_left)
 # # load
 #===============================================================================
 df_raw = pd.read_excel(raw_linerules_xls, sheet_name=0, header=[0,1,2])
-df1 = df_raw.copy()
-
+#df1 = df_raw.copy() 
+df_raw.rename(columns=lambda x: column_rename_d.get(str(x).lower(), x), level=2, inplace=True)
+"""
+df_raw.columns
+"""
 
 #===============================================================================
 # indexing
 #===============================================================================
 #clean up index
-df_left = df_raw.xs('meta1', level=1, axis=1).droplevel(0, axis=1).loc[:, ['Cat', 'Sel', 'StructGroup', 'Cat.Sel', 'Unit', 'Desc']]
+df_left = df_raw.xs('meta1', level=1, axis=1).droplevel(0, axis=1).loc[:, ['category', 'component', 'StructGroup', 'Cat.Sel', 'Unit', 'Desc']]
 df_left.columns = df_left.columns.str.lower()
+df_left = df_left.rename(columns=column_rename_d)
 
 
     
@@ -60,11 +65,11 @@ David manually added a suffix to the 'cat.sel' field for these
     
     
 #extract type from desc
-bx =  df_left[['cat', 'sel']].duplicated(keep=False)
+bx =  df_left[['category', 'component']].duplicated(keep=False)
 df_left = df_left.join(df_left[bx]['desc'].str.extract(r'\((.*?)\)').dropna().iloc[:,0].rename('bldg_layout'))
 df_left['bldg_layout'].fillna('default', inplace=True)
 
-df_left = df_left.loc[:, ['cat', 'sel', 'bldg_layout', 'unit', 'desc']]
+df_left = df_left.loc[:, ['category', 'component', 'bldg_layout', 'unit', 'desc']]
 
 
 #check for uniques

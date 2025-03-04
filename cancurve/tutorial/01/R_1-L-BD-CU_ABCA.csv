@@ -1,4 +1,4 @@
-cat,sel,group_code,rcv,story,desc
+category,component,group_code,rcv,story,desc
 APP,CTG+,kitchen,1234.59,0,Cooktop - gas - High grade
 APP,DW++,kitchen,1856.28,0,Dishwasher - Premium grade
 APP,FRBI+,kitchen,7145.63,0,Built-in freezer - 36in - High grade
@@ -20,7 +20,7 @@ CAB,FH++,kitchen,3985.84,0,Cabinetry - full height unit - Premium grade
 CAB,FLOW+,kitchen,7596.72,0,Cabinetry - laminate lower (base) units - High grade
 CAB,GL+,kitchen,1011.84,0,Add for leaded glass (standard design). per cabinet door
 CAB,KNPL,kitchen,443.08,0,Cabinet knob or pull
-CAB,LOW++,kitchen,3989.0,0,Cabinetry - lower (base) units - Premium grade
+CAB,LOW++,kitchen,3989,0,Cabinetry - lower (base) units - Premium grade
 CAB,MC+,bath,358.3,0,Medicine cabinet - High grade
 CAB,MC+,bath2,358.3,0,Medicine cabinet - High grade
 CAB,MC+,bath3,358.3,0,Medicine cabinet - High grade
@@ -72,7 +72,7 @@ DRY,1/2+,bath,1137.4,0,1/2in drywall - hung. taped. heavy texture. ready for pai
 DRY,1/2+,bath,190.87,0,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,bath2,877.21,0,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,bath2,119.78,0,1/2in drywall - hung. taped. heavy texture. ready for paint
-DRY,1/2+,bath3,1576.0,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,bath3,1576,0,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,bath3,381.75,0,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,bath4,1137.4,-1,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,bath4,190.87,-1,1/2in drywall - hung. taped. heavy texture. ready for paint
@@ -110,9 +110,9 @@ DRY,1/2+,hallway4,1843.64,-1,1/2in drywall - hung. taped. heavy texture. ready f
 DRY,1/2+,hallway4,432.51,-1,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,kitchen,2282.25,0,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,kitchen,791.91,0,1/2in drywall - hung. taped. heavy texture. ready for paint
-DRY,1/2+,laundryroom,1576.0,0,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,laundryroom,1576,0,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,laundryroom,381.75,0,1/2in drywall - hung. taped. heavy texture. ready for paint
-DRY,1/2+,laundryroom2,1576.0,-1,1/2in drywall - hung. taped. heavy texture. ready for paint
+DRY,1/2+,laundryroom2,1576,-1,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,laundryroom2,381.75,-1,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,livingroom,2981.04,0,1/2in drywall - hung. taped. heavy texture. ready for paint
 DRY,1/2+,livingroom,1895.03,0,1/2in drywall - hung. taped. heavy texture. ready for paint
@@ -195,7 +195,7 @@ ELE,OS,utilityroom,116.2,0,Outlet
 ELE,OS,utilityroom2,116.2,-1,Outlet
 ELE,OS,walkinclose2,38.74,0,Outlet
 ELE,OS,walkincloset,38.74,0,Outlet
-ELE,REWIRE,structurelev,25440.0,0,Rewire\wire - avg. residence - boxes & wiring
+ELE,REWIRE,structurelev,25440,0,Rewire\wire - avg. residence - boxes & wiring
 ELE,SMOKE+,bedroom,112.99,0,Smoke detector - High grade
 ELE,SMOKE+,bedroom2,112.99,0,Smoke detector - High grade
 ELE,SMOKE+,bedroom3,112.99,0,Smoke detector - High grade
@@ -239,10 +239,10 @@ FCC,AV++,livingroom2,997.09,-1,Carpet - Premium grade
 FCC,AV++,livingroom3,1289.67,-1,Carpet - Premium grade
 FCC,AV++,nook,461.17,0,Carpet - Premium grade
 FCC,AV++,nook2,461.17,-1,Carpet - Premium grade
-FCC,AV++,utilityroom,555.0,0,Carpet - Premium grade
-FCC,AV++,utilityroom2,555.0,-1,Carpet - Premium grade
-FCC,AV++,walkinclose2,555.0,0,Carpet - Premium grade
-FCC,AV++,walkincloset,555.0,0,Carpet - Premium grade
+FCC,AV++,utilityroom,555,0,Carpet - Premium grade
+FCC,AV++,utilityroom2,555,-1,Carpet - Premium grade
+FCC,AV++,walkinclose2,555,0,Carpet - Premium grade
+FCC,AV++,walkincloset,555,0,Carpet - Premium grade
 FCC,PAD+,bath,22.54,0,Carpet pad - High grade
 FCC,PAD+,bath2,14.15,0,Carpet pad - High grade
 FCC,PAD+,bath3,45.08,0,Carpet pad - High grade
@@ -532,7 +532,7 @@ FRM,2X4,livingroom2,254.41,-1,2in x 4in lumber (.667 BF per LF)
 FRM,2X4,livingroom3,283.21,-1,2in x 4in lumber (.667 BF per LF)
 FRM,2X4,patio,209.52,0,2in x 4in lumber (.667 BF per LF)
 FRM,2X4,structurelev,790.92,0,2in x 4in lumber (.667 BF per LF)
-FRM,2X6,deck,93.0,0,2in x 6in lumber (1 BF per LF)
+FRM,2X6,deck,93,0,2in x 6in lumber (1 BF per LF)
 FRM,2X6,patio,120.69,0,2in x 6in lumber (1 BF per LF)
 FRM,2X6,structurelev,438.79,0,2in x 6in lumber (1 BF per LF)
 FRM,2X6,structurelev,1090.56,0,2in x 6in lumber (1 BF per LF)
@@ -554,7 +554,7 @@ FRM,DKWPSF+,deck,2396.75,0,Deck planking - 2x6 wood polymer lumber (per SF)
 FRM,FRHT,deck,76.03,0,Framing hurricane tie
 FRM,FRHT,patio,97.75,0,Framing hurricane tie
 FRM,FRHT,structurelev,293.23,0,Framing hurricane tie
-FRM,J10SF,structurelev,14430.0,0,Joist - floor or ceiling - 2x10 - w/blocking - 16in oc
+FRM,J10SF,structurelev,14430,0,Joist - floor or ceiling - 2x10 - w/blocking - 16in oc
 FRM,J8SF,deck,718.64,0,Joist - floor or ceiling - 2x8 - w/blocking - 16in oc
 FRM,LAB,structurelev,1172.44,0,Carpenter - General Framer - per hour
 FRM,LAB,structurelev,3419.64,0,Carpenter - General Framer - per hour
@@ -564,7 +564,7 @@ FRM,SH1/2,structurelev,5486.36,0,Sheathing - plywood - 1/2in CDX
 FRM,SH5/8,structurelev,11325.22,0,Sheathing - plywood - 5/8in CDX
 FRM,SHW1/2,structurelev,4.22,0,Sheathing - OSB - 1/2in
 FRM,SHW1/2,structurelev,1768.48,0,Sheathing - OSB - 1/2in
-FRM,SHW3/4T,structurelev,9834.0,0,Sheathing - OSB - 3/4in - tongue and groove
+FRM,SHW3/4T,structurelev,9834,0,Sheathing - OSB - 3/4in - tongue and groove
 FRM,TR10+,structurelev,18968.3,0,Truss - 10/12 slope - heavy loading
 FRM,TR4,deck,881.28,0,Truss - 4/12 slope
 FRM,TR4,patio,1470.34,0,Truss - 4/12 slope
@@ -586,9 +586,9 @@ HVC,FRFAH>,structurelev,5274.98,0,Furnace - forced air - high efficiency - 100.0
 HVC,TS+,structurelev,205.57,0,Thermostat - High grade
 HVC,VENT5+,structurelev,728.14,0,Furnace vent - double wall. 5in
 HVC,VENTCP5,structurelev,204.46,0,Furnace vent - rain cap and storm collar. 5in
-INS,BI24,structurelev,11400.0,0,Blown-in insulation - 24in depth - R66
+INS,BI24,structurelev,11400,0,Blown-in insulation - 24in depth - R66
 INS,BTF10,structurelev,9880.78,0,Batt insulation - 10in - R30 - paper / foil faced
-INS,BTF10,structurelev,8850.0,0,Batt insulation - 10in - R30 - paper / foil faced
+INS,BTF10,structurelev,8850,0,Batt insulation - 10in - R30 - paper / foil faced
 INS,HWRAP,patio,11.08,0,House wrap (air/moisture barrier)
 INS,HWRAP,structurelev,820.6,0,House wrap (air/moisture barrier)
 LIT,AV,nook,85.6,0,Light fixture
@@ -977,7 +977,7 @@ PNT,SHW,bedroom6,111.6,-1,Seal & paint wood shelving. 12in- 24in width
 PNT,SHW,bedroom7,111.6,-1,Seal & paint wood shelving. 12in- 24in width
 PNT,SHW,bedroom8,111.6,-1,Seal & paint wood shelving. 12in- 24in width
 PNT,SHW,structurelev,232.51,0,Seal & paint wood shelving. 12in- 24in width
-PNT,SHW,structurelev,93.0,0,Seal & paint wood shelving. 12in- 24in width
+PNT,SHW,structurelev,93,0,Seal & paint wood shelving. 12in- 24in width
 PNT,SHW,utilityroom,483.6,0,Seal & paint wood shelving. 12in- 24in width
 PNT,SHW,utilityroom2,483.6,-1,Seal & paint wood shelving. 12in- 24in width
 PNT,SHW,walkinclose2,483.6,0,Seal & paint wood shelving. 12in- 24in width

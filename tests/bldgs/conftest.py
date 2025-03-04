@@ -107,3 +107,5 @@ def bldg_meta_d(testCase):
   
 
 
+if __name__=='__main__':
+    print(f'finished running conftest.py')
