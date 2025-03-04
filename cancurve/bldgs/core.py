@@ -655,7 +655,8 @@ def c00_setup_project(
         
         fixed_costs_d=None,        
         
-        curve_name=None, expo_units=None,
+        curve_name=None, 
+        expo_units=None,
         settings_d=None,
         
         log=None,ofp=None,out_dir=None,overwrite=True,

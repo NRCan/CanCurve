@@ -59,9 +59,12 @@ def bldgs_workflow(
     # setup project
     #===========================================================================
     
-    _, _, proj_db_fp, _ = c00_setup_project(ci_df=ci_df,
-        bldg_meta=bldg_meta_d, curve_name=curve_name, 
-        fixed_costs_d=fixed_costs_d, settings_d=settings_d,
+    _, _, proj_db_fp, _ = c00_setup_project(
+        ci_df=ci_df,
+        bldg_meta=bldg_meta_d, 
+        curve_name=curve_name, 
+        fixed_costs_d=fixed_costs_d, 
+        settings_d=settings_d,
         **skwargs)
     
     
