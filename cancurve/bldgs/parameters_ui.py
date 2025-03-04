@@ -91,6 +91,7 @@ building_occupancy_class_d = {
         "Metals/Minerals Processing",
         "High technology",
         "Construction",
+        'Wastewater Plants'
         "Other",
     ],
     "Agriculture": [
@@ -127,3 +128,13 @@ building_occupancy_class_d = {
     ],
     "Other":["Other"]
 }
+
+
+#update building_details_options_d with the occupancy classes
+
+# Set occupancyClassification to the keys of building_occupancy_class_d
+building_details_options_d['occupancyClassification'] = list(building_occupancy_class_d.keys())
+
+# Flatten the lists from building_occupancy_class_d values and remove duplicates using a set
+building_details_options_d['subClassification'] = list({option for options in building_occupancy_class_d.values() for option in options})
+
