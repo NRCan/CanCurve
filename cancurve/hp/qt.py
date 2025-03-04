@@ -59,6 +59,19 @@ def get_tabelWidget_data(tableWidget: QTableWidget):
     return pd.DataFrame(data, columns=headers)
 
 
+def set_tableWidget_data(tableWidget: QTableWidget, data: pd.DataFrame):
+    """Sets the contents of a QTableWidget from a pandas DataFrame."""
+    tableWidget.setRowCount(0)  # Clear existing rows
+
+    tableWidget.setColumnCount(len(data.columns))
+    tableWidget.setHorizontalHeaderLabels(data.columns)
+
+    for row in range(len(data)):
+        tableWidget.insertRow(row)
+        for column in range(len(data.columns)):
+            tableWidget.setItem(row, column, QtWidgets.QTableWidgetItem(str(data.iat[row, column])))
+
+
 def get_formLayout_data(form_layout: QFormLayout) -> dict:
     """Retrieves field (label) and value pairs from a QFormLayout.
     
