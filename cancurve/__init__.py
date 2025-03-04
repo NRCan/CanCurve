@@ -28,7 +28,8 @@ import importlib, warnings
 def check_package(package_name):
     spec = importlib.util.find_spec(package_name)
     if spec is not None:
-        print(f'module {package_name} is installed')
+        #print(f'module {package_name} is installed')
+        pass
     else:
         warnings.warn(f'module \'{package_name}\' not installed')
 
