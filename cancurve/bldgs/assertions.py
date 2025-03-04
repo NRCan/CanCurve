@@ -45,8 +45,8 @@ def assert_ci_df(df, msg=''):
         raise TypeError("Input must be a Pandas DataFrame")
 
     # Check index 
-    if not set(df.index.names).difference(['cat', 'sel']) == set():
-        raise KeyError("Incorrect index names in DataFrame")
+    if not set(df.index.names).difference(['category', 'component']) == set():
+        raise KeyError(f"Incorrect index names in DataFrame\n    {df.index.names}")
 
     # Check data types
     for coln, dstr in df.dtypes.items():
@@ -149,7 +149,7 @@ def assert_drf_df(df):
         raise TypeError("Input must be a Pandas DataFrame")
 
     # Check index 
-    if not set(df.index.names).difference(['cat', 'sel', 'bldg_layout']) == set():
+    if not set(df.index.names).difference(['category', 'component', 'bldg_layout']) == set():
         raise KeyError("Incorrect index names in DataFrame")
 
     # Check the columns all conform to float depths

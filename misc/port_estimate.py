@@ -19,6 +19,8 @@ from cancurve.bldgs.parameters import colns_index, colns_dtypes, floor_story_d
 import sys
 #print(f'    {sys.executable}\n  {sys.version_info}')
 
+from .parameters import index_cols, column_rename_d
+
 
 
 def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp, 
@@ -51,7 +53,9 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
     log.debug(f"Loading XLS file \n    {estimate_xls_fp}")
     df_raw = pd.read_excel(estimate_xls_fp, sheet_name=0)  # Load the first sheet
     df1 = df_raw.copy().loc[:, ['Cat', 'Sel', 'Group Code', 'RCV', 'Desc']]
-    df1.columns = df1.columns.str.strip().str.lower().str.replace(' ', '_') 
+    df1.columns = df1.columns.str.strip().str.lower().str.replace(' ', '_')
+    
+    df1 = df1.rename(columns=column_rename_d) 
     
 
     #=======================================================================
@@ -64,7 +68,7 @@ def ddfp_inputs_to_ci(estimate_xls_fp, ddfp_workbook_fp,
         assert dstr==colns_dtypes[coln], coln
         
     #check keys are unique
-    keys = ['cat', 'sel', 'group_code']
+    keys = ['category', 'component', 'group_code']
     bx = df1.loc[:, keys].duplicated(keep=False)
     if bx.any():
         """this is normal.. often have duplicate items here (e.g., 2x countertops in the kitchen)"""

@@ -14,14 +14,21 @@ from ..parameters import src_dir, home_dir, today_str
 #===============================================================================
 # directories and files
 #===============================================================================
-drf_db_default_fp = os.path.join(src_dir, 'cancurve', 'db', 'mrb_20241007.db')
+drf_db_default_fp = os.path.join(src_dir, 'cancurve', 'db', 'mrb_20250226.db')
 
 #===============================================================================
 # params
 #===============================================================================
-colns_index = ['cat', 'sel', 'bldg_layout']
 
-colns_dtypes = {'cat': 'object', 'sel': 'object', 'rcv': 'float64', 'desc': 'object', 'bldg_layout':'object',
+column_rename_d = {
+    'cat':'category',
+    'sel':'component',
+    }
+
+
+colns_index = ['category', 'component', 'bldg_layout']
+
+colns_dtypes = {'category': 'object', 'component': 'object', 'rcv': 'float64', 'desc': 'object', 'bldg_layout':'object',
                 'group_code':'object', 'group_description':'object', 'story':'int64'}
 
 

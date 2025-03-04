@@ -10,7 +10,7 @@ pretty nasty to do w/o SQLalchemy... doesn't seem worth it
 '''
 
 
-sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20241007.db'
+#sql_fp = r'l:\10_IO\CanCurve\misc\port_linerules\mrb_20241007.db'
 
 
 #add primary keys to cost_items (cat, sel, bldg_layout)

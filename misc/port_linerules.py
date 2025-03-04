@@ -26,13 +26,7 @@ import sqlite3
 from cancurve.hp.basic import view_web_df as view
 
 
-
-column_rename_d = {
-    'cat':'category',
-    'sel':'component',
-    }
-
-index_cols = ['category', 'component', 'bldg_layout']
+from .parameters import index_cols, column_rename_d
 
 
 """
