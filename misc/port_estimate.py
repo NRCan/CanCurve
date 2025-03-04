@@ -19,7 +19,8 @@ from cancurve.bldgs.parameters import colns_index, colns_dtypes, floor_story_d
 import sys
 #print(f'    {sys.executable}\n  {sys.version_info}')
 
-from .parameters import index_cols, column_rename_d
+from .parameters import index_cols
+from cancurve.bldgs.parameters import column_rename_d
 
 
 
