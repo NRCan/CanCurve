@@ -118,8 +118,8 @@ The database was developed in consultation with cost-restoration specialists and
 
 
 The DRF Database is a SQLite database with three tables:
- - **cost_item_meta**: lookup and description fields for each cost-item with key fields ``cat``, ``sel``, and ``bldg_layout``.
- - **drf**: the depth-replacement-factor for each cost-item with key fields ``cat``, ``sel``, and ``bldg_layout``.
+ - **cost_item_meta**: lookup and description fields for each cost-item with key fields ``category``, ``component``, and ``bldg_layout``.
+ - **drf**: the depth-replacement-factor for each cost-item with key fields ``category``, ``component``, and ``bldg_layout``.
  - **depths**: depth values (in feet and meters) corresponding to the columns in the DRF table.
  - **meta**: metadata for the database.
 
