@@ -28,3 +28,19 @@ sphinx-build -M html .\source .\build --jobs=4 --verbose --show-traceback --nitp
 :: launch it
 call build\html\index.html
 ```
+
+## update screen shots
+call the `update_ui_screenshots.py` with something like this:
+```
+:: activate the environment
+call l:\09_REPOS\04_TOOLS\CanCurve\env\activate_py.bat
+
+:: VARIABLES
+SET TEST_DIR=%SRC_DIR%\docs\update_ui_screenshots.py
+SET WORKERS=8
+ 
+:: call pytest
+ECHO starting tests in separate windows
+start cmd.exe /k python -m pytest --maxfail=10 %TEST_DIR% -c %SRC_DIR%\tests\pytest.ini
+
+```

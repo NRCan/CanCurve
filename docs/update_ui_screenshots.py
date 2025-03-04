@@ -2,6 +2,12 @@
 
 could integreate this into the sphinx builder conf.py at some point.. but that seems overkill
 
+This is a per-project script that should be shared with git tracking
+
+needs to be run from the project pygis venv. eg:
+
+    start cmd.exe /k python -m pytest --maxfail=10 %TEST_DIR% -c %SRC_DIR%\tests\pytest.ini
+
 """
 
 
