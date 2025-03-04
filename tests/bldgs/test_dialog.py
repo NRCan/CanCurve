@@ -417,7 +417,7 @@ def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
 @pytest.mark.dev
 @pytest.mark.parametrize('testCase',[
     'case1',
-    'case2',
+    'case2', #db mismatch case
     'case4_R2'
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
@@ -456,7 +456,7 @@ def test_action_tab4actions_step1(dialog,
     # execute test
     #===========================================================================
      
-    QTest.mouseClick(w, Qt.LeftButton)  
+    QTest.mouseClick(w, Qt.LeftButton)  #BldgsDialog.action_tab4actions_step1()
     
     
     #===========================================================================

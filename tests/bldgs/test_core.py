@@ -73,18 +73,7 @@ load_tests_cases_from_file(
 @pytest.mark.dev
 @pytest.mark.parametrize('testCase',
                          test_cases_l + \
-                         ['case1_ci_header_case'],
-    #===========================================================================
-    #                      [
-    # #===========================================================================
-    # # 'case1',
-    # # 'case2',
-    # # pytest.param('case3', marks=pytest.mark.xfail(raises=KeyError, reason="story data mismatch")),
-    # #===========================================================================
-    # 'AB-Calgary_R_1-L-C-ST_ABCA' 
-    # ]
-    #===========================================================================                         
-                         
+                         ['case1_ci_header_case'],                         
                          )
 #@pytest.mark.parametrize('expo_units', ['meters', 'feet'])
 def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d, expo_units,

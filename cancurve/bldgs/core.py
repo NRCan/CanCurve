@@ -837,14 +837,7 @@ def c00_setup_project(
     # load depth-replacement-factor database
     #===========================================================================
     drf_df_raw = load_drf(drf_db_fp, log=log, expo_units=expo_units)
-    
-    """
-    view(ci_df)
-    ci_df.index
-    ci_df.columns
-    drf_df_raw.index.unique('bldg_layout')
-    """
-    
+ 
     
     #slice by building layout
     drf_df1 = drf_df_raw.xs(bldg_layout, level=2)
