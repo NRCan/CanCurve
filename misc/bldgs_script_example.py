@@ -21,7 +21,7 @@ from cancurve.bldgs.core import c00_setup_project, c01_join_drf, c02_group_story
 
 def bldgs_workflow(
         ci_df,
-        bldg_meta_d=None,fixed_costs_d=None,
+        bldg_meta_d=None,fixed_costs_d=None,expo_units=None,
         curve_name=None,
         settings_d=None,
         logger=None, out_dir=None,
@@ -32,6 +32,13 @@ def bldgs_workflow(
     
     see also bldgs.dialog.BldgsDialog.action_tab4actions_run() for gui implementation
     
+    Parameters
+    ----------
+    ci_df : pd.DataFrame
+        cost index data
+    bldg_meta_d : dict
+            building metadata to pass to c00_setup_project
+    
     """
     
     
@@ -39,16 +46,6 @@ def bldgs_workflow(
     # defaults
     #===========================================================================
     if logger is None: get_log_stream(level=logging.INFO)
-    
-    if bldg_meta_d is None:
-        
-        #get meta from test cases
-        from cancurve.bldgs.parameters import bldg_meta_rqmt_df
-        """
-        view(bldg_meta_rqmt_df)
-        """
-        d = bldg_meta_rqmt_df.loc[:, ['varName_core', 'case1']].dropna().set_index('varName_core').iloc[:, 0].to_dict()
-        d = {k:convert_to_float(v) for k,v in d.items()}
         
     if curve_name is None: curve_name = bldg_meta_d['curve_name']
     
@@ -65,6 +62,7 @@ def bldgs_workflow(
         curve_name=curve_name, 
         fixed_costs_d=fixed_costs_d, 
         settings_d=settings_d,
+        expo_units=expo_units,
         **skwargs)
     
     

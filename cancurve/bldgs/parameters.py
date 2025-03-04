@@ -36,7 +36,7 @@ bldg_layout_options_l = ['default',
 
 
 """for testing these, usually hard code as a paramter (dont use buidling metadata)"""
-settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName'}
+settings_default_d = {'scale_m2':False, 'curve_name':'myCurveName', 'expo_units':'meters'}
 
 #===============================================================================
 # params. building metadata

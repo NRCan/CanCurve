@@ -122,6 +122,14 @@ def load_drf(fp, log=None, expo_units='meters'):
     
     TODO: load just the necessary rows (once the database is larger)
     
+    Parameters
+    ----------
+    fp : str
+        filepath to the DRF database
+        
+    expo_units : str
+        column/field name to load from the depths table
+    
     """
     
     
@@ -160,7 +168,7 @@ def load_drf(fp, log=None, expo_units='meters'):
     if not miss_s==set():
         raise IndexError(f'index mismatch between depths and drf tables\n    {miss_s}')
     
-    assert expo_units in depths_df.columns, f'bad exposure unit'
+    assert expo_units in depths_df.columns, f'passed expo_units not found in depths_df: \'{expo_units}\''
     
     #replace the df1 integer-like columns with the float values from depths_df
     log.debug(f'attaching exposure values for \'{expo_units}\'')
@@ -695,6 +703,9 @@ def c00_setup_project(
     fixed_costs_d: dict
         fixed costs per story
         
+    expo_units: str
+        units of exposure in the DRF
+        
         
 
     
@@ -740,10 +751,14 @@ def c00_setup_project(
     assert isinstance(curve_name, str) 
     
     if expo_units is None:
-        expo_units = settings_d['expo_units']
-    else:
+        if 'expo_units' in settings_d:
+            expo_units = settings_d['expo_units']
+    
+    if not expo_units is None:
         settings_d['expo_units'] = expo_units
-    assert isinstance(expo_units, str)
+        
+    #using default in load_drf
+    #assert isinstance(expo_units, str)
     
     #===========================================================================
     # filepaths------
