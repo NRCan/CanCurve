@@ -3,15 +3,7 @@
 CanCurve uses Sphinx and ReadTheDocs
 
 ## build sphinx documentation locally
-need an environment like this:
-```
-  - python
-  - sphinx==8.0.*
-  - sphinx-rtd-theme
-  - pip
-  - pip:
-    - sphinx-lint
-```
+create a venv from `./requirements.txt`
 
 from within this, call something like this to build:
 ```bat
@@ -44,3 +36,11 @@ ECHO starting tests in separate windows
 start cmd.exe /k python -m pytest --maxfail=10 %TEST_DIR% -c %SRC_DIR%\tests\pytest.ini
 
 ```
+
+## IDE config
+use `cspell.json` for project configuration of cspell (custom words and dictionaries)
+
+## ReadTheDocs config
+The project sphinx docs are built and hosted on [readTheDocs](https://app.readthedocs.org/projects/cancurve/). 
+To request access, email @cefect.
+The build is configured w/ `./.readthedocs.yaml`
