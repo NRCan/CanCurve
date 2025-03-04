@@ -1,4 +1,7 @@
 # CanCurve development
+guidelines/instructions for contributing to the CanCurve project.
+
+For contributing to the documentation, see `./docs/contributing.MD`
 
 ## Installation
 Typically, development should employ a virtual environment with pyqgis bindings.
