@@ -22,8 +22,7 @@ from PyQt5.QtWidgets import (
     )
 from qgis.PyQt import QtWidgets
 
-import pandas as pd
-import numpy as np
+ 
 
  
 from cancurve.bldgs.parameters import bldg_meta_rqmt_df
@@ -92,9 +91,7 @@ def set_all_tabs(tab2bldgDetils, tab3dataInput, tab4createCurve):
     
     return True
     
-    
-
-
+ 
 
 @pytest.fixture(scope='function')    
 def tab2bldgDetils(dialog, testCase, 
@@ -221,7 +218,7 @@ def test_parameters():
 def test_init(dialog,):
     
     
-    """manual inspection only"""
+    """uncomment the below to use pytest to launch the dialog interactively"""
     #===========================================================================
     # dialog.show()
     # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    

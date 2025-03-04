@@ -43,13 +43,12 @@ from PyQt5.QtWidgets import (
 
  
 
-from ..config import dev_mode
+ 
 
 from ..hp.basic import convert_to_number, force_open_dir, today_str
 from ..hp.plug import plugLogger
 from ..hp.qt import (
-        DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
-        enable_widget_and_parents, enable_widget_and_children
+        DialogQtBasic, get_formLayout_data, get_gridLayout_data, enable_widget_and_children
         )
 
 from .assertions import assert_drf_db
@@ -59,6 +58,8 @@ from .parameters import (
     )
 
 from .parameters_ui import building_details_options_d, building_occupancy_class_d
+
+from .dialog_dbMismatch import dbMismatchDialog
  
 
 
@@ -168,62 +169,61 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.label_version.setText(f'v{__version__}')
         
  
-        if dev_mode:
             
-            """add tutorial data to welcome tab for easy loading"""
+        """add tutorial data to welcome tab for easy loading"""
+        
+        #add the cases 
+        from .dialog_test_scripts import (
+            test_data_dir_master, fixed_costs_master_d
+            )
+        
+        test_cases_l = ['01'] #test cases to display in UI
+        
+        # Validate that all cases in test_cases_l exist in fixed_costs_master_d
+        missing_cases = [case for case in test_cases_l if case not in fixed_costs_master_d]
+        
+        if missing_cases:
+            raise KeyError(f"The following test cases are missing in fixed_costs_master_d: {missing_cases}")
+        
+        from ..hp.basic import find_single_file_by_extension
+        
+        self.comboBox_dev.addItems(test_cases_l)
+        
+        #add the action
+        from cancurve.bldgs.dialog_test_scripts import set_tab2bldgDetils, set_fixedCosts
+        
+        def populate_ui():
+            self.clear_tab4actions()
+            #get the case
+            testCase = self.comboBox_dev.currentText()
             
-            #add the cases 
-            from .dialog_test_scripts import (
-                test_data_dir_master, fixed_costs_master_d
-                )
+            #populate with the test data
             
-            test_cases_l = ['01'] #test cases to display in UI
+            #tab2
+            set_tab2bldgDetils(self, testCase)
             
-            # Validate that all cases in test_cases_l exist in fixed_costs_master_d
-            missing_cases = [case for case in test_cases_l if case not in fixed_costs_master_d]
+            #tab3                
+            set_fixedCosts(self, fixed_costs_master_d[testCase])
             
-            if missing_cases:
-                raise KeyError(f"The following test cases are missing in fixed_costs_master_d: {missing_cases}")
- 
-            from ..hp.basic import find_single_file_by_extension
+            wdir = os.path.join(os.path.expanduser('~'), 'CanCurve', testCase, 
+                                datetime.now().strftime('%Y%m%d%H%M%S'))
             
-            self.comboBox_dev.addItems(test_cases_l)
+            self.lineEdit_wdir.setText(wdir)
+            self.lineEdit_tab3dataInput_curveName.setText(testCase)
             
-            #add the action
-            from cancurve.bldgs.dialog_test_scripts import set_tab2bldgDetils, set_fixedCosts
+            #tab3: expo units 
+            self.comboBox_tab3dataInput_expoUnits.setCurrentText(self.basementHeightUnits_label.text())            
             
-            def populate_ui():
-                self.clear_tab4actions()
-                #get the case
-                testCase = self.comboBox_dev.currentText()
-                
-                #populate with the test data
-                
-                #tab2
-                set_tab2bldgDetils(self, testCase)
-                
-                #tab3                
-                set_fixedCosts(self, fixed_costs_master_d[testCase])
-                
-                wdir = os.path.join(os.path.expanduser('~'), 'CanCurve', testCase, 
-                                    datetime.now().strftime('%Y%m%d%H%M%S'))
-                
-                self.lineEdit_wdir.setText(wdir)
-                self.lineEdit_tab3dataInput_curveName.setText(testCase)
-                
-                #tab3: expo units 
-                self.comboBox_tab3dataInput_expoUnits.setCurrentText(self.basementHeightUnits_label.text())            
-                
-                
-                
-                #cost information
-                tdata_dir = os.path.join(test_data_dir_master, testCase)
-                ci_fp = find_single_file_by_extension(tdata_dir, '.csv')
-                self.lineEdit_tab3dataInput_cifp.setText(ci_fp)
-                
-                self.logger.push(f'Data loaded for tutorial {testCase}')
-                
-            self.pushButton_tut_load.clicked.connect(populate_ui)
+            
+            
+            #cost information
+            tdata_dir = os.path.join(test_data_dir_master, testCase)
+            ci_fp = find_single_file_by_extension(tdata_dir, '.csv')
+            self.lineEdit_tab3dataInput_cifp.setText(ci_fp)
+            
+            self.logger.push(f'Data loaded for tutorial {testCase}')
+            
+        self.pushButton_tut_load.clicked.connect(populate_ui)
                 
                 
              
@@ -588,9 +588,13 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self._read_db(self._get_proj_db_fp(), log)
         
 
-    def _launch_dialog_dbMismatch(self, msg): 
-        self.dialog_dbMismatch = dbMismatchDialog(message=msg)  
-        self.dialog_dbMismatch.exec_() # Show modally
+    def _launch_dialog_dbMismatch(self, **kwargs):
+        """launch the DRF data entry dialog""" 
+        self.dialog_dbMismatch = dbMismatchDialog(
+            parent=None, iface=self.iface, debug_logger=self.logger, pluginObject=self.pluginObject,
+            **kwargs)
+ 
+        self.dialog_dbMismatch.launch() # Show modally
         
     def _write_fig(self, fig, prefix, log=None, out_dir=None):
         if self.checkBox_tab4actions_saveFig.isChecked():
@@ -712,7 +716,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         bx = ci_df['drf_intersect']
         if not bx.all():
             log.warning(f'intersection incomplete')
-            self._launch_dialog_dbMismatch(err_msg)
+            self._launch_dialog_dbMismatch(proj_db_fp = ofp)
                     
         
         self.lineEdit_tab4actions_projdb.setText(ofp)
@@ -976,10 +980,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     def _get_proj_db_fp(self):
         """retrieve the project filedatabse"""
         proj_db_fp = self.lineEdit_tab4actions_projdb.text()
-        #=======================================================================
-        # if not os.path.exists(proj_db_fp):
-        #     raise IOError(f'must specify a valid project database filepath. got \n    {proj_db_fp}')
-        #=======================================================================
+ 
         if proj_db_fp =='':
             proj_db_fp=None
             
@@ -1160,18 +1161,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
 
 
 
-FORM_CLASS2, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'dbMismatch_dialog.ui'), resource_suffix='')           
-class dbMismatchDialog(QtWidgets.QDialog, FORM_CLASS2, DialogQtBasic):
-    def __init__(self, message='Warning'):  # Accept message
-            super().__init__()
-            self.setupUi(self)
-            self.textBrowser.append(message)  # Set the label if a message is given
-            self.connect_slots()
-            
-    def connect_slots(self):
-        
-        self.pushButton.clicked.connect(self.close)
+
         
         
         
