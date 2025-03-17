@@ -14,6 +14,7 @@ src_dir = os.path.dirname(os.path.dirname(__file__))
 plugin_dir = os.path.dirname(__file__)
 
 home_dir = os.path.join(os.path.expanduser('~'), 'CanCurve')
+os.makedirs(home_dir, exist_ok=True)
 
 #===============================================================================
 # logging

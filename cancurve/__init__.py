@@ -25,6 +25,8 @@ def classFactory(iface):  # pylint: disable=invalid-name
 
 import importlib, warnings
 
+from packaging import version
+
 def check_package(package_name):
     spec = importlib.util.find_spec(package_name)
     if spec is not None:
@@ -36,3 +38,15 @@ def check_package(package_name):
  
 check_package('openpyxl')
 
+
+try:
+    import pandas as pd
+except ImportError:
+    warnings.warn("pandas is not installed!")
+else:
+    required_version = "2.0.0"
+    current_version = pd.__version__
+    # Skeptically assert that the current pandas version meets the minimum requirement.
+    assert version.parse(current_version) >= version.parse(required_version), (
+        f"pandas version {current_version} is below the required {required_version}"
+    )
