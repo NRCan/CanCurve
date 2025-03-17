@@ -54,23 +54,12 @@ using a csv table to capture all of the info
 """
 bldg_meta_rqmt_fp = os.path.join(os.path.dirname(__file__), 'bldg_meta_rqmts.csv')
 bldg_meta_rqmt_df = pd.read_csv(bldg_meta_rqmt_fp)
-#===============================================================================
-# building_meta_rqmts_d = {
-#     'location': {'type': str},
-#     'date': {'type': datetime},
-#     'source': {'type': str},
-#     'impact_units': {'type': str},
-#     'impact_var': {'type': str},
-#     'exposure_units': {'type': str},
-#     'exposure_var': {'type': str},
-#     'scale_units': {'type': str},
-#     'scale_var': {'type': str},
-#     'bldg_layout': {'type': str},
-# }
-#===============================================================================
+
+#check the requirements data
+assert isinstance(bldg_meta_rqmt_df, pd.DataFrame)
+assert len(bldg_meta_rqmt_df)>0
+assert all([x in bldg_meta_rqmt_df.columns for x in ['varName_core', 'varName_ui', 'varName_canflood', 'type', 'required_core', 'required_canflood', 'default_canflood', 'widgetName']])
  
-
-
  
 
 
