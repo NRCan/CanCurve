@@ -16,6 +16,10 @@ from PyQt5.QtWidgets import (
 
 from qgis.PyQt import QtWidgets
 from PyQt5.QtCore import QObject
+from PyQt5.QtWidgets import QTableView
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
+import pandas as pd
+from PyQt5.QtCore import Qt
 
 def assert_string_in_combobox(combo_box: QComboBox, target_string: str):
     """
@@ -34,15 +38,7 @@ def assert_string_in_combobox(combo_box: QComboBox, target_string: str):
 
 
 def get_tabelWidget_data(tableWidget: QTableWidget):
-    """Converts the contents of a QTableWidget to a pandas DataFrame.
-
-    Args:
-        tableWidget: The QTableWidget instance to convert.
-
-    Returns:
-        A pandas DataFrame containing the data from the table.
-    """
-
+    
     headers = []
     for column in range(tableWidget.columnCount()):
         header_item = tableWidget.horizontalHeaderItem(column)
@@ -58,13 +54,61 @@ def get_tabelWidget_data(tableWidget: QTableWidget):
 
     return pd.DataFrame(data, columns=headers)
 
+def get_tableView_data(tableView: QTableView):
+        
+        model = tableView.model()
+        if model is None:
+            raise ValueError("No model set on the QTableView.")
+
+        if not isinstance(model, QStandardItemModel):
+            raise ValueError(f"Expected QStandardItemModel, got {type(model)}.")
+
+        # Extract headers
+        headers = [model.headerData(col, Qt.Horizontal) for col in range(model.columnCount())]
+        data = []
+
+        # Extract rows
+        for row in range(model.rowCount()):
+            row_data = [model.item(row, col).text() if model.item(row, col) else "" for col in range(model.columnCount())]
+            data.append(row_data)
+
+        # if not data:
+        #     raise ValueError("No data extracted from the table.")
+
+        df = pd.DataFrame(data, columns=headers)
+        return df
+
+def set_tableView_data(tableView: QTableView, data: pd.DataFrame):
+    """Sets the contents of a QTableView from a pandas DataFrame."""
+    
+    # Create a new model
+    tableView.setModel(None)
+    model = QStandardItemModel()
+    
+    # Set column headers from the DataFrame
+    model.setHorizontalHeaderLabels(data.columns.tolist())
+    
+    # Add rows to the model
+    for row in range(len(data)):
+        # Create a list to hold the row data
+        items = []
+        for column in range(len(data.columns)):
+            # Convert each DataFrame value to a string and create a QStandardItem for each cell
+            item = QStandardItem(str(data.iat[row, column]))
+            items.append(item)
+        
+        # Append the row to the model
+        model.appendRow(items)
+    
+    # Set the model for the QTableView
+    tableView.setModel(model)
 
 def set_tableWidget_data(tableWidget: QTableWidget, data: pd.DataFrame):
     """Sets the contents of a QTableWidget from a pandas DataFrame."""
     tableWidget.setRowCount(0)  # Clear existing rows
 
     tableWidget.setColumnCount(len(data.columns))
-    tableWidget.setHorizontalHeaderLabels(data.columns)
+    tableWidget.setHorizontalHeaderLabels(data.columns.tolist())
 
     for row in range(len(data)):
         tableWidget.insertRow(row)
