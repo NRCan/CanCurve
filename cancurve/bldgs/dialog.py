@@ -301,7 +301,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             expo_units = self.comboBox_tab3dataInput_expoUnits.currentText()            
             self.basementHeightUnits_label.setText(expo_units)
             
-        #activaate everytime the QComboBox changes        
+        #activate everytime the QComboBox changes        
         self.comboBox_tab3dataInput_expoUnits.currentIndexChanged.connect(set_expo_units)
         
  
@@ -610,7 +610,6 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         if self.checkBox_tab4actions_launchPlot.isChecked():
             log.info(f'launching matplotlib plot dialog')
             plt.show()
-
     def _run_c00_setup_project(self, logger=None, out_dir=None):
         """retrive and run project setup
         
@@ -708,27 +707,22 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
                     
         progress.setValue(80)
-        
         #=======================================================================
         # post ui actions-------
         #=======================================================================
         #missing entries
-        bx = ci_df['drf_intersect']
-        if not bx.all():
-            log.warning(f'intersection incomplete')
-            self._launch_dialog_dbMismatch(proj_db_fp = ofp)
-                    
-        
+        #bx = ci_df['drf_intersect']
+        bx = np.invert(ci_df.index.isin(drf_df.index))
+        if bx.sum() != 0:
+            log.warning(f'intersection incomplete, DB mismatch. Complete in step 2')
         self.lineEdit_tab4actions_projdb.setText(ofp)
-        
         progress.setValue(95)
         
         
         
         progress.setValue(100)
         
-        log.info(f'Step 1 complete w/ {ci_df.shape}')
-        
+        log.info(f'Step 1 complete w/ {ci_df.shape}') 
         return ci_df, drf_df, ofp, err_msg
         
         
@@ -738,14 +732,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         """step2 run button
         
         pushButton_tab4actions_step2"""
+        
         self._run_c01_join_drf()
         
         self._read_db(self._get_proj_db_fp(), self.logger)
-
-
-
-
-
 
 
     def _run_c01_join_drf(self, logger=None):
@@ -757,7 +747,6 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log = logger.getChild('_run')
         
         proj_db_fp = self._get_proj_db_fp() 
-        
         progress = self.progressBar_tab4actions_step2 #progress bar for this function
         
         progress.setValue(5)
@@ -765,9 +754,24 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         # run------
         #=======================================================================
         from .core import c01_join_drf as func
+        
+        
+            #=======================================================================
+            # retrieve-----------
+            #=======================================================================
+        with sqlite3.connect(proj_db_fp) as conn:
+            ci_df = pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['category', 'component'])
+            drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['category', 'component'])
+        bx = np.invert(ci_df.index.isin(drf_df.index))
+        if bx.sum() != 0:
+            log.warning(f'intersection incomplete')
+            self._launch_dialog_dbMismatch(proj_db_fp = proj_db_fp)
+                    
+        
+        self.lineEdit_tab4actions_projdb.setText(proj_db_fp)
+        
         progress.setValue(10)
         depth_rcv_df =  func(proj_db_fp, log=log)
-        
         progress.setValue(70)
         #=======================================================================
         # plot------
@@ -799,7 +803,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #self._read_db(proj_db_fp, log)
         
         progress.setValue(100)
-        log.info(f'Step 2 complete w/ {depth_rcv_df.shape}')
+        #log.info(f'Step 2 complete w/ {depth_rcv_df.shape}')
         return depth_rcv_df
         
     
@@ -978,7 +982,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
     
     def _get_proj_db_fp(self):
-        """retrieve the project filedatabse"""
+        """retrieve the project file database"""
         proj_db_fp = self.lineEdit_tab4actions_projdb.text()
  
         if proj_db_fp =='':
