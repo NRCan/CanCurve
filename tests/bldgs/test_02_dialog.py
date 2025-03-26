@@ -258,6 +258,8 @@ def test_02_init(dialog,):
 
 @pytest.mark.parametrize('testCase',[
     'case1',
+    '01',
+    '02',
     #'case2',
     ], indirect=False)
 def test_03_get_building_details(dialog, 
@@ -490,7 +492,7 @@ def _run_tab4actions_setup(dialog, button_name, checkbox_names=None):
 
 @pytest.mark.dev
 @pytest.mark.parametrize('testCase', [
-    'case1',
+    #'case1',
     'case2',
     #===========================================================================
     # pytest.param('case2', marks=pytest.mark.xfail(
@@ -516,15 +518,17 @@ def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase,
 
 
     if testCase=='case2':
-        def patch_dbMisMatch(*args, **kwargs):
-            """tried to throw an error here and catch it with pytest.raises
-            spent 30 m and couldnt figure it out
-            some problem with an error in the tear down
-            """
-            print('patch_dbMisMatch')
- 
-        #patch teh dbMisMatch dialog
-        monkeypatch.setattr(dialog, "_launch_dialog_dbMismatch", patch_dbMisMatch)
+ #==============================================================================
+ #        def patch_dbMisMatch(*args, **kwargs):
+ #            """tried to throw an error here and catch it with pytest.raises
+ #            spent 30 m and couldnt figure it out
+ #            some problem with an error in the tear down
+ #            """
+ #            print('patch_dbMisMatch')
+ # 
+ #        #patch teh dbMisMatch dialog
+ #        monkeypatch.setattr(dialog, "_launch_dialog_dbMismatch", patch_dbMisMatch)
+ #==============================================================================
     
     
         #with pytest.raises(KeyError, match="launch_dialog_dbMismatch"):
@@ -578,7 +582,7 @@ def test_11_action_tab4actions_step4(dialog, set_all_tabs, set_projdb, testCase,
     
 
     
-#@pytest.mark.dev
+#
 @pytest.mark.parametrize('testCase',[
     #'case1',
     #pytest.param('case2', marks=pytest.mark.xfail(raises=(ValueError), reason="this case is missing some DRF entries")),
