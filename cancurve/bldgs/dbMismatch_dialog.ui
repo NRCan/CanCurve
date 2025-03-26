@@ -152,7 +152,7 @@ QLabel {
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Use this tool to update your DRF. Select the entries on the right (these are the orphaned entries from your cost-items table), and click &quot;Copy Selected Entries to DRF&quot; to begin.</string>
+          <string>Use this tool to add replacement factors for each exposure depth for each orphaned cost item.</string>
          </property>
         </widget>
        </item>
@@ -265,6 +265,13 @@ QLabel {
             </widget>
            </item>
           </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Add replacement factors (between zero and one) for each exposure depth</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QTableView" name="tableView_drf">
