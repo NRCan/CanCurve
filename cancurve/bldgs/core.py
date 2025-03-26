@@ -877,7 +877,7 @@ def c00_setup_project(
     
         
     #add column
-    ci_df.loc[:, 'drf_intersect'] = ~bx #note this wriites as 0=False; 1=True
+    ci_df.loc[:, 'drf_intersect'] = ~bx #note this writes as 0=False; 1=True
     
     #===========================================================================
     # setup project meta----------
