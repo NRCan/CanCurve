@@ -72,7 +72,7 @@ the dev branch is where new features and fixes are collected and tested before r
 
 - [ ] update the README.md to summarize any new features for users
 
-- [ ] similarly update cancurve\metadata.txt
+- [ ] similarly update `.\cancurve\metadata.txt`
 
 - [ ] execute all tests. investigate warnings. fix errors. 
 
