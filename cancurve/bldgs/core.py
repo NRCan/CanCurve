@@ -869,7 +869,10 @@ def c00_setup_project(
  
  
         log.debug(msg)
-        log.warning(f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF\n    Run Step 2 to amend the DRF')
+        
+        msg = f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF\n    Run Step 2 to amend the DRF'
+        """handled by the dialog
+        log.warning(msg)"""
  
     else:
         log.debug(f'all keys intersect')
