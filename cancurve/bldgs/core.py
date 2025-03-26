@@ -868,7 +868,8 @@ def c00_setup_project(
         'Run Step 2 individually to launch the DRF editor.'
  
  
-        log.warning(msg)
+        log.debug(msg)
+        log.warning(f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF\n    Run Step 2 to amend the DRF')
  
     else:
         log.debug(f'all keys intersect')
