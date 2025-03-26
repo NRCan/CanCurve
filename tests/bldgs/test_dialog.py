@@ -209,13 +209,13 @@ def set_projdb(dialog, proj_db_fp):
 # TESTS------
 #===============================================================================
 
-def test_parameters():
+def test_01_parameters():
     df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type']].dropna(subset='varName_ui').set_index('varName_ui')
     assert set(building_details_options_d.keys()).difference(df.index)==set(), 'parameters_ui doesnt match paramter csv'
     
 
 @pytest.mark.dev
-def test_init(dialog,):
+def test_02_init(dialog,):
     
     
     """uncomment the below to use pytest to launch the dialog interactively"""
@@ -250,7 +250,7 @@ def test_init(dialog,):
  
     
 #===============================================================================
-# private tests-------
+# TESTS: PRIVATE-------
 #===============================================================================
 """functions hidden from user"""
 
@@ -259,17 +259,12 @@ def test_init(dialog,):
     'case1',
     #'case2',
     ], indirect=False)
-def test_get_building_details(dialog, 
+def test_03_get_building_details(dialog, 
                          tab2bldgDetils, #calling this sets the values on the UI
                          bldg_meta_d, #from conftest
                          ):
     
-    """manual inspection only"""
-  #=============================================================================
-  #   QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
-  # 
-  #   sys.exit(QApp.exec_()) #wrap
-  #=============================================================================
+ 
     
     result = dialog._get_building_details()
     
@@ -285,7 +280,7 @@ def test_get_building_details(dialog,
     'case1',
     #'case2',
     ], indirect=False)
-def test_get_fixed_costs(dialog, 
+def test_04_get_fixed_costs(dialog, 
                          tableWidget_tab3dataInput_fixedCosts, #calling this sets the values on the UI
                          fixed_costs_d 
                          ):
@@ -296,10 +291,11 @@ def test_get_fixed_costs(dialog,
     
     
 #===============================================================================
-# Dialog tests--------
+# TESTS: DIALOG FUNCTIONALITY--------
 #===============================================================================
 
-def test_radioButton_tab4actions_runControl(dialog):
+def test_05_radioButton_tab4actions_runControl(dialog):
+    """check radio button logic"""
 
     b1 = dialog.radioButton_tab4actions_runControl_all
     b2 = dialog.radioButton_tab4actions_runControl_individ
@@ -357,31 +353,26 @@ def test_radioButton_tab4actions_runControl(dialog):
     #'case2',
     ], indirect=False)
 @pytest.mark.parametrize('testPhase', ['c03'])
-def test_pushButton_tab4actions_read(dialog, set_projdb):
+def test_06_pushButton_tab4actions_read(dialog, set_projdb):
+    """test read project database button"""
     
     w = dialog.pushButton_tab4actions_read
     
-    enable_widget_and_parents(w) #need to enable the button for it to work
+    enable_widget_and_parents(w) #need to enable the button for it to work    
     
+    QTest.mouseClick(w, Qt.LeftButton) #dialog.BldgsDialog.action_read_proj_db()
     
-    QTest.mouseClick(w, Qt.LeftButton)
-    
-    
-    #===========================================================================
-    # """manual inspection only"""
-    # dialog.show()
-    # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect    
-    # sys.exit(QApp.exec_()) #wrap
-    #===========================================================================
 
-#@pytest.mark.dev
+ 
+ 
 @pytest.mark.parametrize('buttonName, lineName, QFileDialogTypeName',[
      ('pushButton_wd','lineEdit_wdir','getExistingDirectory'),
      ('pushButton_tab3dataInput_cifp','lineEdit_tab3dataInput_cifp', 'getOpenFileName'),
      ('pushButton_tab3dataInput_drfFp','lineEdit_tab3dataInput_drfFp', 'getOpenFileName'),
      ('pushButton_tab4actions_browse', 'lineEdit_tab4actions_projdb', 'getOpenFileName'),
      ])  
-def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
+def test_07_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
+    """check all the load file buttons"""
     
     #retrieve button widget
     assert hasattr(dialog, buttonName), buttonName
@@ -405,13 +396,13 @@ def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
     
  
 #===============================================================================
-# Dialog Action tests--------
+# TESTS: Dialog Actions--------
 #===============================================================================
 """simulate user interface"""
 
 
     
-@pytest.mark.dev
+ 
 @pytest.mark.parametrize('testCase',[
     'case1',
     'case2', #db mismatch case
@@ -419,11 +410,11 @@ def test_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
 @pytest.mark.parametrize('ciPlot',[True], indirect=False)
-@pytest.mark.parametrize('drfPlot',[True], indirect=False)
- 
-def test_action_tab4actions_step1(dialog,
+@pytest.mark.parametrize('drfPlot',[True], indirect=False) 
+def test_08_action_tab4actions_step1(dialog,
                                   set_all_tabs, ciPlot, drfPlot, 
                                   ):
+    """test the step 1 button for _run_c00_setup_project'"""
     
     
     
@@ -455,11 +446,7 @@ def test_action_tab4actions_step1(dialog,
      
     QTest.mouseClick(w, Qt.LeftButton)  #BldgsDialog.action_tab4actions_step1()
     
-    
-    #===========================================================================
-    # QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
-    # sys.exit(QApp.exec_()) #wrap
-    #===========================================================================
+ 
     #===========================================================================
     # check
     #===========================================================================
@@ -482,9 +469,12 @@ def test_action_tab4actions_step1(dialog,
 @pytest.mark.parametrize('scale_m2',[True,
                                      #False,
                                      ], indirect=False)
-def test_action_tab4actions(dialog, set_all_tabs, set_projdb, button, expected_tables, 
-                            run_plot, testPhase):
-    """run test on actions 2, 3, and 4 (see above for action 1)"""
+def test_09_action_tab4actions(dialog, set_all_tabs, set_projdb, 
+                               button, expected_tables, testPhase,
+                            run_plot):
+    """
+    flexible test for all the action buttons
+    run test on actions 2, 3, or 4 (see above for action 1)"""
     print('starting test')
     #===========================================================================
     # setup dialog
