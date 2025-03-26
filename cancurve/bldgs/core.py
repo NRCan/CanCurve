@@ -1007,12 +1007,10 @@ def c01_join_drf(proj_db_fp,
         ci_df =  pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['category', 'component'])
         drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['category', 'component'])
         
-        #check
-        bx = np.invert(ci_df.index.isin(drf_df.index))
-        
-        #no... this flag is just for helping the user to fix the intersect
+        #check intersect
         #need to re-calc the intersect to allow the user to update the database
-        #bx = ~ci_df['drf_intersect'].astype(bool)
+        bx = np.invert(ci_df.index.isin(drf_df.index))
+ 
         if bx.any():
             msg = f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF\n    add keys to DRF or remove from cost-items'
             log.error(msg)
