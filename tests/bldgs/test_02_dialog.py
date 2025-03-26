@@ -456,64 +456,95 @@ def test_08_action_tab4actions_step1(dialog,
     
  
  
-@pytest.mark.dev
-#@patch('matplotlib.pyplot.show')  #breaks enable_widget for some reason...
-@pytest.mark.parametrize('testCase', ['case4_R2'])
-@pytest.mark.parametrize('button, testPhase, expected_tables', [
-    #('pushButton_tab4actions_step1', expected_tables_base), #this test is sufficnetly different... see above
-    ('pushButton_tab4actions_step2', 'c01', expected_tables_base+['c01_depth_rcv']),
-    ('pushButton_tab4actions_step3', 'c02', expected_tables_base+['c01_depth_rcv', 'c02_ddf']),
-    ('pushButton_tab4actions_step4', 'c03', expected_tables_base+['c01_depth_rcv', 'c02_ddf']), #export step doesnt write
-])
-@pytest.mark.parametrize('run_plot', [True])
-@pytest.mark.parametrize('scale_m2',[True,
-                                     #False,
-                                     ], indirect=False)
-def test_09_action_tab4actions(dialog, set_all_tabs, set_projdb, 
-                               button, expected_tables, testPhase,
-                            run_plot):
+def _run_tab4actions_setup(dialog, button_name, checkbox_names=None):
     """
-    flexible test for all the action buttons
-    run test on actions 2, 3, or 4 (see above for action 1)"""
-    print('starting test')
-    #===========================================================================
-    # setup dialog
-    #===========================================================================
+    Common setup and execution for tab4actions tests.
+ 
+    """
+    # Switch to the appropriate tab and enable the target button.
     dialog._change_tab('tab4actions')
-    # Get the button to test
-    w = getattr(dialog, button)
-    # Enable the button
-    enable_widget_and_parents(w) #doesn't enable check boxes
+    button = getattr(dialog, button_name)
+    enable_widget_and_parents(button)
     
-    if run_plot:
-        cbox_name = {
-            'c01':'checkBox_tab4actions_step2_plot',
-            'c02':'checkBox_tab4actions_step3_plot',
-            'c03':None
-            }[testPhase]
-        
-        if not cbox_name is None:            
-            print(f'enabling plot checkBox \'{cbox_name}\'')
-            cbox = getattr(dialog, cbox_name)
-            enable_widget_and_parents(cbox)
-            cbox.setChecked(True)
-            
-        dialog.checkBox_tab4actions_saveFig.setChecked(True)
-            
-
-    #===========================================================================
-    # execute
-    #===========================================================================
-    # Simulate a mouse click on the button
-    print('QTest.mouseClick')
-    QTest.mouseClick(w, Qt.LeftButton)
-
-    # Check the result
-    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+    # Always enable the figure saving checkbox.
+    dialog.checkBox_tab4actions_saveFig.setChecked(True)
     
+    # Enable and check each provided checkbox.
+    if checkbox_names:
+        for cb_name in checkbox_names:
+            cb = getattr(dialog, cb_name)
+            enable_widget_and_parents(cb)
+            cb.setChecked(True)
+    
+    # Execute: simulate a mouse click on the button.
+    QTest.mouseClick(button, Qt.LeftButton)
+
+
  
 
-    print('finished')
+@pytest.mark.dev 
+@pytest.mark.parametrize('testCase', [
+    'case1',
+    'case2',
+    'case4_R2'
+    ])
+@pytest.mark.parametrize('testPhase', ['c01'])
+@pytest.mark.parametrize('scale_m2', [True], indirect=False)
+def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase, testPhase, scale_m2):
+    """
+    Test for Step2 c01_join_drf
+ 
+    """
+    expected_tables = expected_tables_base + ['c01_depth_rcv']
+    
+    _run_tab4actions_setup(
+        dialog,
+        button_name='pushButton_tab4actions_step2', #_run_c01_join_drf()
+        checkbox_names=['checkBox_tab4actions_step2_plot']
+    )
+    # Verification: check the project DB for the expected tables.
+    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+
+
+
+ 
+@pytest.mark.parametrize('testCase', ['case4_R2'])
+@pytest.mark.parametrize('testPhase', ['c02'])
+@pytest.mark.parametrize('scale_m2', [True], indirect=False)
+def test_10_action_tab4actions_step3(dialog, set_all_tabs, set_projdb, testCase, testPhase, scale_m2):
+    """
+    Test for Step3 
+    """
+    expected_tables = expected_tables_base + ['c01_depth_rcv', 'c02_ddf']
+    _run_tab4actions_setup(
+        dialog,
+        button_name='pushButton_tab4actions_step3',
+        checkbox_names=['checkBox_tab4actions_step3_plot']
+    )
+    # Verification: check the project DB for the expected tables.
+    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+
+
+# Test for action step4
+ 
+@pytest.mark.parametrize('testCase', ['case4_R2'])
+@pytest.mark.parametrize('testPhase', ['c03'])
+@pytest.mark.parametrize('scale_m2', [True], indirect=False)
+def test_11_action_tab4actions_step4(dialog, set_all_tabs, set_projdb, testCase, testPhase, scale_m2):
+    """
+     Test for Step4
+    """
+    expected_tables = expected_tables_base + ['c01_depth_rcv', 'c02_ddf']
+    _run_tab4actions_setup(
+        dialog,
+        button_name='pushButton_tab4actions_step4',
+        checkbox_names=[]
+    )
+    # Verification: check the project DB for the expected tables.
+    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+    
+    
+    
 
     
 #@pytest.mark.dev
@@ -524,7 +555,7 @@ def test_09_action_tab4actions(dialog, set_all_tabs, set_projdb,
     'case4_R2'
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
-def test_action_tab4actions_runAll(dialog, set_all_tabs): 
+def test_12_action_tab4actions_runAll(dialog, set_all_tabs): 
     """test combined
     
     no need to test plots here
