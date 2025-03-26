@@ -39,7 +39,7 @@ def _get_bldg_meta_d(testCase, df=None):
     if testCase in df.columns:
         d = df.loc[:, ['varName_core', testCase]].dropna().set_index('varName_core').iloc[:, 0].to_dict()
     else:
-        raise KeyError(testCase)
+        raise KeyError(f'failed to find \'{testCase}\' in bldg_meta_rqmt_df_test')
     d = {k:convert_to_float(v) for k, v in d.items()}
     assert_bldg_meta_d(d, msg=testCase)
     return d
@@ -107,3 +107,5 @@ def bldg_meta_d(testCase):
   
 
 
+if __name__=='__main__':
+    print(f'finished running conftest.py')

@@ -1,12 +1,32 @@
 # CanCurve development
+guidelines/instructions for contributing to the CanCurve project.
+
+For contributing to the documentation, see `./docs/contributing.MD`
 
 ## Installation
-Typically, development should employ a virtual environment with pyqgis bindings. 
-We usually develop to target the most recent QGIS LTR. 
-Some additional packages used for testing and deployment are specified in `./requirements.txt`
+Typically, development should employ a virtual environment with pyqgis bindings.
+To build this requires:
+- 1) pyqgis bindings (see `./readme.md` for target version)
+- 2) Some additional packages used for testing and deployment are specified in `./requirements.txt`
+- 3) a `./definitions.py` file is needed for some of the testing data (see below for template)
 
 ### PYTHONPATH
 only the source directory should be included (`./CanCurve` not `./CanCurve/cancurve`)
+
+
+### definitions.py
+
+```python
+#machine specific external filepaths
+#See Shared Drive/02_proj/2403_CanCurve/10_IO to download
+#https://drive.google.com/drive/folders/1Z0d40SdXU0bcI0l7CLO2aT6gYGhSu3cQ?usp=drive_link
+
+#directory where test data is stored
+test_data_dir = r's:\02_proj\2403_CanCurve\10_IO\test_data'
+
+#directory with DDFP data from David (for comparison)
+ddfp_data_dir = r's:\02_proj\2403_CanCurve\10_IO\DDF_data'
+```
 
 ## Tests
 pytests are in `./tests`

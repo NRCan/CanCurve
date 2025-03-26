@@ -35,7 +35,9 @@ def _get_ddf(study_name, ddf_name, framework_name):
 #===============================================================================
 @pytest.fixture(scope='function')
 def curve_data_dir(study_name, ddf_name):
-    return os.path.join(os.path.dirname(ddfp_lib_fp_d[study_name]), ddf_name)
+    curve_path = os.path.join(os.path.dirname(ddfp_lib_fp_d[study_name]), ddf_name)
+    assert os.path.exists(curve_path), f'failed to get a real path for \'{study_name}\' and \'{ddf_name}\''
+    return curve_path
 
 @pytest.fixture(scope='function')
 def ddf_d(study_name, ddf_name):
@@ -55,13 +57,7 @@ def ci_df(ci_fp):
 # tests---------
 #===============================================================================
 
-@pytest.mark.dev
-def test_qgis_version(qgis_app, qgis_iface):
- 
-    expected_version_int = 33412  # Version 3.34.12
-    from qgis.core import Qgis
-    actual_version_int = Qgis.QGIS_VERSION_INT
-    assert actual_version_int == expected_version_int, f"Expected QGIS version {expected_version_int}, but got {actual_version_int}"
+
 
 
 @pytest.mark.parametrize('study_name, ddf_name',[
@@ -82,31 +78,7 @@ def test_plot_and_eval_ddfs(ddf_d, tmpdir, logger):
     func(ddf_d, log=logger, out_dir=tmpdir)
     
     
-#===============================================================================
-# file-based tests ------
-#===============================================================================
-from .data.bldgs_data_scripts import load_tests_cases_from_file, test_cases_l
-load_tests_cases_from_file() #setup file-based test cases
 
-
-
-@pytest.mark.dev
-@pytest.mark.parametrize('testCase',
-    #['case4_R2']
-     test_cases_l,    
-    )
-def test_bldgs_workflow(testCase, 
-                        ci_df, bldg_meta_d,fixed_costs_d,  #from conftest based on testCase                       
-                        tmpdir, logger):
-    """end-to-end backend testing"""
-    from misc.bldgs_script_example import bldgs_workflow as func
-    
-    func(ci_df, bldg_meta_d=bldg_meta_d, fixed_costs_d=fixed_costs_d,
-         #settings_d=settings_d, #use default 
-          curve_name=f'{testCase}_c00',
-         logger=logger, out_dir=tmpdir,
-         plot=False,
-         )
     
     
     

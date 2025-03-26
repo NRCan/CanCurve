@@ -54,11 +54,7 @@ def write_fig(figure, ofp, write=True, log=None, testCase='testCase'):
 #===============================================================================
 # fixtures-------
 #===============================================================================
-#===============================================================================
-# @pytest.fixture(scope='function')
-# def c00_cost_items_df(proj_db_fp):
-#     return get_sqlite_table(proj_db_fp, 'c00_cost_items', index_col=['cat', 'sel'])
-#===============================================================================
+ 
 @pytest.fixture(scope='function')
 def action_result(testCase, testPhase):
     """intelligently retrieve result for this case and phase from test_core"""

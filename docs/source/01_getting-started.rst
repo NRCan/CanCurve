@@ -84,6 +84,7 @@ Frequently Asked Questions
 
 **Do I really need to install an old version of QGIS to use CanCurve?**
       No, but we recommend it for best performance. If you have a newer version of QGIS installed, you can try CanCurve with it, but you may experience issues.
+      We do our best to keep CanCurve up-to-date with the latest version of QGIS.
 
 
 

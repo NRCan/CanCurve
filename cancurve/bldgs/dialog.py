@@ -41,15 +41,10 @@ from PyQt5.QtWidgets import (
     QFileDialog,
     )
 
- 
-
-from ..config import dev_mode
-
 from ..hp.basic import convert_to_number, force_open_dir, today_str
 from ..hp.plug import plugLogger
 from ..hp.qt import (
-        DialogQtBasic, get_formLayout_data, get_gridLayout_data, get_tabelWidget_data,
-        enable_widget_and_parents, enable_widget_and_children
+        DialogQtBasic, get_formLayout_data, get_gridLayout_data, enable_widget_and_children
         )
 
 from .assertions import assert_drf_db
@@ -58,7 +53,9 @@ from .parameters import (
     drf_db_default_fp,home_dir, bldg_meta_rqmt_df
     )
 
-from .parameters_ui import building_details_options_d
+from .parameters_ui import building_details_options_d, building_occupancy_class_d
+
+from .dialog_dbMismatch import dbMismatchDialog
  
 
 
@@ -80,11 +77,6 @@ if not os.path.dirname(resources_module_fp) in sys.path:
 
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
-"""
-help(uic)
-help(uic.loadUiType)
-print(sys.path)
-"""
 ui_fp = os.path.join(os.path.dirname(__file__), 'cc_bldgs_dialog.ui')
 assert os.path.exists(ui_fp)
 FORM_CLASS, _ = uic.loadUiType(ui_fp, resource_suffix='')
@@ -134,7 +126,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # children
         #=======================================================================
-        self.dialog_dbMismatch=None
+        #self.dialog_dbMismatch=None
         
         self.logger.debug('CanCurveDialog init finish')
         #self.logger.info('this woriks?')
@@ -168,62 +160,61 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         self.label_version.setText(f'v{__version__}')
         
  
-        if dev_mode:
             
-            """add tutorial data to welcome tab for easy loading"""
+        """add tutorial data to welcome tab for easy loading"""
+        
+        #add the cases 
+        from .dialog_test_scripts import (
+            test_data_dir_master, fixed_costs_master_d
+            )
+        
+        test_cases_l = ['01', '02'] #test cases to display in UI
+        
+        # Validate that all cases in test_cases_l exist in fixed_costs_master_d
+        missing_cases = [case for case in test_cases_l if case not in fixed_costs_master_d]
+        
+        if missing_cases:
+            raise KeyError(f"The following test cases are missing in fixed_costs_master_d: {missing_cases}")
+        
+        from ..hp.basic import find_single_file_by_extension
+        
+        self.comboBox_dev.addItems(test_cases_l)
+        
+        #add the action
+        from cancurve.bldgs.dialog_test_scripts import set_tab2bldgDetils, set_fixedCosts
+        
+        def populate_ui():
+            self.clear_tab4actions()
+            #get the case
+            testCase = self.comboBox_dev.currentText()
             
-            #add the cases 
-            from .dialog_test_scripts import (
-                test_data_dir_master, fixed_costs_master_d
-                )
+            #populate with the test data
             
-            test_cases_l = ['01'] #test cases to display in UI
+            #tab2
+            set_tab2bldgDetils(self, testCase)
             
-            # Validate that all cases in test_cases_l exist in fixed_costs_master_d
-            missing_cases = [case for case in test_cases_l if case not in fixed_costs_master_d]
+            #tab3                
+            set_fixedCosts(self, fixed_costs_master_d[testCase])
             
-            if missing_cases:
-                raise KeyError(f"The following test cases are missing in fixed_costs_master_d: {missing_cases}")
- 
-            from ..hp.basic import find_single_file_by_extension
+            wdir = os.path.join(os.path.expanduser('~'), 'CanCurve', testCase, 
+                                datetime.now().strftime('%Y%m%d%H%M%S'))
             
-            self.comboBox_dev.addItems(test_cases_l)
+            self.lineEdit_wdir.setText(wdir)
+            self.lineEdit_tab3dataInput_curveName.setText(testCase)
             
-            #add the action
-            from cancurve.bldgs.dialog_test_scripts import set_tab2bldgDetils, set_fixedCosts
+            #tab3: expo units 
+            self.comboBox_tab3dataInput_expoUnits.setCurrentText(self.basementHeightUnits_label.text())            
             
-            def populate_ui():
-                self.clear_tab4actions()
-                #get the case
-                testCase = self.comboBox_dev.currentText()
-                
-                #populate with the test data
-                
-                #tab2
-                set_tab2bldgDetils(self, testCase)
-                
-                #tab3                
-                set_fixedCosts(self, fixed_costs_master_d[testCase])
-                
-                wdir = os.path.join(os.path.expanduser('~'), 'CanCurve', testCase, 
-                                    datetime.now().strftime('%Y%m%d%H%M%S'))
-                
-                self.lineEdit_wdir.setText(wdir)
-                self.lineEdit_tab3dataInput_curveName.setText(testCase)
-                
-                #tab3: expo units 
-                self.comboBox_tab3dataInput_expoUnits.setCurrentText(self.basementHeightUnits_label.text())            
-                
-                
-                
-                #cost information
-                tdata_dir = os.path.join(test_data_dir_master, testCase)
-                ci_fp = find_single_file_by_extension(tdata_dir, '.csv')
-                self.lineEdit_tab3dataInput_cifp.setText(ci_fp)
-                
-                self.logger.push(f'Data loaded for tutorial {testCase}')
-                
-            self.pushButton_tut_load.clicked.connect(populate_ui)
+            
+            
+            #cost information
+            tdata_dir = os.path.join(test_data_dir_master, testCase)
+            ci_fp = find_single_file_by_extension(tdata_dir, '.csv')
+            self.lineEdit_tab3dataInput_cifp.setText(ci_fp)
+            
+            self.logger.push(f'Data loaded for tutorial {testCase}')
+            
+        self.pushButton_tut_load.clicked.connect(populate_ui)
                 
                 
              
@@ -246,6 +237,26 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             comboBox = self._get_child(f'{k}_ComboBox', childType=QtWidgets.QComboBox)
             comboBox.addItems([str(e) for e in options_l])
             comboBox.setCurrentIndex(-1)
+            
+        #add hierarchical classification
+        self.occupancyClassification_ComboBox.addItems(list(building_occupancy_class_d.keys()))
+        
+        
+        def set_subclass():
+            parent_key = self.occupancyClassification_ComboBox.currentText()
+            comboBox_child = self.subClassification_ComboBox
+            comboBox_child.clear()
+            if parent_key in building_occupancy_class_d:
+                comboBox_child.addItems(building_occupancy_class_d[parent_key])
+            else:
+                # Optionally handle the error or add a default message/item
+                comboBox_child.addItem("No subclass available")
+        
+        #connect the functino to update subClassification_ComboBox
+        self.occupancyClassification_ComboBox.currentIndexChanged.connect(set_subclass)
+
+ 
+        
             
         #add the current date to the LineEdit
         """this is added by the core functions... no need to let the user edit
@@ -281,7 +292,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             expo_units = self.comboBox_tab3dataInput_expoUnits.currentText()            
             self.basementHeightUnits_label.setText(expo_units)
             
-        #activaate everytime the QComboBox changes        
+        #activate everytime the QComboBox changes        
         self.comboBox_tab3dataInput_expoUnits.currentIndexChanged.connect(set_expo_units)
         
  
@@ -450,23 +461,21 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
     
     def _read_db(self, proj_db_fp, log):
+        """activate tab4 actions/buttons based on the status of the project database"""
         #=======================================================================
         # imports
-        #=======================================================================
-        
+        #=======================================================================        
         from .assertions import assert_proj_db
         from ..hp.sql import get_table_names
-        #import sqlite3
+
         
         
  
         #=======================================================================
         # get table names
         #=======================================================================        
-        
         with sqlite3.connect(proj_db_fp) as conn:
-            assert_proj_db(conn)
-            
+            assert_proj_db(conn)            
             table_names_l =get_table_names(conn)
             
         log.debug(f'read {len(table_names_l)} tables')
@@ -484,7 +493,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             #turn teh group on
             enable_widget_and_children(getattr(self, d['groupBox']), enable)
             
-            #set the progress on teh previous
+            #set the progress on the previous
             pb = getattr(self, d['progressBar'])
             if enable:
                 pb.setValue(100)
@@ -535,10 +544,13 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         step_log(1)
         _, _, _, err_msg = self._run_c00_setup_project(logger=log, out_dir=out_dir)
         
+        #handle failure
         if not err_msg is None:
+            self._read_db(self._get_proj_db_fp(), log)
+            self.radioButton_tab4actions_runControl_individ.setChecked(True)
             log.warning(err_msg)
             return
-        
+                
         #=======================================================================
         # step 2
         #=======================================================================
@@ -566,12 +578,21 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         self._run_c00_setup_project()
         
+        #activate tab4 buttons
         self._read_db(self._get_proj_db_fp(), log)
         
 
-    def _launch_dialog_dbMismatch(self, msg): 
-        self.dialog_dbMismatch = dbMismatchDialog(message=msg)  
-        self.dialog_dbMismatch.exec_() # Show modally
+    def _launch_dialog_dbMismatch(self, **kwargs):
+        """launch the DRF data entry dialog""" 
+        with dbMismatchDialog(
+            parent=self, iface=self.iface, 
+            #debug_logger=self.logger,
+            logger=self.logger.getChild('dbMismatchDialog'), 
+            **kwargs) as wrkr:
+            
+            wrkr.launch()
+ 
+        #self.dialog_dbMismatch.launch() # Show modally
         
     def _write_fig(self, fig, prefix, log=None, out_dir=None):
         if self.checkBox_tab4actions_saveFig.isChecked():
@@ -587,12 +608,11 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         if self.checkBox_tab4actions_launchPlot.isChecked():
             log.info(f'launching matplotlib plot dialog')
             plt.show()
-
-    def _run_c00_setup_project(self, 
-                               logger=None, out_dir=None):
+    def _run_c00_setup_project(self, logger=None, out_dir=None):
         """retrive and run project setup
         
-        re-factored so we can call it from multiple push buttons
+        wrapper around core.c00_setup_project() plus some plotting
+ 
         """
         #=======================================================================
         # defaults
@@ -610,13 +630,12 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         
         ci_fp =         self.lineEdit_tab3dataInput_cifp.text()
+        assert not ci_fp=='', f'no costItem file path specified'
         
-        assert not ci_fp=='', f'no costItem filepath specified'
-        
-        drf_db_fp =     self.lineEdit_tab3dataInput_drfFp.text()        
+        drf_db_fp = self.lineEdit_tab3dataInput_drfFp.text()        
         
         #curve_name = self.lineEdit_di_curveName.text() in settings_d
-        bldg_meta =     self._get_building_details(logger=log)
+        bldg_meta = self._get_building_details(logger=log)
         
         #fixed costs from table
         try:
@@ -628,7 +647,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         ofp = self._get_proj_db_fp() #load the one provided by the user
         
-        #get buidling layout
+        #get building layout
         """seems like only the 'default' entries are working
         from .core import _get_building_layout_from_meta
         bldg_layout = _get_building_layout_from_meta(bldg_meta)
@@ -640,8 +659,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # run action--------
         #=======================================================================
-        from .core import c00_setup_project as func
-        
+        from .core import c00_setup_project as func        
         
         ci_df, drf_df, ofp, err_msg =  func(
             ci_fp, drf_db_fp=drf_db_fp, bldg_meta=bldg_meta, fixed_costs_d=fixed_costs_d,
@@ -656,18 +674,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         cbox_d = {
             'ci':{'cbox':self.checkBox_tab4actions_step1_ciPlot,'df':ci_df},
             'drf':{'cbox':self.checkBox_tab4actions_step1_drfPlot, 'df':drf_df},
-            }
-        
-        #setup both
-        #=======================================================================
-        # show_plot=False
-        # for k,v in cbox_d.items():
-        #     if v['cbox'].isChecked():
-        #         plt.close('all')
-        #         show_plot=True
-        #         break
-        #=======================================================================
- 
+            } 
  
         for i, (k,d) in enumerate(cbox_d.items()):
             log.info(f'plotting \'{k}\'')
@@ -697,27 +704,22 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
                     
         progress.setValue(80)
-        
         #=======================================================================
         # post ui actions-------
         #=======================================================================
         #missing entries
-        bx = ci_df['drf_intersect']
-        if not bx.all():
-            log.warning(f'intersection incomplete')
-            self._launch_dialog_dbMismatch(err_msg)
-                    
-        
+        #bx = ci_df['drf_intersect']
+        bx = np.invert(ci_df.index.isin(drf_df.index))
+        if bx.sum() != 0:
+            log.warning(f'The DRF table does not contain all the entries necessary to process your cost-items')
         self.lineEdit_tab4actions_projdb.setText(ofp)
-        
         progress.setValue(95)
         
         
         
         progress.setValue(100)
         
-        log.info(f'Step 1 complete w/ {ci_df.shape}')
-        
+        log.info(f'Step 1 complete w/ {ci_df.shape}') 
         return ci_df, drf_df, ofp, err_msg
         
         
@@ -727,18 +729,14 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         """step2 run button
         
         pushButton_tab4actions_step2"""
+        
         self._run_c01_join_drf()
         
         self._read_db(self._get_proj_db_fp(), self.logger)
 
 
-
-
-
-
-
     def _run_c01_join_drf(self, logger=None):
-        """retrive and run project setup
+        """run Step 2: Join DRF to CI then multiply through to create fractional restoration costs
         
         re-factored so we can call it from multiple push buttons
         """
@@ -746,17 +744,36 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         log = logger.getChild('_run')
         
         proj_db_fp = self._get_proj_db_fp() 
-        
         progress = self.progressBar_tab4actions_step2 #progress bar for this function
         
         progress.setValue(5)
+
+        
+        
+        
+        #=======================================================================
+        # db Mismatch-----------
+        #=======================================================================
+        log.debug(f'checking for db mismatch')
+        with sqlite3.connect(proj_db_fp) as conn:
+            ci_df = pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['category', 'component'])
+            drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['category', 'component'])
+        bx = np.invert(ci_df.index.isin(drf_df.index))
+        if bx.sum() != 0:
+            #log.warning(f'intersection incomplete')
+            log.push(f'Missing {bx.sum()}/{len(ci_df)} entries in DRF... launching mismatch dialog')
+            self._launch_dialog_dbMismatch(proj_db_fp = proj_db_fp)
+            return
+        
+        log.info(f'intersection complete... no mismatch')
         #=======================================================================
         # run------
         #=======================================================================
-        from .core import c01_join_drf as func
-        progress.setValue(10)
-        depth_rcv_df =  func(proj_db_fp, log=log)
+        self.lineEdit_tab4actions_projdb.setText(proj_db_fp)
         
+        progress.setValue(10)
+        from .core import c01_join_drf as func
+        depth_rcv_df =  func(proj_db_fp, log=log)
         progress.setValue(70)
         #=======================================================================
         # plot------
@@ -788,7 +805,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #self._read_db(proj_db_fp, log)
         
         progress.setValue(100)
-        log.info(f'Step 2 complete w/ {depth_rcv_df.shape}')
+        #log.info(f'Step 2 complete w/ {depth_rcv_df.shape}')
         return depth_rcv_df
         
     
@@ -967,12 +984,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
     
     def _get_proj_db_fp(self):
-        """retrieve the project filedatabse"""
+        """retrieve the project file database"""
         proj_db_fp = self.lineEdit_tab4actions_projdb.text()
-        #=======================================================================
-        # if not os.path.exists(proj_db_fp):
-        #     raise IOError(f'must specify a valid project database filepath. got \n    {proj_db_fp}')
-        #=======================================================================
+ 
         if proj_db_fp =='':
             proj_db_fp=None
             
@@ -1153,18 +1167,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
 
 
 
-FORM_CLASS2, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'dbMismatch_dialog.ui'), resource_suffix='')           
-class dbMismatchDialog(QtWidgets.QDialog, FORM_CLASS2, DialogQtBasic):
-    def __init__(self, message='Warning'):  # Accept message
-            super().__init__()
-            self.setupUi(self)
-            self.textBrowser.append(message)  # Set the label if a message is given
-            self.connect_slots()
-            
-    def connect_slots(self):
-        
-        self.pushButton.clicked.connect(self.close)
+
         
         
         

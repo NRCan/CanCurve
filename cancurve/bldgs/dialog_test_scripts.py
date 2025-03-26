@@ -41,6 +41,7 @@ note the underlying data needs to be duplicated in ./dev_test_data and ./tests/d
 """
 fixed_costs_master_d = {
         '01':{0:10000.0, -1:8000.0}, #case1 for UI display
+        '02':{0:10000.0, -1:8000.0}, #case1_ci_header_case'
         'case1':{0:10000.0, -1:8000.0},
         'case1_ci_header_case':{0:10000.0, -1:8000.0},
         'case2':None,
@@ -75,8 +76,12 @@ def set_fixedCosts(dialog, fixed_costs_d):
         
         
 def set_tab2bldgDetils(dialog, testCase):
+    """configure the building details tab based on the test"""
     
-    df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type'] + test_cases_l].dropna(subset='varName_ui').set_index('varName_ui')
+    #read from bldg_meta_rqmts.csv
+    #slice down and index by the ui element (varName_ui)
+    cols_bx = bldg_meta_rqmt_df.columns.isin(['varName_ui', 'widgetName', 'type'] + test_cases_l)
+    df = bldg_meta_rqmt_df.loc[:,cols_bx].dropna(subset='varName_ui').set_index('varName_ui')
     
     """
     view(df)
@@ -85,7 +90,11 @@ def set_tab2bldgDetils(dialog, testCase):
     #loop through and change the combobox to match whats in the dictionary
     for k, row in df.iterrows():
         
+        
+
+        
         try:
+            #retrieve the value from the test case
             if not pd.isnull(row[testCase]):
                 v = row[testCase]
             elif k in building_details_options_d:
@@ -94,14 +103,26 @@ def set_tab2bldgDetils(dialog, testCase):
                 #print('continue')
                 continue #skip this one
             #v = str(v_raw)
+            
+            #retrieve the widget
             assert hasattr(dialog, row['widgetName']), f'bad widgetname: %s'%row['widgetName']
             widget = getattr(dialog, row['widgetName'])
+            
+            
+            if k == 'subClassification': #add exception for the subClassifcation
+                continue
+            
+            
             #check if the requested value is one of the comboBox's options
             if isinstance(widget, QComboBox):
                 assert_string_in_combobox(widget, v)
+            
+            #set the value 
             set_widget_value(widget, v)
+            
+            
         except Exception as e:
-            raise IOError(f'failed to set element {k} on the building details tab w/\n    {e}')
+            raise IOError(f'failed to set element \'{k}\' on the building details tab w/\n    {e}')
         
         
         

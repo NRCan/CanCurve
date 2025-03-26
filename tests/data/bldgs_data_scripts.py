@@ -102,6 +102,8 @@ def load_tests_cases_from_file(
         
     data is deliberately stored outside of repo 
     
+    make updates to bldg_meta_rqmt_df_test
+    
 
 
     """

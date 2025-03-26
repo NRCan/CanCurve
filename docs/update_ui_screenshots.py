@@ -2,6 +2,12 @@
 
 could integreate this into the sphinx builder conf.py at some point.. but that seems overkill
 
+This is a per-project script that should be shared with git tracking
+
+needs to be run from the project pygis venv. eg:
+
+    start cmd.exe /k python -m pytest --maxfail=10 %TEST_DIR% -c %SRC_DIR%\tests\pytest.ini
+
 """
 
 
@@ -12,12 +18,12 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt
 
-from tests.bldgs.test_dialog import (
+from tests.bldgs.test_02_dialog import (
     dialog, set_all_tabs, bldg_meta_d, tab2bldgDetils, tab3dataInput, tab4createCurve, 
     tableWidget_tab3dataInput_fixedCosts,fixed_costs_d, ci_fp, expo_units
     )
 
-
+from cancurve.parameters import src_dir
 
 
 def _write_tab_figure(dialog, output_image, tab_widget_name):
@@ -40,7 +46,7 @@ def _write_tab_figure(dialog, output_image, tab_widget_name):
     pixmap = QPixmap(dialog.size())
     dialog.render(pixmap)
 # Save the rendered screenshot as a PNG
-    output_dir = os.path.join('source', 'assets') # Directory for saving images
+    output_dir = os.path.join(src_dir, 'docs', 'source', 'assets') # Directory for saving images
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, output_image)
     pixmap.save(output_path)

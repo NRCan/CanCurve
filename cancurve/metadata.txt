@@ -6,7 +6,7 @@
 name=CanCurve
 qgisMinimumVersion=3.34
 description=Free tools to create Canadian flood Depth-Damage Functions (DDF)
-version=0.0.1
+version=1.1.0
 author=Seth Bryant
 email=heather.mcgrath@canada.ca
 
@@ -20,7 +20,7 @@ repository=https://github.com/NRCan/CanCurve
 
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
-changelog= v0.0.1 [2024-05] initial working release (un tested)
+changelog= v1.1.0 [2025-03] post-release improvements
 
 # Tags are comma separated with spaces allowed
 tags=flood risk, flood, model, Canada
