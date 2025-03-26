@@ -53,7 +53,7 @@ def dialog(qgis_iface, proj_db_fp):
  
     
     dialog =  dbMismatchDialog(parent=parent, iface=qgis_iface,
-                          debug_logger=logger, #connect python logger for rtests
+                          logger=logger, #connect python logger for rtests
                           proj_db_fp=proj_db_fp,
  
                           )
