@@ -837,14 +837,7 @@ def c00_setup_project(
     # load depth-replacement-factor database
     #===========================================================================
     drf_df_raw = load_drf(drf_db_fp, log=log, expo_units=expo_units)
-    
-    """
-    view(ci_df)
-    ci_df.index
-    ci_df.columns
-    drf_df_raw.index.unique('bldg_layout')
-    """
-    
+ 
     
     #slice by building layout
     drf_df1 = drf_df_raw.xs(bldg_layout, level=2)
@@ -872,11 +865,14 @@ def c00_setup_project(
         msg+=f'For reference, the missing entries have been written to file:\n\n{ofp1}'        
         msg+=f'\n\nTo proceed, update the DRF to provide factors for the missing cost items' + \
         ' (or remove the entries from the Cost Items table).  '+\
-        'Typically, this is done by editing the Project Database with a third-party SQLite3 editor. '+\
-        'Once the tables are corrected, proceed with \'Step 2\'.'
+        'Run Step 2 individually to launch the DRF editor.'
  
  
-        log.warning(msg)
+        log.debug(msg)
+        
+        msg = f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF\n    Run Step 2 to amend the DRF'
+        """handled by the dialog
+        log.warning(msg)"""
  
     else:
         log.debug(f'all keys intersect')
@@ -884,7 +880,7 @@ def c00_setup_project(
     
         
     #add column
-    ci_df.loc[:, 'drf_intersect'] = ~bx #note this wriites as 0=False; 1=True
+    ci_df.loc[:, 'drf_intersect'] = ~bx #note this writes as 0=False; 1=True
     
     #===========================================================================
     # setup project meta----------
@@ -1014,12 +1010,10 @@ def c01_join_drf(proj_db_fp,
         ci_df =  pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['category', 'component'])
         drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['category', 'component'])
         
-        #check
-        bx = np.invert(ci_df.index.isin(drf_df.index))
-        
-        #no... this flag is just for helping the user to fix the intersect
+        #check intersect
         #need to re-calc the intersect to allow the user to update the database
-        #bx = ~ci_df['drf_intersect'].astype(bool)
+        bx = np.invert(ci_df.index.isin(drf_df.index))
+ 
         if bx.any():
             msg = f'missing {bx.sum()}/{len(bx)} cost-item keys in DRF\n    add keys to DRF or remove from cost-items'
             log.error(msg)

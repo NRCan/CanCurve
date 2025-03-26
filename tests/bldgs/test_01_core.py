@@ -47,13 +47,15 @@ def copy_sqlite(proj_db_fp, testCase, destinationPhase, write=overwrite_testdata
 # data---------
 #===============================================================================
 from ..data.bldgs_data_scripts import load_tests_cases_from_file, test_cases_l
+
+#setup file-based test cases
 load_tests_cases_from_file(
     #===========================================================================
     # caseName_l = [ #only loading a few for unit tests
     #      'AB-Calgary_R_1-L-C-ST_ABCA' 
     #     ]
     #===========================================================================
-    ) #setup file-based test cases
+    ) 
 
 #===============================================================================
 # fixtures-------
@@ -70,21 +72,17 @@ load_tests_cases_from_file(
 
 
 
-@pytest.mark.dev
+
 @pytest.mark.parametrize('testCase',
-                         test_cases_l + \
-                         ['case1_ci_header_case'],
-    #===========================================================================
-    #                      [
-    # #===========================================================================
-    # # 'case1',
-    # # 'case2',
-    # # pytest.param('case3', marks=pytest.mark.xfail(raises=KeyError, reason="story data mismatch")),
-    # #===========================================================================
-    # 'AB-Calgary_R_1-L-C-ST_ABCA' 
-    # ]
-    #===========================================================================                         
-                         
+                            ['case1',
+                            'case2', #The specified DRF (mrb_20250226.db) is missing 4/409 entries
+                            'case3',
+                            'case4_R2',                      
+                            'AB-Calgary_R_1-L-BD-CU_ABCA',
+                            'AB-Calgary_R_1-L-BD-ST_ABCA',
+                            'AB-Calgary_R_1-L-BU-ST_ABCA',
+                            'AB-Calgary_R_1-L-C-CU_ABCA',
+                            'case1_ci_header_case'],                         
                          )
 #@pytest.mark.parametrize('expo_units', ['meters', 'feet'])
 def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d, expo_units,
@@ -109,16 +107,20 @@ def test_c00_setup_project(tmp_path, ci_fp, testCase, fixed_costs_d, expo_units,
 
     
     
-#@pytest.mark.dev
-@pytest.mark.parametrize('testCase',
-                         test_cases_l
-                         #[
-    #===========================================================================
-    # #'case1',
-    # #pytest.param('case2', marks=pytest.mark.xfail(raises=KeyError, reason="this case is missing some DRF entries")), 
-    # 'case3',
-    # ]
-    #===========================================================================
+@pytest.mark.dev
+@pytest.mark.parametrize('testCase',                         
+                            ['case1',
+                            #'case2', #The specified DRF (mrb_20250226.db) is missing 4/409 entries
+                            pytest.param('case2', marks=pytest.mark.xfail(
+                                raises=(KeyError, FileNotFoundError, ValueError), 
+                                reason="missing DRF entries")),
+                            'case3',
+                            'case4_R2',                      
+                            'AB-Calgary_R_1-L-BD-CU_ABCA',
+                            'AB-Calgary_R_1-L-BD-ST_ABCA',
+                            'AB-Calgary_R_1-L-BU-ST_ABCA',
+                            'AB-Calgary_R_1-L-C-CU_ABCA',
+                            'case1_ci_header_case'],   
                          
                          )
 @pytest.mark.parametrize('testPhase',['c01'], indirect=False)

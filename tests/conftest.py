@@ -5,9 +5,10 @@ Created on Apr. 16, 2024
 '''
 import os, logging, sys
 import pytest
-from unittest.mock import patch
+#from unittest.mock import patch
 
-
+from PyQt5.QtTest import QTest
+from PyQt5.Qt import Qt 
 
 from cancurve.parameters import src_dir
 
@@ -18,6 +19,31 @@ from definitions import test_data_dir as test_data_dir_master
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
 #test_data_dir_master = os.path.join(src_dir, 'tests', 'data')
 
+#===============================================================================
+# pytest custom config
+#===============================================================================
+ 
+
+def pytest_runtest_teardown(item, nextitem):
+    """custom teardown message"""
+    test_name = item.name
+    print(f"\n{'='*20} Test completed: {test_name} {'='*20}\n\n\n")
+    
+def pytest_report_header(config):
+    """modifies the pytest header to show all of the arguments"""
+    return f"pytest arguments: {' '.join(config.invocation_params.args)}"
+
+#===============================================================================
+# HELPERS----------
+#===============================================================================
+def click(widget):
+    widgetname = widget.objectName() if widget.objectName() else str(widget)
+    
+    #check that the widget is enabled
+    assert widget.isEnabled(), f'widget is not enabled: {widgetname}'
+    sys.stdout.flush()
+    print(f"\n\nclicking: \'{widgetname}\'\n{'=' * 80}\n\n")
+    return QTest.mouseClick(widget, Qt.LeftButton)
 
 #===============================================================================
 # fixtrues--------
@@ -42,6 +68,7 @@ def logger():
     
     
     return log
+
 
 
  

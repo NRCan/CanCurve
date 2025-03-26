@@ -153,8 +153,8 @@ def assert_drf_df(df):
         raise KeyError("Incorrect index names in DataFrame")
 
     # Check the columns all conform to float depths
-    if not 'float' in df.columns.dtype.name:
-        raise TypeError(f'DRF column headers expected as dtype float. instead got \'{df.columns.dtype.name}\'')
+    # if not 'float' in df.columns.dtype.name:
+    #     raise TypeError(f'DRF column headers expected as dtype float. instead got \'{df.columns.dtype.name}\'')
     
     # Check data types (more accurate)
  

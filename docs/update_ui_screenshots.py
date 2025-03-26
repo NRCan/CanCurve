@@ -18,7 +18,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt
 
-from tests.bldgs.test_dialog import (
+from tests.bldgs.test_02_dialog import (
     dialog, set_all_tabs, bldg_meta_d, tab2bldgDetils, tab3dataInput, tab4createCurve, 
     tableWidget_tab3dataInput_fixedCosts,fixed_costs_d, ci_fp, expo_units
     )

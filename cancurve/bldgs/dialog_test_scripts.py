@@ -41,6 +41,7 @@ note the underlying data needs to be duplicated in ./dev_test_data and ./tests/d
 """
 fixed_costs_master_d = {
         '01':{0:10000.0, -1:8000.0}, #case1 for UI display
+        '02':{0:10000.0, -1:8000.0}, #case1_ci_header_case'
         'case1':{0:10000.0, -1:8000.0},
         'case1_ci_header_case':{0:10000.0, -1:8000.0},
         'case2':None,
@@ -79,7 +80,8 @@ def set_tab2bldgDetils(dialog, testCase):
     
     #read from bldg_meta_rqmts.csv
     #slice down and index by the ui element (varName_ui)
-    df = bldg_meta_rqmt_df.loc[:, ['varName_ui', 'widgetName', 'type'] + test_cases_l].dropna(subset='varName_ui').set_index('varName_ui')
+    cols_bx = bldg_meta_rqmt_df.columns.isin(['varName_ui', 'widgetName', 'type'] + test_cases_l)
+    df = bldg_meta_rqmt_df.loc[:,cols_bx].dropna(subset='varName_ui').set_index('varName_ui')
     
     """
     view(df)
