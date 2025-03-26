@@ -729,7 +729,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
 
 
     def _run_c01_join_drf(self, logger=None):
-        """retrive and run project setup
+        """run Step 2: Join DRF to CI then multiply through to create fractional restoration costs
         
         re-factored so we can call it from multiple push buttons
         """
@@ -740,27 +740,32 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         progress = self.progressBar_tab4actions_step2 #progress bar for this function
         
         progress.setValue(5)
-        #=======================================================================
-        # run------
-        #=======================================================================
-        from .core import c01_join_drf as func
+
         
         
-            #=======================================================================
-            # retrieve-----------
-            #=======================================================================
+        
+        #=======================================================================
+        # db Mismatch-----------
+        #=======================================================================
+        log.debug(f'checking for db mismatch')
         with sqlite3.connect(proj_db_fp) as conn:
             ci_df = pd.read_sql('SELECT * FROM c00_cost_items', conn, index_col=['category', 'component'])
             drf_df = pd.read_sql('SELECT * FROM c00_drf', conn, index_col=['category', 'component'])
         bx = np.invert(ci_df.index.isin(drf_df.index))
         if bx.sum() != 0:
-            log.warning(f'intersection incomplete')
-            log.push(f'Missing values total before step 2 {bx.sum()}')
+            #log.warning(f'intersection incomplete')
+            log.push(f'Missing {bx.sum()}/{len(ci_df)} entries in DRF... launching mismatch dialog')
             self._launch_dialog_dbMismatch(proj_db_fp = proj_db_fp)
             return
+        
+        log.info(f'intersection complete... no mismatch')
+        #=======================================================================
+        # run------
+        #=======================================================================
         self.lineEdit_tab4actions_projdb.setText(proj_db_fp)
         
         progress.setValue(10)
+        from .core import c01_join_drf as func
         depth_rcv_df =  func(proj_db_fp, log=log)
         progress.setValue(70)
         #=======================================================================

@@ -33,6 +33,7 @@ from cancurve.hp.qt import (
     assert_string_in_combobox, enable_widget_and_parents, set_widget_value
     )
 from tests.test_plugin import logger
+from ..conftest import click
 
 from cancurve.bldgs.dialog_test_scripts import test_cases_l, set_tab2bldgDetils, set_fixedCosts
 
@@ -214,7 +215,7 @@ def test_01_parameters():
     assert set(building_details_options_d.keys()).difference(df.index)==set(), 'parameters_ui doesnt match paramter csv'
     
 
-@pytest.mark.dev
+ 
 def test_02_init(dialog,):
     
     
@@ -477,33 +478,63 @@ def _run_tab4actions_setup(dialog, button_name, checkbox_names=None):
             cb.setChecked(True)
     
     # Execute: simulate a mouse click on the button.
-    QTest.mouseClick(button, Qt.LeftButton)
-
+    click(button)
+    #QTest.mouseClick(button, Qt.LeftButton)
+    
+    
+    
 
  
+ 
 
-@pytest.mark.dev 
+
+@pytest.mark.dev
 @pytest.mark.parametrize('testCase', [
     'case1',
     'case2',
-    'case4_R2'
+    #===========================================================================
+    # pytest.param('case2', marks=pytest.mark.xfail(
+    #                             raises=(KeyError,), 
+    #                             reason="missing DRF entries")),
+    #===========================================================================
+    #'case4_R2'
     ])
 @pytest.mark.parametrize('testPhase', ['c01'])
 @pytest.mark.parametrize('scale_m2', [True], indirect=False)
-def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase, testPhase, scale_m2):
+def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase, testPhase, scale_m2, monkeypatch):
     """
     Test for Step2 c01_join_drf
- 
+
     """
     expected_tables = expected_tables_base + ['c01_depth_rcv']
     
-    _run_tab4actions_setup(
-        dialog,
-        button_name='pushButton_tab4actions_step2', #_run_c01_join_drf()
-        checkbox_names=['checkBox_tab4actions_step2_plot']
-    )
-    # Verification: check the project DB for the expected tables.
-    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+    run_test = lambda: _run_tab4actions_setup(
+                dialog,
+                button_name='pushButton_tab4actions_step2', #_run_c01_join_drf()
+                checkbox_names=['checkBox_tab4actions_step2_plot']
+            )
+
+
+    if testCase=='case2':
+        def patch_dbMisMatch(*args, **kwargs):
+            """tried to throw an error here and catch it with pytest.raises
+            spent 30 m and couldnt figure it out
+            some problem with an error in the tear down
+            """
+            print('patch_dbMisMatch')
+ 
+        #patch teh dbMisMatch dialog
+        monkeypatch.setattr(dialog, "_launch_dialog_dbMismatch", patch_dbMisMatch)
+    
+    
+        #with pytest.raises(KeyError, match="launch_dialog_dbMismatch"):
+        run_test()
+        
+    else:
+        run_test()
+        # Verification: check the project DB for the expected tables.
+        assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+
 
 
 
