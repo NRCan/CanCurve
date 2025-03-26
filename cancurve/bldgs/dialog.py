@@ -77,11 +77,6 @@ if not os.path.dirname(resources_module_fp) in sys.path:
 
 
 # This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
-"""
-help(uic)
-help(uic.loadUiType)
-print(sys.path)
-"""
 ui_fp = os.path.join(os.path.dirname(__file__), 'cc_bldgs_dialog.ui')
 assert os.path.exists(ui_fp)
 FORM_CLASS, _ = uic.loadUiType(ui_fp, resource_suffix='')

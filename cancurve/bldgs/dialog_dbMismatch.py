@@ -36,6 +36,13 @@ from .assertions import (
     )
 
 
+from ..parameters import plugin_dir
+resources_module_fp = os.path.join(plugin_dir, 'resources.py')
+assert os.path.exists(resources_module_fp), resources_module_fp 
+if not os.path.dirname(resources_module_fp) in sys.path:
+    sys.path.append(os.path.dirname(resources_module_fp))
+    
+
 FORM_CLASS2, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'dbMismatch_dialog.ui'), resource_suffix='')           
 class dbMismatchDialog(QtWidgets.QDialog, FORM_CLASS2, DialogQtBasic):
