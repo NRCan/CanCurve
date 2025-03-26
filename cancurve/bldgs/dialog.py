@@ -126,7 +126,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         # children
         #=======================================================================
-        self.dialog_dbMismatch=None
+        #self.dialog_dbMismatch=None
         
         self.logger.debug('CanCurveDialog init finish')
         #self.logger.info('this woriks?')
@@ -168,7 +168,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             test_data_dir_master, fixed_costs_master_d
             )
         
-        test_cases_l = ['01'] #test cases to display in UI
+        test_cases_l = ['01', '02'] #test cases to display in UI
         
         # Validate that all cases in test_cases_l exist in fixed_costs_master_d
         missing_cases = [case for case in test_cases_l if case not in fixed_costs_master_d]
@@ -544,7 +544,10 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         step_log(1)
         _, _, _, err_msg = self._run_c00_setup_project(logger=log, out_dir=out_dir)
         
+        #handle failure
         if not err_msg is None:
+            self._read_db(self._get_proj_db_fp(), log)
+            self.radioButton_tab4actions_runControl_individ.setChecked(True)
             log.warning(err_msg)
             return
                 
@@ -581,11 +584,15 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
 
     def _launch_dialog_dbMismatch(self, **kwargs):
         """launch the DRF data entry dialog""" 
-        self.dialog_dbMismatch = dbMismatchDialog(
-            parent=None, iface=self.iface, debug_logger=self.logger, pluginObject=self,
-            **kwargs)
+        with dbMismatchDialog(
+            parent=self, iface=self.iface, 
+            #debug_logger=self.logger,
+            logger=self.logger.getChild('dbMismatchDialog'), 
+            **kwargs) as wrkr:
+            
+            wrkr.launch()
  
-        self.dialog_dbMismatch.launch() # Show modally
+        #self.dialog_dbMismatch.launch() # Show modally
         
     def _write_fig(self, fig, prefix, log=None, out_dir=None):
         if self.checkBox_tab4actions_saveFig.isChecked():

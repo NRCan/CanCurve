@@ -86,9 +86,8 @@
     </disabled>
    </palette>
   </property>
-  
-   <property name="windowTitle">
-   <string>CanCurve</string>
+  <property name="windowTitle">
+   <string>DRF Data Entry Tool</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QPushButton {
@@ -118,10 +117,6 @@ QLabel {
 }
 
 </string>
- </property>
-  
-  <property name="windowTitle">
-   <string>DRF Data Entry Tool</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -184,7 +179,7 @@ QLabel {
            <item>
             <widget class="QPushButton" name="pushButton_DRFtoProjDB">
              <property name="text">
-              <string>Write DRF Edits</string>
+              <string>Write DRF Edits to Project Database</string>
              </property>
             </widget>
            </item>
@@ -201,17 +196,16 @@ QLabel {
              </property>
             </spacer>
            </item>
-            <item>
-            <widget class="QLabel" name="label_7">
-             <property name="text">
-              <string>Depth Unit:</string>
-             </property>
-            </widget>
-           </item>
            <item>
             <widget class="QLabel" name="label_Depth_Units">
+             <property name="minimumSize">
+              <size>
+               <width>75</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="text">
-              <string>Meters</string>
+              <string>?</string>
              </property>
             </widget>
            </item>
@@ -318,6 +312,12 @@ QLabel {
            </item>
            <item>
             <widget class="QLabel" name="label_CI_entries_total">
+             <property name="minimumSize">
+              <size>
+               <width>50</width>
+               <height>0</height>
+              </size>
+             </property>
              <property name="text">
               <string>0</string>
              </property>
@@ -379,6 +379,9 @@ QLabel {
                 </colorrole>
                </disabled>
               </palette>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
              </property>
             </widget>
            </item>
@@ -498,7 +501,7 @@ QLabel {
          </widget>
         </item>
         <item>
-         <widget class="QProgressBar" name="progressBar_mismatchdialog">
+         <widget class="QProgressBar" name="progressBar">
           <property name="value">
            <number>5</number>
           </property>

@@ -865,8 +865,7 @@ def c00_setup_project(
         msg+=f'For reference, the missing entries have been written to file:\n\n{ofp1}'        
         msg+=f'\n\nTo proceed, update the DRF to provide factors for the missing cost items' + \
         ' (or remove the entries from the Cost Items table).  '+\
-        'Typically, this is done by editing the Project Database with a third-party SQLite3 editor. '+\
-        'Once the tables are corrected, proceed with \'Step 2\'.'
+        'Run Step 2 individually to launch the DRF editor.'
  
  
         log.warning(msg)

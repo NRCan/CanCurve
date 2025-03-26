@@ -78,28 +78,44 @@ def get_tableView_data(tableView: QTableView):
         df = pd.DataFrame(data, columns=headers)
         return df
 
-def set_tableView_data(tableView: QTableView, data: pd.DataFrame):
-    """Sets the contents of a QTableView from a pandas DataFrame."""
-    
-    # Create a new model
+def set_tableView_data(tableView: QTableView, data: pd.DataFrame, freeze_columns_l=None):
+    """Sets the contents of a QTableView from a pandas DataFrame.
+
+    Parameters
+    ----------
+    tableView : QTableView
+        The table view to populate.
+    data : pd.DataFrame
+        The data to display.
+    freeze_columns_l : list of int, optional
+        A list of column indices (positions) that should be frozen (non-editable).
+    """
+    # Clear any existing model
     tableView.setModel(None)
     model = QStandardItemModel()
     
-    # Set column headers from the DataFrame
+    # Set column headers from the DataFrame.
     model.setHorizontalHeaderLabels(data.columns.tolist())
     
-    # Add rows to the model
+    # If no freeze list provided, use an empty list.
+    freeze_columns_l = freeze_columns_l or []
+    
+    # Add rows to the model.
     for row in range(len(data)):
-        # Create a list to hold the row data
         items = []
         for column in range(len(data.columns)):
-            # Convert each DataFrame value to a string and create a QStandardItem for each cell
             item = QStandardItem(str(data.iat[row, column]))
+            # For frozen columns, explicitly set flags to be selectable and enabled (but not editable).
+            if column in freeze_columns_l:
+                #item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+                
+                print(f'for table {tableView.objectName()} freezing column {column}')
+
+            # Otherwise, leave the default flags (usually includes editable).
             items.append(item)
-        
-        # Append the row to the model
         model.appendRow(items)
-    
+        
     # Set the model for the QTableView
     tableView.setModel(model)
 
