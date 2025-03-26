@@ -41,10 +41,6 @@ from PyQt5.QtWidgets import (
     QFileDialog,
     )
 
- 
-
- 
-
 from ..hp.basic import convert_to_number, force_open_dir, today_str
 from ..hp.plug import plugLogger
 from ..hp.qt import (
@@ -502,7 +498,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
             #turn teh group on
             enable_widget_and_children(getattr(self, d['groupBox']), enable)
             
-            #set the progress on teh previous
+            #set the progress on the previous
             pb = getattr(self, d['progressBar'])
             if enable:
                 pb.setValue(100)
@@ -556,7 +552,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         if not err_msg is None:
             log.warning(err_msg)
             return
-        
+                
         #=======================================================================
         # step 2
         #=======================================================================
@@ -591,7 +587,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
     def _launch_dialog_dbMismatch(self, **kwargs):
         """launch the DRF data entry dialog""" 
         self.dialog_dbMismatch = dbMismatchDialog(
-            parent=None, iface=self.iface, debug_logger=self.logger, pluginObject=self.pluginObject,
+            parent=None, iface=self.iface, debug_logger=self.logger, pluginObject=self,
             **kwargs)
  
         self.dialog_dbMismatch.launch() # Show modally
@@ -632,13 +628,12 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #=======================================================================
         
         ci_fp =         self.lineEdit_tab3dataInput_cifp.text()
+        assert not ci_fp=='', f'no costItem file path specified'
         
-        assert not ci_fp=='', f'no costItem filepath specified'
-        
-        drf_db_fp =     self.lineEdit_tab3dataInput_drfFp.text()        
+        drf_db_fp = self.lineEdit_tab3dataInput_drfFp.text()        
         
         #curve_name = self.lineEdit_di_curveName.text() in settings_d
-        bldg_meta =     self._get_building_details(logger=log)
+        bldg_meta = self._get_building_details(logger=log)
         
         #fixed costs from table
         try:
@@ -650,7 +645,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         
         ofp = self._get_proj_db_fp() #load the one provided by the user
         
-        #get buidling layout
+        #get building layout
         """seems like only the 'default' entries are working
         from .core import _get_building_layout_from_meta
         bldg_layout = _get_building_layout_from_meta(bldg_meta)
@@ -714,7 +709,7 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         #bx = ci_df['drf_intersect']
         bx = np.invert(ci_df.index.isin(drf_df.index))
         if bx.sum() != 0:
-            log.warning(f'intersection incomplete, DB mismatch. Complete in step 2')
+            log.warning(f'The DRF table does not contain all the entries necessary to process your cost-items')
         self.lineEdit_tab4actions_projdb.setText(ofp)
         progress.setValue(95)
         
@@ -765,9 +760,9 @@ class BldgsDialog(QtWidgets.QDialog, FORM_CLASS, DialogQtBasic):
         bx = np.invert(ci_df.index.isin(drf_df.index))
         if bx.sum() != 0:
             log.warning(f'intersection incomplete')
+            log.push(f'Missing values total before step 2 {bx.sum()}')
             self._launch_dialog_dbMismatch(proj_db_fp = proj_db_fp)
-                    
-        
+            return
         self.lineEdit_tab4actions_projdb.setText(proj_db_fp)
         
         progress.setValue(10)
