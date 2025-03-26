@@ -110,7 +110,7 @@ def set_tableView_data(tableView: QTableView, data: pd.DataFrame, freeze_columns
                 #item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 item.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
                 
-                print(f'for table {tableView.objectName()} freezing column {column}')
+                #print(f'for table {tableView.objectName()} freezing column {column}')
 
             # Otherwise, leave the default flags (usually includes editable).
             items.append(item)

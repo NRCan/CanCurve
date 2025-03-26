@@ -260,16 +260,31 @@ class dbMismatchDialog(QtWidgets.QDialog, FORM_CLASS2, DialogQtBasic):
         # Initialize missing DRF columns (excluding 'category' and 'component') with empty strings
         for col in drf_df.columns:
             if col not in selected_data.columns:
-                selected_data[col] = ""  # or np.nan if preferred
+                selected_data[col] = np.nan  # or np.nan if preferred
         # Ensure correct column order as per DRF
         selected_data = selected_data[drf_df.columns]
-        # Append selected data to DRF DataFrame
-        drf_df = pd.concat([drf_df, selected_data], ignore_index=True)
-        self.progressBar.setValue(80) 
+        
+        #filter out any ['category', 'component'] matches from selected_data that exist in the DRF
+        #keep these as columns, but treat them as a 2 level multindex (i.e., combinations)
+        merged_df = selected_data.merge(
+                    drf_df[['category', 'component']], 
+                    on=['category', 'component'], 
+                    how='left', 
+                    indicator=True
+                )
+        
+        new_data = merged_df[merged_df['_merge'] == 'left_only'].drop(columns=['_merge'])
+        self.progressBar.setValue(60)
+        
+        # Append only the new rows (if any) to the current DRF DataFrame.
+        if not new_data.empty:
+            drf_df = pd.concat([drf_df, new_data], ignore_index=True)
+        else:
+            log.info("No new rows to add; all selected items already exist in DRF.")
         
         
         # Update the DRF table view with the new data
-        set_tableView_data(tableView_drf, drf_df,
+        set_tableView_data(tableView_drf, drf_df.fillna(0.0),
                            freeze_columns_l=[0, 1],
                            )
         

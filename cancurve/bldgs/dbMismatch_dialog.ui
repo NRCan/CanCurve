@@ -179,7 +179,7 @@ QLabel {
            <item>
             <widget class="QPushButton" name="pushButton_DRFtoProjDB">
              <property name="text">
-              <string>Write DRF Edits to Project Database</string>
+              <string>↑ Write DRF Edits to Project Database ↑</string>
              </property>
             </widget>
            </item>
@@ -286,7 +286,7 @@ QLabel {
               </sizepolicy>
              </property>
              <property name="text">
-              <string>Copy Selected Entries to DRF</string>
+              <string>← Copy Selected Entries to DRF</string>
              </property>
             </widget>
            </item>
