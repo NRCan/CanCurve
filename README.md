@@ -10,12 +10,11 @@ CanCurve is an open source tool for developing flood depth-damage (stage-damage)
  
  
 ## Updates
-- 2024-12-04: update survey link [v1.0.3](https://github.com/NRCan/CanCurve/releases/tag/v1.0.3)
-- 2024-11-27: UI and documentation improvements.
-- 2024-10-31: add sphinx documentation. improve treatment of units. update to QGIS 3.34.12 [v1.0.0](https://github.com/NRCan/CanCurve/releases/tag/v1.0.0)
-- 2024-08-22: priority A and B fixes [v0.1.0](https://github.com/NRCan/CanCurve/releases/tag/v0.1.0)
-- 2024-05-09: small fixes and updates based on initial comments
-- 2024-05-01: initial working release (un tested) [v0.0.1](https://github.com/NRCan/CanCurve/releases/tag/v0.0.1)
+- [v1.1.0](https://github.com/NRCan/CanCurve/releases/tag/v1.1.0) post-release improvements
+    - new interface and tools for missing DRF entries
+    - rename sel to itemcode add cat lookup label table
+- [v1.0.3](https://github.com/NRCan/CanCurve/releases/tag/v1.0.3) pre-release
+
 
 
 ## Documentation
