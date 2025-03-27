@@ -3,12 +3,14 @@ Created on Apr. 16, 2024
 
 @author: cef
 '''
+from unittest.mock import Mock
 import os, logging, sys
 import pytest
 #from unittest.mock import patch
 
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt 
+from qgis.gui import QgisInterface
 
 from cancurve.parameters import src_dir
 
@@ -20,7 +22,7 @@ base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #test_data_dir_master = os.path.join(src_dir, 'tests', 'data')
 
 #===============================================================================
-# pytest custom config
+# pytest custom config-------
 #===============================================================================
  
 
@@ -32,6 +34,33 @@ def pytest_runtest_teardown(item, nextitem):
 def pytest_report_header(config):
     """modifies the pytest header to show all of the arguments"""
     return f"pytest arguments: {' '.join(config.invocation_params.args)}"
+
+
+#===============================================================================
+# Pytest-qgis fixes--------
+#===============================================================================
+"""
+some stub implementations are broken in the pytest-qgis package.
+need to over-write them here
+
+see issues:
+https://github.com/GispoCoding/pytest-qgis/issues/26
+
+"""
+@pytest.fixture(scope="session")
+def qgis_iface(qgis_iface: QgisInterface):
+    # Create a new mock object to simulate the QgsMessageBar instance.
+    message_bar_mock = Mock()
+    # Provide a pushMessage mock that can be called with any combination of arguments.
+    message_bar_mock.pushMessage = Mock()
+    
+    # Since the QGIS API expects iface.messageBar() to be called,
+    # assign a callable (lambda) that returns our message_bar_mock.
+    qgis_iface.messageBar = lambda: message_bar_mock
+
+ 
+
+    return qgis_iface
 
 #===============================================================================
 # HELPERS----------
