@@ -1,14 +1,14 @@
-"""auto update tab figures using pytest
+# """auto update tab figures using pytest
 
-could integreate this into the sphinx builder conf.py at some point.. but that seems overkill
+# could integreate this into the sphinx builder conf.py at some point.. but that seems overkill
 
-This is a per-project script that should be shared with git tracking
+# This is a per-project script that should be shared with git tracking
 
-needs to be run from the project pygis venv. eg:
+# needs to be run from the project pygis venv. eg:
 
-    start cmd.exe /k python -m pytest --maxfail=10 %TEST_DIR% -c %SRC_DIR%\tests\pytest.ini
+    # start cmd.exe /k python -m pytest --maxfail=10 %TEST_DIR% -c %SRC_DIR%\tests\pytest.ini
 
-"""
+# """
 
 
 import pytest
@@ -18,12 +18,18 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtTest import QTest
 from PyQt5.Qt import Qt
 
+#from tests.conftest import click, qgis_iface
 from tests.bldgs.test_02_dialog import (
-    dialog, set_all_tabs, bldg_meta_d, tab2bldgDetils, tab3dataInput, tab4createCurve, 
-    tableWidget_tab3dataInput_fixedCosts,fixed_costs_d, ci_fp, expo_units
+    set_all_tabs, bldg_meta_d, tab2bldgDetils, tab3dataInput, tab4createCurve, 
+    tableWidget_tab3dataInput_fixedCosts,fixed_costs_d, ci_fp, expo_units,
+    dialog_fixt, qgis_iface_stub
     )
 
+ 
+
 from cancurve.parameters import src_dir
+
+
 
 
 def _write_tab_figure(dialog, output_image, tab_widget_name):
@@ -64,7 +70,7 @@ def _write_tab_figure(dialog, output_image, tab_widget_name):
     ('02-dialog-createCurve.PNG', 'tab4actions'),
     # Add more cases here if needed
 ], indirect=False)
-def test_capture_tab_screenshot(dialog, output_image, tab_widget_name):
+def test_capture_tab_screenshot(dialog_fixt, output_image, tab_widget_name):
     """
     Capture a screenshot of a specific tab in a PyQt5 QDialog and save it as a PNG.
 
@@ -75,7 +81,7 @@ def test_capture_tab_screenshot(dialog, output_image, tab_widget_name):
     """
 
     # Ensure the dialog is loaded and find the QTabWidget
-    _write_tab_figure(dialog, output_image, tab_widget_name)
+    _write_tab_figure(dialog_fixt, output_image, tab_widget_name)
 
 
  
@@ -85,13 +91,13 @@ def test_capture_tab_screenshot(dialog, output_image, tab_widget_name):
  
     # Add more cases here if needed
 ], indirect=False)
-def test_capture_tab_screenshot_populated(dialog, output_image, tab_widget_name, tab2bldgDetils, tab3dataInput):
+def test_capture_tab_screenshot_populated(dialog_fixt, output_image, tab_widget_name, tab2bldgDetils, tab3dataInput):
     """
     Capture a screenshot of a specific tab in a PyQt5 QDialog, populate,
     """
 
     # Ensure the dialog is loaded and find the QTabWidget
-    _write_tab_figure(dialog, output_image, tab_widget_name)
+    _write_tab_figure(dialog_fixt, output_image, tab_widget_name)
     
     
     
@@ -100,18 +106,18 @@ def test_capture_tab_screenshot_populated(dialog, output_image, tab_widget_name,
 @pytest.mark.parametrize('output_image, tab_widget_name, testCase', [
     ('03_01_cc.PNG', 'tab4actions', 'case1'),
 ], indirect=False)
-def test_capture_tab_screenshot_populated_tag4(dialog, output_image, tab_widget_name, set_all_tabs):
+def test_capture_tab_screenshot_populated_tag4(dialog_fixt, output_image, tab_widget_name, set_all_tabs):
     """
     Capture a screenshot of a specific tab in a PyQt5 QDialog, populate,
     """
-
+ 
     #plot over-rides
-    dialog.checkBox_tab4actions_step3_plot.setChecked(True)
+    dialog_fixt.checkBox_tab4actions_step3_plot.setChecked(True)
     
-    QTest.mouseClick(dialog._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
+    QTest.mouseClick(dialog_fixt._get_child('pushButton_tab4actions_run'), Qt.LeftButton)   #BldgsDialog.action_tab4actions_run()
     
     # Ensure the dialog is loaded and find the QTabWidget
-    _write_tab_figure(dialog, output_image, tab_widget_name)
+    _write_tab_figure(dialog_fixt, output_image, tab_widget_name)
     
     
     

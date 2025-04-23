@@ -39,21 +39,29 @@ def pytest_report_header(config):
 #===============================================================================
 # Pytest-qgis fixes--------
 #===============================================================================
-"""
-some stub implementations are broken in the pytest-qgis package.
-need to over-write them here
 
-see issues:
-https://github.com/GispoCoding/pytest-qgis/issues/26
-
-"""
 @pytest.fixture(scope="session")
-def qgis_iface(qgis_iface: QgisInterface):
+def qgis_iface_stub(qgis_iface: QgisInterface):
+    """
+    stub message logger
+    
+    BACKGEROUND================
+    some stub implementations are broken in the pytest-qgis package.
+    need to over-write them here
+    
+    see issues:
+    https://github.com/GispoCoding/pytest-qgis/issues/26
+    
+    USE/WARNING===================
+    need to excplicitly import this into each test target (otherwise the stub will not be inherited)
+    
+    """
+    
     # Create a new mock object to simulate the QgsMessageBar instance.
     message_bar_mock = Mock()
     # Provide a pushMessage mock that can be called with any combination of arguments.
     message_bar_mock.pushMessage = Mock()
-    
+     
     # Since the QGIS API expects iface.messageBar() to be called,
     # assign a callable (lambda) that returns our message_bar_mock.
     qgis_iface.messageBar = lambda: message_bar_mock
