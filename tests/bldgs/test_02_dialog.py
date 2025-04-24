@@ -33,7 +33,8 @@ from cancurve.hp.qt import (
     assert_string_in_combobox, enable_widget_and_parents, set_widget_value
     )
 from tests.test_plugin import logger
-from ..conftest import click
+from tests.conftest import click, qgis_iface_stub
+
 
 from cancurve.bldgs.dialog_test_scripts import test_cases_l, set_tab2bldgDetils, set_fixedCosts
 
@@ -62,17 +63,19 @@ use fixtures to parameterize in blocks
 """
     
 @pytest.fixture(scope='function') 
-def dialog(qgis_iface):
+def dialog_fixt(qgis_iface_stub):
     """dialog fixture.
     for interactive tests, see 'test_init' (uncomment block)"""
     
     #indirect parameters
  
     
-    dialog =  BldgsDialog(parent=None, iface=qgis_iface,
+    dialog =  BldgsDialog(parent=None, iface=qgis_iface_stub,
                           debug_logger=logger, #connect python logger for rtests
  
                           )
+    
+    dialog.logger.push('BldgsDialog.inited')
  
     #disable launching of result
     dialog.checkBox_tab4actions_step4_launch.setChecked(False) #not nice for testing
@@ -95,26 +98,26 @@ def set_all_tabs(tab2bldgDetils, tab3dataInput, tab4createCurve):
  
 
 @pytest.fixture(scope='function')    
-def tab2bldgDetils(dialog, testCase, 
+def tab2bldgDetils(dialog_fixt, testCase, 
                    bldg_meta_d, #from conftest
                    ):
     """populate the 'Building Details' tab with test metadata"""
     
-    dialog._change_tab('tab2bldgDetils')
+    dialog_fixt._change_tab('tab2bldgDetils')
     
-    set_tab2bldgDetils(dialog, testCase) 
+    set_tab2bldgDetils(dialog_fixt, testCase) 
         
     #===========================================================================
     # check against core parmeters
     #===========================================================================
-    assert bldg_meta_d['bldg_layout']==dialog.buildingLayout_ComboBox.currentText()
+    assert bldg_meta_d['bldg_layout']==dialog_fixt.buildingLayout_ComboBox.currentText()
     
     #if dialog.basementHeightUnits_ComboBox.currentText()=='m':
     assert 'basement_height' in bldg_meta_d
-    assert bldg_meta_d['basement_height']==dialog.basementHeight_DoubleSpinBox.value()
+    assert bldg_meta_d['basement_height']==dialog_fixt.basementHeight_DoubleSpinBox.value()
     
-    if dialog.sizeOrAreaUnits_ComboBox.currentText()=='m²':
-        assert bldg_meta_d['scale_value_m2']==dialog.sizeOrAreaValue_DoubleSpinBox.value()
+    if dialog_fixt.sizeOrAreaUnits_ComboBox.currentText()=='m²':
+        assert bldg_meta_d['scale_value_m2']==dialog_fixt.sizeOrAreaValue_DoubleSpinBox.value()
  
  
         
@@ -128,27 +131,27 @@ def tab2bldgDetils(dialog, testCase,
     return True
 
 @pytest.fixture(scope='function') 
-def tab3dataInput(dialog, tableWidget_tab3dataInput_fixedCosts, 
+def tab3dataInput(dialog_fixt, tableWidget_tab3dataInput_fixedCosts, 
                       testCase, ci_fp, expo_units,
                       #scale_m2,
                       tmp_path):
     
-    dialog.lineEdit_wdir.setText(str(tmp_path))
-    dialog.lineEdit_tab3dataInput_curveName.setText(testCase)
-    dialog.lineEdit_tab3dataInput_cifp.setText(ci_fp)
+    dialog_fixt.lineEdit_wdir.setText(str(tmp_path))
+    dialog_fixt.lineEdit_tab3dataInput_curveName.setText(testCase)
+    dialog_fixt.lineEdit_tab3dataInput_cifp.setText(ci_fp)
     
     #set the QComboBox to match the value of 'expo_units'
-    dialog.comboBox_tab3dataInput_expoUnits.setCurrentText(expo_units)
+    dialog_fixt.comboBox_tab3dataInput_expoUnits.setCurrentText(expo_units)
     
     """changed this to a drop down on tab4
     if scale_m2: 
-        dialog.radioButton_tab3dataInput_rcvm2.setChecked(True)
+        dialog_fixt.radioButton_tab3dataInput_rcvm2.setChecked(True)
     else:
-        dialog.radioButton_tab3dataInput_rcvm2.setChecked(False)
+        dialog_fixt.radioButton_tab3dataInput_rcvm2.setChecked(False)
     """
         
     """not needed... the default is set during connect_slots
-    dialog.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)"""
+    dialog_fixt.lineEdit_tab3dataInput_drfFp.setText(drf_db_default_fp)"""
     
     print('tab3dataInput setup')
     
@@ -156,7 +159,7 @@ def tab3dataInput(dialog, tableWidget_tab3dataInput_fixedCosts,
     
 
 @pytest.fixture(scope='function') 
-def tab4createCurve(dialog, scale_m2,
+def tab4createCurve(dialog_fixt, scale_m2,
                       tmp_path):
     
     """
@@ -167,14 +170,14 @@ def tab4createCurve(dialog, scale_m2,
         }
         
     """
-    
+    print('tab4createCurve start')
     # Find the index corresponding to scale_m2 directly using dictionary comprehension
-    index = next((k for k, v in dialog.scale_m2_index_d.items() if v == scale_m2), None)
+    index = next((k for k, v in dialog_fixt.scale_m2_index_d.items() if v == scale_m2), None)
 
     if index is not None:
-        dialog.comboBox_tab4actions_costBasis.setCurrentIndex(index)
+        dialog_fixt.comboBox_tab4actions_costBasis.setCurrentIndex(index)
         
-        assert dialog.scale_m2_index_d[dialog.comboBox_tab4actions_costBasis.currentIndex()]==scale_m2
+        assert dialog_fixt.scale_m2_index_d[dialog_fixt.comboBox_tab4actions_costBasis.currentIndex()]==scale_m2
         
  
     else:
@@ -182,6 +185,7 @@ def tab4createCurve(dialog, scale_m2,
         raise ValueError(f"Invalid scale_m2 value: {scale_m2}")
     
     #check
+    print('tab4createCurve finish')
             
  
     
@@ -190,18 +194,18 @@ def tab4createCurve(dialog, scale_m2,
 
 
 @pytest.fixture(scope='function')    
-def tableWidget_tab3dataInput_fixedCosts(dialog, fixed_costs_d):
+def tableWidget_tab3dataInput_fixedCosts(dialog_fixt, fixed_costs_d):
     """assign the dictionary to the input table widget"""
-    dialog._change_tab('tab3dataInput')
+    dialog_fixt._change_tab('tab3dataInput')
     
-    set_fixedCosts(dialog, fixed_costs_d)
+    set_fixedCosts(dialog_fixt, fixed_costs_d)
     
     return True
        
 @pytest.fixture(scope='function')        
-def set_projdb(dialog, proj_db_fp):
+def set_projdb(dialog_fixt, proj_db_fp):
     """set the project database filepath onto the dialog"""
-    dialog.lineEdit_tab4actions_projdb.setText(proj_db_fp)
+    dialog_fixt.lineEdit_tab4actions_projdb.setText(proj_db_fp)
     
         
 
@@ -216,7 +220,7 @@ def test_01_parameters():
     
 
  
-def test_02_init(dialog,):
+def test_02_init(dialog_fixt,):
     
     
     """uncomment the below to use pytest to launch the dialog interactively"""
@@ -228,7 +232,7 @@ def test_02_init(dialog,):
  
  
     
-    assert hasattr(dialog, 'logger')
+    assert hasattr(dialog_fixt, 'logger')
     
 
 #===============================================================================
@@ -237,12 +241,12 @@ def test_02_init(dialog,):
 #     #'case2',
 #     ], indirect=False)
 # @pytest.mark.parametrize('scale_m2',[True], indirect=False)
-# def test_init_prepopulate(dialog, set_all_tabs):
+# def test_init_prepopulate(dialog_fixt, set_all_tabs):
 #     """init and pre-populate the inputs
 #     useful for manual tests"""
 #      
 #     """manual inspection only"""
-#     dialog._change_tab('tab4actions')
+#     dialog_fixt._change_tab('tab4actions')
 #      
 #     QApp = QApplication(sys.argv) #initlize a QT appliaction (inplace of Qgis) to manually inspect
 #     
@@ -262,14 +266,14 @@ def test_02_init(dialog,):
     '02',
     #'case2',
     ], indirect=False)
-def test_03_get_building_details(dialog, 
+def test_03_get_building_details(dialog_fixt, 
                          tab2bldgDetils, #calling this sets the values on the UI
                          bldg_meta_d, #from conftest
                          ):
     
  
     
-    result = dialog._get_building_details()
+    result = dialog_fixt._get_building_details()
     
     for k,v in bldg_meta_d.items():
         assert k in result, f'key \'{k}\' missing in result'
@@ -283,12 +287,12 @@ def test_03_get_building_details(dialog,
     'case1',
     #'case2',
     ], indirect=False)
-def test_04_get_fixed_costs(dialog, 
+def test_04_get_fixed_costs(dialog_fixt, 
                          tableWidget_tab3dataInput_fixedCosts, #calling this sets the values on the UI
                          fixed_costs_d 
                          ):
     
-    result_d = dialog._get_fixed_costs()
+    result_d = dialog_fixt._get_fixed_costs()
  
     assert result_d==fixed_costs_d
     
@@ -297,17 +301,17 @@ def test_04_get_fixed_costs(dialog,
 # TESTS: DIALOG FUNCTIONALITY--------
 #===============================================================================
 
-def test_05_radioButton_tab4actions_runControl(dialog):
+def test_05_radioButton_tab4actions_runControl(dialog_fixt):
     """check radio button logic"""
 
-    b1 = dialog.radioButton_tab4actions_runControl_all
-    b2 = dialog.radioButton_tab4actions_runControl_individ
+    b1 = dialog_fixt.radioButton_tab4actions_runControl_all
+    b2 = dialog_fixt.radioButton_tab4actions_runControl_individ
     
     button_l = [
-        dialog.pushButton_tab4actions_step1,
-        #dialog.pushButton_tab4actions_step2,
-        #dialog.pushButton_tab4actions_step3,
-        #dialog.pushButton_tab4actions_step4        
+        dialog_fixt.pushButton_tab4actions_step1,
+        #dialog_fixt.pushButton_tab4actions_step2,
+        #dialog_fixt.pushButton_tab4actions_step3,
+        #dialog_fixt.pushButton_tab4actions_step4        
         ]
  
 
@@ -356,14 +360,14 @@ def test_05_radioButton_tab4actions_runControl(dialog):
     #'case2',
     ], indirect=False)
 @pytest.mark.parametrize('testPhase', ['c03'])
-def test_06_pushButton_tab4actions_read(dialog, set_projdb):
+def test_06_pushButton_tab4actions_read(dialog_fixt, set_projdb):
     """test read project database button"""
     
-    w = dialog.pushButton_tab4actions_read
+    w = dialog_fixt.pushButton_tab4actions_read
     
     enable_widget_and_parents(w) #need to enable the button for it to work    
     
-    QTest.mouseClick(w, Qt.LeftButton) #dialog.BldgsDialog.action_read_proj_db()
+    QTest.mouseClick(w, Qt.LeftButton) #dialog_fixt.Bldgsdialog_fixt.action_read_proj_db()
     
 
  
@@ -374,17 +378,17 @@ def test_06_pushButton_tab4actions_read(dialog, set_projdb):
      ('pushButton_tab3dataInput_drfFp','lineEdit_tab3dataInput_drfFp', 'getOpenFileName'),
      ('pushButton_tab4actions_browse', 'lineEdit_tab4actions_projdb', 'getOpenFileName'),
      ])  
-def test_07_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
+def test_07_file_buttons(dialog_fixt, buttonName, lineName, QFileDialogTypeName):
     """check all the load file buttons"""
     
     #retrieve button widget
-    assert hasattr(dialog, buttonName), buttonName
-    w = getattr(dialog, buttonName)    
+    assert hasattr(dialog_fixt, buttonName), buttonName
+    w = getattr(dialog_fixt, buttonName)    
     enable_widget_and_parents(w)
     
     #lineEdit widget
-    assert hasattr(dialog, lineName)
-    lineWidget = getattr(dialog, lineName)
+    assert hasattr(dialog_fixt, lineName)
+    lineWidget = getattr(dialog_fixt, lineName)
     
     #PyQt5.QtWidgets.QFileDialog.
     
@@ -414,7 +418,7 @@ def test_07_file_buttons(dialog, buttonName, lineName, QFileDialogTypeName):
 @pytest.mark.parametrize('scale_m2',[True], indirect=False)
 @pytest.mark.parametrize('ciPlot',[True], indirect=False)
 @pytest.mark.parametrize('drfPlot',[True], indirect=False) 
-def test_08_action_tab4actions_step1(dialog,
+def test_08_action_tab4actions_step1(dialog_fixt,
                                   set_all_tabs, ciPlot, drfPlot, 
                                   ):
     """test the step 1 button for _run_c00_setup_project'"""
@@ -426,19 +430,19 @@ def test_08_action_tab4actions_step1(dialog,
     # settup diablog
     #===========================================================================
 
-    dialog._change_tab('tab4actions')
+    dialog_fixt._change_tab('tab4actions')
     
-    w = dialog.pushButton_tab4actions_step1
+    w = dialog_fixt.pushButton_tab4actions_step1
     
     enable_widget_and_parents(w) #need to enable the button for it to work
     
     if ciPlot:
-        cbox = dialog.checkBox_tab4actions_step1_ciPlot
+        cbox = dialog_fixt.checkBox_tab4actions_step1_ciPlot
         enable_widget_and_parents(cbox)
         cbox.setChecked(True)
         
     if drfPlot:
-        cbox = dialog.checkBox_tab4actions_step1_drfPlot
+        cbox = dialog_fixt.checkBox_tab4actions_step1_drfPlot
         enable_widget_and_parents(cbox)
         cbox.setChecked(True)
         
@@ -453,29 +457,29 @@ def test_08_action_tab4actions_step1(dialog,
     #===========================================================================
     # check
     #===========================================================================
-    assert_proj_db_fp(dialog._get_proj_db_fp())
+    assert_proj_db_fp(dialog_fixt._get_proj_db_fp())
      
     print('finished')
     
  
  
-def _run_tab4actions_setup(dialog, button_name, checkbox_names=None):
+def _run_tab4actions_setup(dialog_fixt, button_name, checkbox_names=None):
     """
     Common setup and execution for tab4actions tests.
  
     """
     # Switch to the appropriate tab and enable the target button.
-    dialog._change_tab('tab4actions')
-    button = getattr(dialog, button_name)
+    dialog_fixt._change_tab('tab4actions')
+    button = getattr(dialog_fixt, button_name)
     enable_widget_and_parents(button)
     
     # Always enable the figure saving checkbox.
-    dialog.checkBox_tab4actions_saveFig.setChecked(True)
+    dialog_fixt.checkBox_tab4actions_saveFig.setChecked(True)
     
     # Enable and check each provided checkbox.
     if checkbox_names:
         for cb_name in checkbox_names:
-            cb = getattr(dialog, cb_name)
+            cb = getattr(dialog_fixt, cb_name)
             enable_widget_and_parents(cb)
             cb.setChecked(True)
     
@@ -503,7 +507,7 @@ def _run_tab4actions_setup(dialog, button_name, checkbox_names=None):
     ])
 @pytest.mark.parametrize('testPhase', ['c01'])
 @pytest.mark.parametrize('scale_m2', [True], indirect=False)
-def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase, testPhase, scale_m2, monkeypatch):
+def test_09_action_tab4actions_step2(dialog_fixt, set_all_tabs, set_projdb, testCase, testPhase, scale_m2, monkeypatch):
     """
     Test for Step2 c01_join_drf
 
@@ -511,7 +515,7 @@ def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase,
     expected_tables = expected_tables_base + ['c01_depth_rcv']
     
     run_test = lambda: _run_tab4actions_setup(
-                dialog,
+                dialog_fixt,
                 button_name='pushButton_tab4actions_step2', #_run_c01_join_drf()
                 checkbox_names=['checkBox_tab4actions_step2_plot']
             )
@@ -525,8 +529,8 @@ def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase,
             """
             print('patch_dbMisMatch')
   
-        #patch teh dbMisMatch dialog
-        monkeypatch.setattr(dialog, "_launch_dialog_dbMismatch", patch_dbMisMatch)
+        #patch teh dbMisMatch dialog_fixt
+        monkeypatch.setattr(dialog_fixt, "_launch_dialog_dbMismatch", patch_dbMisMatch)
     
         """for dev"""
         #with pytest.raises(KeyError, match="launch_dialog_dbMismatch"):
@@ -535,7 +539,7 @@ def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase,
     else:
         run_test()
         # Verification: check the project DB for the expected tables.
-        assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+        assert_proj_db_fp(dialog_fixt._get_proj_db_fp(), expected_tables=expected_tables)
 
 
 
@@ -544,18 +548,18 @@ def test_09_action_tab4actions_step2(dialog, set_all_tabs, set_projdb, testCase,
 @pytest.mark.parametrize('testCase', ['case4_R2'])
 @pytest.mark.parametrize('testPhase', ['c02'])
 @pytest.mark.parametrize('scale_m2', [True], indirect=False)
-def test_10_action_tab4actions_step3(dialog, set_all_tabs, set_projdb, testCase, testPhase, scale_m2):
+def test_10_action_tab4actions_step3(dialog_fixt, set_all_tabs, set_projdb, testCase, testPhase, scale_m2):
     """
     Test for Step3 
     """
     expected_tables = expected_tables_base + ['c01_depth_rcv', 'c02_ddf']
     _run_tab4actions_setup(
-        dialog,
+        dialog_fixt,
         button_name='pushButton_tab4actions_step3',
         checkbox_names=['checkBox_tab4actions_step3_plot']
     )
     # Verification: check the project DB for the expected tables.
-    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+    assert_proj_db_fp(dialog_fixt._get_proj_db_fp(), expected_tables=expected_tables)
 
 
 # Test for action step4
@@ -563,18 +567,18 @@ def test_10_action_tab4actions_step3(dialog, set_all_tabs, set_projdb, testCase,
 @pytest.mark.parametrize('testCase', ['case4_R2'])
 @pytest.mark.parametrize('testPhase', ['c03'])
 @pytest.mark.parametrize('scale_m2', [True], indirect=False)
-def test_11_action_tab4actions_step4(dialog, set_all_tabs, set_projdb, testCase, testPhase, scale_m2):
+def test_11_action_tab4actions_step4(dialog_fixt, set_all_tabs, set_projdb, testCase, testPhase, scale_m2):
     """
      Test for Step4
     """
     expected_tables = expected_tables_base + ['c01_depth_rcv', 'c02_ddf']
     _run_tab4actions_setup(
-        dialog,
+        dialog_fixt,
         button_name='pushButton_tab4actions_step4',
         checkbox_names=[]
     )
     # Verification: check the project DB for the expected tables.
-    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables)
+    assert_proj_db_fp(dialog_fixt._get_proj_db_fp(), expected_tables=expected_tables)
     
     
     
@@ -588,20 +592,20 @@ def test_11_action_tab4actions_step4(dialog, set_all_tabs, set_projdb, testCase,
     'case4_R2'
     ], indirect=False)
 @pytest.mark.parametrize('scale_m2',[True, False], indirect=False)
-def test_12_action_tab4actions_runAll(dialog, set_all_tabs): 
+def test_12_action_tab4actions_runAll(dialog_fixt, set_all_tabs): 
     """test combined
     
     no need to test plots here
     """
-    dialog._change_tab('tab4actions')
+    dialog_fixt._change_tab('tab4actions')
     
     #plot over-rides
-    dialog.checkBox_tab4actions_step3_plot.setChecked(True)
+    dialog_fixt.checkBox_tab4actions_step3_plot.setChecked(True)
     
-    QTest.mouseClick(dialog._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
+    QTest.mouseClick(dialog_fixt._get_child('pushButton_tab4actions_run'), Qt.LeftButton)  
     
     #check
-    assert_proj_db_fp(dialog._get_proj_db_fp(), expected_tables=expected_tables_base+['c01_depth_rcv', 'c02_ddf'])
+    assert_proj_db_fp(dialog_fixt._get_proj_db_fp(), expected_tables=expected_tables_base+['c01_depth_rcv', 'c02_ddf'])
     
     
     

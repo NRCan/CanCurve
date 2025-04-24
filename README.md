@@ -10,6 +10,8 @@ CanCurve is an open source tool for developing flood depth-damage (stage-damage)
  
  
 ## Updates
+- [v1.2.0](https://github.com/NRCan/CanCurve/releases/tag/v1.2.0) public release
+    - update to QGIS 3.40.6
 - [v1.1.0](https://github.com/NRCan/CanCurve/releases/tag/v1.1.0) post-release improvements
     - new interface and tools for missing DRF entries
     - rename sel to itemcode add cat lookup label table
@@ -22,7 +24,7 @@ Project documentation is [here](https://cancurve.readthedocs.io/en/latest/)
 
 
 ## Installing for the first time
-- Install [QGIS 3.34.14](https://download.qgis.org/downloads/) (with Qt 5.15.13)
+- Install [QGIS 3.40.6](https://download.qgis.org/downloads/) (with Qt 5)
 - download the `cancurve.zip` file from the [latest release](https://github.com/NRCan/CanCurve/releases) to your local machine
 - in QGIS, `Manage and Install Plugins...` > `Install from ZIP` > select the downloaded file
 - we recommended to also install the **First Aid** plugin for more detailed error messages 

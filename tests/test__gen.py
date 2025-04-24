@@ -48,7 +48,7 @@ def parse_requirements(file_path):
 
 def test_qgis_version(qgis_app, qgis_iface):
 
-    expected_version_int = 33414  # Version 3.34.14
+    expected_version_int = 34006  # Version 3.40.6
     from qgis.core import Qgis
     actual_version_int = Qgis.QGIS_VERSION_INT
     assert actual_version_int == expected_version_int, f"Expected QGIS version {expected_version_int}, but got {actual_version_int}"
