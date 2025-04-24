@@ -5,7 +5,7 @@
 [general]
 name=CanCurve
 qgisMinimumVersion=3.34
-description=Free tools to create Canadian flood Depth-Damage Functions (DDF)
+description=Free tools to create flood Depth-Damage Functions for Canada
 version=1.2.0
 author=Seth Bryant
 email=bryant.seth@ceflood.com
