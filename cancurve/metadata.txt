@@ -8,7 +8,7 @@ qgisMinimumVersion=3.34
 description=Free tools to create Canadian flood Depth-Damage Functions (DDF)
 version=1.2.0
 author=Seth Bryant
-email=heather.mcgrath@canada.ca
+email=bryant.seth@ceflood.com
 
 about = CanCurve is an open-source tool which can develop depth-damage (stage-damage) functions for use in flood loss estimation and flood risk assessments.
 
