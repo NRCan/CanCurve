@@ -54,8 +54,7 @@ This zip file can then be distributed using a git-hub release (upload the zip fi
 
 ### Full QGIS Repository release
 - [ ] create the plugin zip as above
-- [ ] in git-hub, create a new release tag (e.g., v1.2.0), summarize new features for developers. upload the zip file. 
-
+- [ ] in git-hub, create a new release tag (e.g., v1.2.0), summarize new features for developers. upload the zip file.
 - [ ] login to [plugins.qgis.org](https://plugins.qgis.org/accounts/login/?next=/plugins/my) using the CanFlood credentials (ask Nicky). Navigate to **Upload a plugin** and select the zip file.
 
 - [ ] In QGIS, refresh the repository and ensure that the new version is available (may take ~10mins for the version to be available). Upgrade and check that it works.
