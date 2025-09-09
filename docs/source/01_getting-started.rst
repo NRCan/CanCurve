@@ -30,9 +30,10 @@ Overviews
 -----------------------
 CanCurve is a collection of tools for generating Depth Damage Functions (DDF) used by platforms like `CanFlood <https://github.com/NRCan/CanFlood>`_ to create flood risk models.
 CanCurve's :ref:`Buildings Tool <sec02-bldgs>` for example facilitates the creation of DDFs from detailed restoration cost data for archetypal buildings.
-This tool joins a table of restoration activities (e.g., repair dry-wall for $1000), called the :ref:`Cost-Item Table <sec02-costItem>`, to a database of information on the flood vulnerability of those items, called the :ref:`Depth-Replacement-Factor (DRF) Database <sec02-DRF>`.
+This tool joins a table of user-supplied restoration activities (e.g., repair dry-wall for $1000), called the :ref:`Cost-Item Table <sec02-costItem>`, to a database of information on the flood vulnerability of those items, called the :ref:`Depth-Replacement-Factor (DRF) Database <sec02-DRF>`.
 After identifying the target building or archetype for which a user would like to construct a DDF, typically a :ref:`Cost-Item Table <sec02-costItem>` is prepared using local pricing tables and expert knowledge on the restoration of the building.
 For the :ref:`DRF Database <sec02-DRF>`, either the version shipped with CanCurve can be used (default), or an alternate file can be specified.
+Metadata fields are avaialble to better contextualize the DDF, but these do not alter the function.
 Once these inputs and the building metadata are prepared and entered into the Buildings Tool, the four :ref:`Curve Creation <sec02-Core>` steps can be run to create and export a DDF in :ref:`CanFlood format <sec02-CanFloodFormat>`.
 
 
@@ -71,6 +72,9 @@ See the :ref:`User Guide <sec02-userGuide>` and the :ref:`Tutorials <sec03-tutor
 
 Frequently Asked Questions
 --------------------------
+**Why does changing occupancy classification or subclassification values not alter the result?**
+    Metadata fields, like occupancy classification or subclassification, provide descriptive context, but they don’t change how the function operates.
+
 
 **Where can I find Cost-Item data for my archetype?**
     Typically this information is obtained from cost restoration experts using specialized software like Xactimate and a detailed model of the structure.
