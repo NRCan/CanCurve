@@ -74,6 +74,7 @@ To assemble the DDF, the following metadata is required:
  - **Building Layout** (``bldg_layout``): Corresponds to categories in the :ref:`DRF Database <sec02-drf>`.
  - **Basement height value** (``basement_height_m``): The height of the basement in meters, used to concatenate the cost values between storeys.
  - **Structure area value** (``scale_value``): The area of the structure in square meters used to scale the cost values for :ref:`Area-based <sec02-costbasis>` cost basis.
+ - **Scale factor** (``scale_factor``): Factor for scaling all cost values. Can be useful for spatio-temporal transfers.
 
 Specifying additional metadata fields is recommended, as the Buildings Tool will include them in the output DDFs.
 For example data, see the :ref:`Tutorials <sec03-tutorials>`.
